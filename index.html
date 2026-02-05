@@ -23,6 +23,10 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Karla', sans-serif;
             background: var(--cream);
@@ -37,7 +41,16 @@
             padding: 0 2rem;
         }
 
-        /* Hero Section */
+        /* Full Page Sections */
+        section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Hero Section with Background */
         header {
             min-height: 100vh;
             display: flex;
@@ -45,13 +58,28 @@
             justify-content: center;
             position: relative;
             overflow: hidden;
-            background: linear-gradient(135deg, #f5f1e8 0%, #e8dcc8 100%);
+            background-image: url('images/background_mushroom.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(245, 241, 232, 0.85);
+            backdrop-filter: blur(2px);
         }
 
         .hero-content {
             text-align: center;
             z-index: 2;
             animation: fadeInUp 1.2s ease-out;
+            position: relative;
         }
 
         .hero-header {
@@ -69,21 +97,7 @@
             border-radius: 50%;
             object-fit: cover;
             border: 4px solid var(--accent);
-            box-shadow: 0 10px 30px rgba(61, 41, 22, 0.2);
-            animation: fadeIn 1.5s ease-out;
-        }
-
-        .profile-placeholder {
-            width: 360px;
-            height: 360px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent), var(--sage));
-            border: 4px solid var(--accent);
-            box-shadow: 0 10px 30px rgba(61, 41, 22, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
+            box-shadow: 0 10px 30px rgba(61, 41, 22, 0.3);
             animation: fadeIn 1.5s ease-out;
         }
 
@@ -94,6 +108,7 @@
             color: var(--primary);
             letter-spacing: 0.02em;
             margin: 0;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
         }
 
         .hero-subtitle {
@@ -102,6 +117,7 @@
             font-weight: 300;
             margin-bottom: 2rem;
             font-style: italic;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
         }
 
         .hero-description {
@@ -110,43 +126,10 @@
             max-width: 700px;
             margin: 0 auto 3rem;
             line-height: 1.8;
-        }
-
-        /* Mushroom decorative elements */
-        .mushroom-deco {
-            position: absolute;
-            opacity: 0.15;
-            filter: sepia(40%) hue-rotate(20deg);
-        }
-
-        .mushroom-1 {
-            width: 300px;
-            height: 300px;
-            top: 10%;
-            left: 5%;
-            background: radial-gradient(ellipse at 50% 80%, var(--accent) 0%, transparent 70%);
-            border-radius: 50% 50% 45% 45%;
-            animation: float 8s ease-in-out infinite;
-        }
-
-        .mushroom-2 {
-            width: 200px;
-            height: 200px;
-            bottom: 15%;
-            right: 8%;
-            background: radial-gradient(ellipse at 50% 80%, var(--mushroom) 0%, transparent 70%);
-            border-radius: 50% 50% 48% 48%;
-            animation: float 6s ease-in-out infinite 1s;
-        }
-
-        .mushroom-3 {
-            width: 150px;
-            height: 150px;
-            top: 60%;
-            left: 15%;
-            background: radial-gradient(ellipse at 50% 80%, var(--sage) 0%, transparent 70%);
-            border-radius: 50% 50% 46% 46%;
-            animation: float 7s ease-in-out infinite 0.5s;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(61, 41, 22, 0.1);
         }
 
         /* Research Section */
@@ -224,6 +207,117 @@
             color: var(--earth);
             line-height: 1.8;
             font-size: 1rem;
+        }
+
+        /* Auto-Scrolling Mushroom Gallery */
+        .gallery-section {
+            padding: 8rem 0;
+            background: linear-gradient(135deg, #f5f1e8 0%, #e8dcc8 100%);
+            overflow: hidden;
+        }
+
+        .gallery-wrapper {
+            margin-top: 4rem;
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+        }
+
+        .gallery-track {
+            display: flex;
+            gap: 2rem;
+            animation: scroll 60s linear infinite;
+            will-change: transform;
+        }
+
+        .gallery-track:hover {
+            animation-play-state: paused;
+        }
+
+        .gallery-item {
+            min-width: 400px;
+            height: 500px;
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 60px rgba(61, 41, 22, 0.3);
+            z-index: 10;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(calc(-400px * 23 - 2rem * 23));
+            }
+        }
+
+        /* Zoom Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            animation: zoomIn 0.3s ease;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 2rem;
+            right: 3rem;
+            color: white;
+            font-size: 3rem;
+            font-weight: 300;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            z-index: 1001;
+        }
+
+        .modal-close:hover {
+            transform: scale(1.2);
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
         /* Skills Section */
@@ -408,94 +502,13 @@
             }
         }
 
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0) rotate(0deg);
-            }
-            50% {
-                transform: translateY(-20px) rotate(5deg);
-            }
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .timeline::before {
-                left: 0;
-            }
-
-            .timeline-item:nth-child(odd),
-            .timeline-item:nth-child(even) {
-                padding-left: 2rem;
-                padding-right: 0;
-                text-align: left;
-            }
-
-            .timeline-dot {
-                left: 0;
-                transform: translateX(-50%);
-            }
-
-            .research-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .contact-info {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
-
-        /* Mushroom Images Placeholder */
-        .mushroom-gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 4rem;
-        }
-
-        .mushroom-img {
-            width: 100%;
-            height: 300px;
-            background: linear-gradient(135deg, var(--mushroom), var(--sage));
-            border-radius: 2px;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.4s ease;
-        }
-
-        .mushroom-img:hover {
-            transform: scale(1.05);
-        }
-
-        .mushroom-img::after {
-            content: '🍄';
-            position: absolute;
-            font-size: 4rem;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            opacity: 0.3;
-        }
-
-        .mushroom-label {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(61, 41, 22, 0.9);
-            color: var(--cream);
-            padding: 1rem;
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.1rem;
-            font-style: italic;
-        }
-
         .scroll-indicator {
             position: absolute;
             bottom: 3rem;
             left: 50%;
             transform: translateX(-50%);
             animation: bounce 2s infinite;
+            z-index: 2;
         }
 
         @keyframes bounce {
@@ -513,30 +526,50 @@
         .scroll-indicator::after {
             content: '↓';
             font-size: 2rem;
-            color: var(--secondary);
+            color: var(--primary);
             opacity: 0.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .research-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-info {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .gallery-item {
+                min-width: 300px;
+                height: 400px;
+            }
+
+            @keyframes scroll {
+                0% {
+                    transform: translateX(0);
+                }
+                100% {
+                    transform: translateX(calc(-300px * 23 - 2rem * 23));
+                }
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Hero Section -->
+    <!-- Hero Section with Background -->
     <header>
-        <div class="mushroom-deco mushroom-1"></div>
-        <div class="mushroom-deco mushroom-2"></div>
-        <div class="mushroom-deco mushroom-3"></div>
-        
         <div class="hero-content">
             <div class="hero-header">
-                <!-- Upload your photo to /images folder in GitHub, then uncomment the line below -->
                 <img src="images/profile.jpg" alt="Shinnam Yoo" class="profile-photo">
-                <!-- <div class="profile-placeholder">🍄</div> -->
                 <h1 class="hero-title">Shinnam Yoo</h1>
             </div>
             <p class="hero-subtitle">Exploring the Hidden World of Mycorrhizal Fungi</p>
             <p class="hero-description">
-                My research goal is to understand how fungi interact with their environments and to generate 
-                knowledge that can support carbon sequestration and climate change mitigation. Through my work 
-                on <em>Tricholoma matsutake</em>, I also developed an interest in sustainable agriculture. 
+                My research goal is to understand how fungi interact with their environments and to generate
+                knowledge that can support carbon sequestration and climate change mitigation. Through my work
+                on <em>Tricholoma matsutake</em>, I also developed an interest in sustainable agriculture.
                 I also aim to promote public appreciation of fungi through education inspired by my wild mushroom foraging.
             </p>
         </div>
@@ -552,8 +585,8 @@
                     <div class="research-icon">🔬</div>
                     <h3>Ectomycorrhizal Ecology & Microbiome</h3>
                     <p>
-                        Investigating core microbiomes of ectomycorrhizal fungi through cross-study phylogenetic 
-                        analysis and metabarcoding. Specialized in <em>Tricholoma matsutake</em> holobiont systems, 
+                        Investigating core microbiomes of ectomycorrhizal fungi through cross-study phylogenetic
+                        analysis and metabarcoding. Specialized in <em>Tricholoma matsutake</em> holobiont systems,
                         fine-scale community assembly, and spatial distribution patterns in forest ecosystems.
                     </p>
                 </div>
@@ -561,8 +594,8 @@
                     <div class="research-icon">🧬</div>
                     <h3>Multi-Omics & Systems Biology</h3>
                     <p>
-                        Integrating transcriptomics, metabolomics, and genome-scale metabolic modeling to understand 
-                        fungal physiology and microbe-environment interactions. Development of bioinformatics pipelines 
+                        Integrating transcriptomics, metabolomics, and genome-scale metabolic modeling to understand
+                        fungal physiology and microbe-environment interactions. Development of bioinformatics pipelines
                         for heterogeneous amplicon sequence analysis using phylogenetic approaches.
                     </p>
                 </div>
@@ -570,10 +603,160 @@
                     <div class="research-icon">🌲</div>
                     <h3>Conservation & Sustainable Agriculture</h3>
                     <p>
-                        Bridging fundamental mycology with climate change mitigation through carbon sequestration research. 
-                        Developing cultivation technologies for valuable mushroom species and promoting public appreciation 
+                        Bridging fundamental mycology with climate change mitigation through carbon sequestration research.
+                        Developing cultivation technologies for valuable mushroom species and promoting public appreciation
                         of fungi through education and wild mushroom foraging.
                     </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Auto-Scrolling Mushroom Gallery -->
+    <section class="gallery-section">
+        <div class="container">
+            <h2 class="section-title">Field Collections</h2>
+            <div class="gallery-wrapper">
+                <div class="gallery-track">
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/Asterophora lycoperdoides (덧붙이버섯), 주로 무당버섯 위에 발생 (9).JPG" alt="Asterophora lycoperdoides">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_1713.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_1772.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_1781.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_1801.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_1858.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_1927.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_1951.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_2016.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_2037.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_3315.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_3450.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_3639.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_3651.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_3676.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_3690.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_3717.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_4430.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_4453.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_4562 (2).JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_4873.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_4931.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_4976.JPG" alt="Mushroom Collection">
+                    </div>
+                    <!-- Duplicate images for seamless loop -->
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/Asterophora lycoperdoides (덧붙이버섯), 주로 무당버섯 위에 발생 (9).JPG" alt="Asterophora lycoperdoides">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_1713.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_1772.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_1781.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_1801.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_1858.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_1927.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_1951.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_2016.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_2037.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_3315.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_3450.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_3639.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_3651.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_3676.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_3690.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_3717.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_4430.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_4453.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_4562 (2).JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_4873.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_4931.JPG" alt="Mushroom Collection">
+                    </div>
+                    <div class="gallery-item" onclick="openModal(this)">
+                        <img src="images/Mushrooms/IMG_4976.JPG" alt="Mushroom Collection">
+                    </div>
                 </div>
             </div>
         </div>
@@ -628,36 +811,11 @@
         </div>
     </section>
 
-    <!-- Mushroom Gallery Section -->
-    <section class="research-section">
-        <div class="container">
-            <h2 class="section-title">Field Collections</h2>
-            <div class="mushroom-gallery">
-                <div class="mushroom-img">
-                    <!-- <img src="images/matsutake.jpg" alt="Tricholoma matsutake" style="width: 100%; height: 100%; object-fit: cover;"> -->
-                    <div class="mushroom-label">Tricholoma matsutake</div>
-                </div>
-                <div class="mushroom-img">
-                    <!-- <img src="images/ectomycorrhiza.jpg" alt="Ectomycorrhizal root tips" style="width: 100%; height: 100%; object-fit: cover;"> -->
-                    <div class="mushroom-label">Ectomycorrhizal root tips</div>
-                </div>
-                <div class="mushroom-img">
-                    <!-- <img src="images/mycelium.jpg" alt="Soil mycelial network" style="width: 100%; height: 100%; object-fit: cover;"> -->
-                    <div class="mushroom-label">Soil mycelial network</div>
-                </div>
-                <div class="mushroom-img">
-                    <!-- <img src="images/forest.jpg" alt="Pine forest survey site" style="width: 100%; height: 100%; object-fit: cover;"> -->
-                    <div class="mushroom-label">Pine forest survey site</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Publications Section -->
     <section class="publications-section">
         <div class="container">
             <h2 class="section-title">Selected Publications</h2>
-            
+
             <a href="https://doi.org/10.1186/s40168-025-02329-x" target="_blank" class="pub-card">
                 <div class="pub-title">
                     Functionally distinct core microbes of Tricholoma matsutake revealed by cross-study analysis
@@ -670,7 +828,7 @@
 
             <a href="https://doi.org/10.1007/s00572-022-01088-z" target="_blank" class="pub-card">
                 <div class="pub-title">
-                    Exploring Fine-Scale Assembly of Ectomycorrhizal Fungal Communities Through 
+                    Exploring Fine-Scale Assembly of Ectomycorrhizal Fungal Communities Through
                     Phylogenetic and Spatial Distribution Analyses
                 </div>
                 <div class="pub-journal">Mycorrhiza (2022)</div>
@@ -681,7 +839,7 @@
 
             <a href="https://doi.org/10.1080/12298093.2022.2097364" target="_blank" class="pub-card">
                 <div class="pub-title">
-                    Fourteen Unrecorded Species of Agaricales Underw. (Agaricomycetes, Basidiomycota) 
+                    Fourteen Unrecorded Species of Agaricales Underw. (Agaricomycetes, Basidiomycota)
                     from the Republic of Korea
                 </div>
                 <div class="pub-journal">Mycobiology (2022)</div>
@@ -695,10 +853,10 @@
                     Co-Authored Publications
                 </h3>
                 <p style="color: var(--earth); line-height: 1.8;">
-                    Contributing author on 10+ peer-reviewed publications including research in 
-                    <em>IMA Fungus</em> (2026), <em>Journal of Microbiology and Biotechnology</em> (2025), 
-                    <em>Journal of Microbiology</em> (2023, 2025), <em>Frontiers in Microbiology</em> (2020), 
-                    and <em>Sustainability</em> (2021), covering topics in fungal systematics, microbiome ecology, 
+                    Contributing author on 10+ peer-reviewed publications including research in
+                    <em>IMA Fungus</em> (2026), <em>Journal of Microbiology and Biotechnology</em> (2025),
+                    <em>Journal of Microbiology</em> (2023, 2025), <em>Frontiers in Microbiology</em> (2020),
+                    and <em>Sustainability</em> (2021), covering topics in fungal systematics, microbiome ecology,
                     and environmental microbiology.
                 </p>
             </div>
@@ -736,5 +894,36 @@
             "The good life is one inspired by love and guided by knowledge" - Bertrand Russell
         </p>
     </footer>
+
+    <!-- Zoom Modal -->
+    <div id="imageModal" class="modal" onclick="closeModal()">
+        <span class="modal-close">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <script>
+        function openModal(element) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            const img = element.querySelector('img');
+
+            modal.classList.add('active');
+            modalImg.src = img.src;
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('imageModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal with ESC key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
 </body>
 </html>
