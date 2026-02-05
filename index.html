@@ -117,8 +117,8 @@
             width: 300px;
             height: 300px;
             border-radius: 50%;
-            object-fit: cover;
-            object-position: center top;
+            object-fit: contain;
+            background: white;
             border: 4px solid var(--accent);
             box-shadow: 0 10px 30px rgba(61, 41, 22, 0.3);
             animation: fadeIn 1.5s ease-out;
@@ -150,7 +150,7 @@
             text-align: left;
         }
 
-        /* Field Collections Gallery */
+        /* Gallery Gallery */
         .gallery-section {
             margin-top: 3rem;
             padding: 3rem 0;
@@ -207,34 +207,31 @@
         .contact-inline {
             display: flex;
             justify-content: center;
-            gap: 2rem;
-            margin-top: 2rem;
+            gap: 1.5rem;
+            margin-top: 1rem;
             flex-wrap: wrap;
-            padding: 2rem;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 8px;
-            max-width: 800px;
-            margin: 2rem auto;
+            max-width: 700px;
+            margin: 1rem auto 2rem;
         }
 
         .contact-item {
             display: flex;
             align-items: center;
-            gap: 0.8rem;
-            font-size: 0.95rem;
-            color: var(--earth);
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--secondary);
         }
 
         .contact-icon {
-            width: 35px;
-            height: 35px;
+            width: 24px;
+            height: 24px;
             background: var(--accent);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 1rem;
+            font-size: 0.75rem;
             flex-shrink: 0;
         }
 
@@ -455,10 +452,10 @@
     <!-- Navigation -->
     <nav>
         <div class="nav-container">
-            <a class="nav-link active" onclick="showPage('home')">Home</a>
-            <a class="nav-link" onclick="showPage('research')">Research Focus</a>
-            <a class="nav-link" onclick="showPage('skills')">Technical Expertise</a>
-            <a class="nav-link" onclick="showPage('publications')">Publications</a>
+            <a class="nav-link active" onclick="showPage('home', this)">Home</a>
+            <a class="nav-link" onclick="showPage('research', this)">Research Focus</a>
+            <a class="nav-link" onclick="showPage('skills', this)">Technical Expertise</a>
+            <a class="nav-link" onclick="showPage('publications', this)">Publications</a>
         </div>
     </nav>
 
@@ -494,9 +491,9 @@
                     </div>
                 </div>
 
-                <!-- Field Collections Gallery -->
+                <!-- Gallery Gallery -->
                 <div class="gallery-section">
-                    <h2 class="section-title">Field Collections</h2>
+                    <h2 class="section-title">Gallery</h2>
                     <div class="gallery-grid" id="randomGallery">
                         <!-- Random 3 images will be inserted here by JavaScript -->
                     </div>
@@ -708,7 +705,7 @@
         }
 
         // Page navigation
-        function showPage(pageId) {
+        function showPage(pageId, element) {
             // Hide all pages
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
@@ -723,7 +720,9 @@
             document.getElementById(pageId).classList.add('active');
 
             // Add active class to clicked nav link
-            event.target.classList.add('active');
+            if (element) {
+                element.classList.add('active');
+            }
 
             // Scroll to top
             window.scrollTo(0, 0);
