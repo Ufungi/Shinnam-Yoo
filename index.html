@@ -141,8 +141,8 @@
             width: var(--profile-size);
             height: var(--profile-size);
             border-radius: 50%;
-            object-fit: contain;
-            background: white;
+            object-fit: cover;
+            object-position: center;
             border: 4px solid var(--accent);
             box-shadow: 0 15px 40px rgba(61, 41, 22, 0.25);
             margin: 0 auto var(--spacing-md);
@@ -178,7 +178,7 @@
         /* Main Cards */
         .main-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: var(--spacing-md);
             margin-top: var(--spacing-lg);
         }
