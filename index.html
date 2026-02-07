@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academic Journey - Mycological Research</title>
+    <title>Shinnam Yoo - Mycological Research</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Karla:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -24,16 +24,16 @@
             --spacing-lg: 4rem;
 
             /* Sizes */
-            --profile-size: 300px;
-            --nav-height: 80px;
-            --gallery-gap: 1.5rem;
+            --profile-size: 280px;
+            --nav-height: 70px;
+            --card-height: 320px;
 
             /* Transitions */
             --transition-fast: 0.2s;
             --transition-normal: 0.3s;
             --transition-slow: 0.5s;
 
-            /* Z-index layers */
+            /* Z-index */
             --z-nav: 100;
             --z-modal: 1000;
         }
@@ -116,27 +116,25 @@
             padding: 0 var(--spacing-md);
         }
 
-        /* Home Page */
+        /* ===== HOME PAGE (Landing) ===== */
         .home-page {
             background: linear-gradient(135deg, #f5f1e8 0%, #e8dcc8 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
+            justify-content: center;
             padding: var(--spacing-lg) 0;
         }
 
-        .hero-content {
+        .landing-content {
             text-align: center;
-            animation: fadeInUp 1.2s ease-out;
+            max-width: 900px;
+            margin: 0 auto;
+            animation: fadeInUp 1s ease-out;
         }
 
-        .hero-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: var(--spacing-md);
-            margin-bottom: var(--spacing-md);
-            flex-wrap: wrap;
+        .profile-section {
+            margin-bottom: var(--spacing-lg);
         }
 
         .profile-photo {
@@ -146,53 +144,108 @@
             object-fit: contain;
             background: white;
             border: 4px solid var(--accent);
-            box-shadow: 0 10px 30px rgba(61, 41, 22, 0.3);
-            animation: fadeIn 1.5s ease-out;
+            box-shadow: 0 15px 40px rgba(61, 41, 22, 0.25);
+            margin: 0 auto var(--spacing-md);
+            display: block;
+            animation: fadeIn 1.2s ease-out;
         }
 
         .hero-title {
             font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(3rem, 8vw, 6rem);
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
             font-weight: 300;
             color: var(--primary);
             letter-spacing: 0.02em;
-            margin: 0;
+            margin-bottom: var(--spacing-sm);
         }
 
         .hero-subtitle {
-            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            font-size: clamp(1rem, 2.5vw, 1.4rem);
             color: var(--secondary);
-            font-weight: 300;
-            margin-bottom: var(--spacing-md);
+            font-weight: 400;
             font-style: italic;
+            margin-bottom: var(--spacing-md);
         }
 
         .hero-description {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             color: var(--earth);
-            max-width: 800px;
-            margin: 0 auto 3rem;
             line-height: 1.8;
-            text-align: left;
+            max-width: 700px;
+            margin: 0 auto var(--spacing-lg);
         }
 
-        /* Gallery Section */
-        .gallery-section {
-            margin-top: 3rem;
-            padding: 3rem 0;
+        /* Main Cards */
+        .main-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-lg);
         }
 
-        .section-title {
+        .main-card {
+            background: white;
+            border-radius: 12px;
+            padding: var(--spacing-lg);
+            cursor: pointer;
+            transition: transform var(--transition-normal) ease, box-shadow var(--transition-normal) ease;
+            box-shadow: 0 4px 20px rgba(61, 41, 22, 0.1);
+            text-align: center;
+            min-height: var(--card-height);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .main-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(61, 41, 22, 0.2);
+        }
+
+        .card-icon {
+            font-size: 4rem;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .card-title {
             font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(2rem, 5vw, 3rem);
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: var(--spacing-sm);
+            font-weight: 600;
+        }
+
+        .card-description {
+            font-size: 0.95rem;
+            color: var(--earth);
+            line-height: 1.6;
+        }
+
+        /* ===== RESEARCH PAGE ===== */
+        .content-page {
+            background: white;
+            padding: var(--spacing-lg) 0;
+            min-height: calc(100vh - var(--nav-height));
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+            padding-top: var(--spacing-md);
+        }
+
+        .page-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
             font-weight: 400;
             color: var(--primary);
-            margin-bottom: var(--spacing-md);
-            text-align: center;
-            position: relative;
+            margin-bottom: var(--spacing-sm);
         }
 
-        .section-title::after {
+        .page-title::after {
             content: '';
             display: block;
             width: 80px;
@@ -201,77 +254,23 @@
             margin: var(--spacing-sm) auto 0;
         }
 
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: var(--gallery-gap);
-            margin-top: var(--spacing-md);
+        .section-group {
+            margin-bottom: var(--spacing-lg);
         }
 
-        .gallery-item {
-            position: relative;
-            border-radius: 8px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform var(--transition-normal) ease, box-shadow var(--transition-normal) ease;
-            aspect-ratio: 4/5;
-        }
-
-        .gallery-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(61, 41, 22, 0.3);
-        }
-
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        /* Contact Info in Home Page */
-        .contact-inline {
-            display: flex;
-            justify-content: center;
-            gap: var(--gallery-gap);
-            margin-top: var(--spacing-sm);
-            flex-wrap: wrap;
-            max-width: 700px;
-            margin: var(--spacing-sm) auto var(--spacing-md);
-        }
-
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-xs);
-            font-size: 0.85rem;
+        .section-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
             color: var(--secondary);
-        }
-
-        .contact-icon {
-            width: 24px;
-            height: 24px;
-            background: var(--accent);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 0.75rem;
-            flex-shrink: 0;
-        }
-
-        /* Research & Skills Pages */
-        .content-page {
-            background: white;
-            padding: var(--spacing-lg) 0;
+            margin-bottom: var(--spacing-md);
+            text-align: center;
         }
 
         .content-card {
             background: var(--cream);
             padding: var(--spacing-md);
-            margin-bottom: var(--gallery-gap);
-            border-radius: 2px;
+            margin-bottom: var(--spacing-md);
+            border-radius: 8px;
             border-left: 4px solid var(--accent);
             transition: transform var(--transition-normal) ease, box-shadow var(--transition-normal) ease;
         }
@@ -283,7 +282,7 @@
 
         .content-card h3 {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             color: var(--primary);
             margin-bottom: 0.8rem;
             font-weight: 600;
@@ -293,7 +292,7 @@
         }
 
         .content-icon {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
         }
 
         .content-card p, .content-card ul {
@@ -310,7 +309,7 @@
         .content-card li {
             padding: 0.4rem 0;
             position: relative;
-            padding-left: var(--gallery-gap);
+            padding-left: 1.5rem;
         }
 
         .content-card li::before {
@@ -321,12 +320,48 @@
             font-size: 0.7rem;
         }
 
-        /* Publications Page */
+        /* ===== GALLERY PAGE ===== */
+        .gallery-page {
+            background: linear-gradient(135deg, #f5f1e8 0%, #e8dcc8 100%);
+            padding: var(--spacing-lg) 0;
+            min-height: calc(100vh - var(--nav-height));
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-md);
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform var(--transition-normal) ease, box-shadow var(--transition-normal) ease;
+            aspect-ratio: 4/5;
+            box-shadow: 0 4px 15px rgba(61, 41, 22, 0.15);
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 35px rgba(61, 41, 22, 0.25);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* ===== PUBLICATIONS PAGE ===== */
         .pub-card {
             background: var(--cream);
             padding: var(--spacing-md);
-            margin-bottom: var(--gallery-gap);
-            border-radius: 2px;
+            margin-bottom: var(--spacing-md);
+            border-radius: 8px;
             border-left: 4px solid var(--accent);
             transition: transform var(--transition-normal) ease, box-shadow var(--transition-normal) ease;
             cursor: pointer;
@@ -362,12 +397,11 @@
             line-height: 1.6;
         }
 
-        /* Co-Authored Card */
         .co-authored-card {
             margin-top: var(--spacing-md);
             padding: 1.8rem;
             background: var(--cream);
-            border-radius: 2px;
+            border-radius: 8px;
             border-left: 4px solid var(--sage);
         }
 
@@ -384,7 +418,7 @@
             font-size: 0.95rem;
         }
 
-        /* Zoom Modal */
+        /* ===== MODAL ===== */
         .modal {
             display: none;
             position: fixed;
@@ -432,17 +466,68 @@
             outline-offset: 4px;
         }
 
-        /* Footer */
+        /* ===== FOOTER ===== */
         footer {
             background: var(--primary);
             color: var(--cream);
+            padding: var(--spacing-lg) 0 var(--spacing-md);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
             text-align: center;
-            padding: var(--spacing-md) 0;
+        }
+
+        .footer-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            margin-bottom: var(--spacing-md);
+            color: var(--accent);
+        }
+
+        .footer-contacts {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-lg);
+            flex-wrap: wrap;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .footer-contact {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            color: var(--cream);
+        }
+
+        .footer-icon {
+            width: 30px;
+            height: 30px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .footer-bottom {
+            margin-top: var(--spacing-md);
+            padding-top: var(--spacing-md);
+            border-top: 1px solid rgba(245, 241, 232, 0.2);
             font-size: 0.9rem;
             opacity: 0.8;
         }
 
-        /* Animations */
+        .footer-quote {
+            margin-top: var(--spacing-xs);
+            font-size: 0.85rem;
+            font-style: italic;
+        }
+
+        /* ===== ANIMATIONS ===== */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -455,12 +540,8 @@
         }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         @keyframes zoomIn {
@@ -474,13 +555,7 @@
             }
         }
 
-        /* Responsive */
-        @media (max-width: 968px) {
-            .gallery-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             .nav-container {
                 gap: var(--spacing-xs);
@@ -491,13 +566,17 @@
                 padding: 0.4rem 0.7rem;
             }
 
-            .gallery-grid {
+            .main-cards {
                 grid-template-columns: 1fr;
             }
 
-            .contact-inline {
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+
+            .footer-contacts {
                 flex-direction: column;
-                align-items: center;
+                gap: var(--spacing-sm);
             }
         }
     </style>
@@ -507,144 +586,162 @@
     <nav role="navigation" aria-label="Main navigation">
         <div class="nav-container">
             <a href="#home" class="nav-link active" data-page="home">Home</a>
-            <a href="#research" class="nav-link" data-page="research">Research Focus</a>
-            <a href="#skills" class="nav-link" data-page="skills">Technical Expertise</a>
+            <a href="#research" class="nav-link" data-page="research">Research</a>
+            <a href="#gallery" class="nav-link" data-page="gallery">Gallery</a>
             <a href="#publications" class="nav-link" data-page="publications">Publications</a>
         </div>
     </nav>
 
-    <!-- Home Page -->
+    <!-- HOME PAGE (Landing) -->
     <main id="home" class="page active home-page">
         <div class="container">
-            <div class="hero-content">
-                <div class="hero-header">
+            <div class="landing-content">
+                <div class="profile-section">
                     <img src="images/profile.jpg" alt="Shinnam Yoo profile photo" class="profile-photo">
                     <h1 class="hero-title">Shinnam Yoo</h1>
-                </div>
-                <p class="hero-subtitle">Exploring the Hidden World of Mycorrhizal Fungi</p>
-                <p class="hero-description">
-                    My research goal is to understand how fungi interact with their environments and to generate
-                    knowledge that can support carbon sequestration and climate change mitigation. Through my work
-                    on <em>Tricholoma matsutake</em>, I also developed an interest in sustainable agriculture.
-                    I also aim to promote public appreciation of fungi through education inspired by my wild mushroom foraging.
-                </p>
-
-                <!-- Contact Info -->
-                <div class="contact-inline">
-                    <div class="contact-item">
-                        <div class="contact-icon" aria-hidden="true">✉</div>
-                        <span>dbqnchqkq93@snu.ac.kr</span>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon" aria-hidden="true">📍</div>
-                        <span>Seoul National University</span>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon" aria-hidden="true">📞</div>
-                        <span>+82-10-3784-1636</span>
-                    </div>
+                    <p class="hero-subtitle">Mycological Researcher</p>
+                    <p class="hero-description">
+                        Exploring the hidden world of mycorrhizal fungi to understand their environmental interactions
+                        and contribute to carbon sequestration and climate change mitigation strategies.
+                    </p>
                 </div>
 
-                <!-- Gallery Section -->
-                <div class="gallery-section">
-                    <h2 class="section-title">Gallery</h2>
-                    <div class="gallery-grid" id="randomGallery">
-                        <!-- Random 3 images will be inserted here by JavaScript -->
-                    </div>
+                <div class="main-cards">
+                    <a href="#research" class="main-card" data-page="research">
+                        <div class="card-icon" aria-hidden="true">🔬</div>
+                        <h2 class="card-title">Research</h2>
+                        <p class="card-description">
+                            Explore my work in ectomycorrhizal ecology, multi-omics, and sustainable agriculture
+                        </p>
+                    </a>
+
+                    <a href="#gallery" class="main-card" data-page="gallery">
+                        <div class="card-icon" aria-hidden="true">📸</div>
+                        <h2 class="card-title">Gallery</h2>
+                        <p class="card-description">
+                            View my field collection of mushroom specimens from various ecosystems
+                        </p>
+                    </a>
+
+                    <a href="#publications" class="main-card" data-page="publications">
+                        <div class="card-icon" aria-hidden="true">📄</div>
+                        <h2 class="card-title">Publications</h2>
+                        <p class="card-description">
+                            Browse my peer-reviewed research in leading mycology journals
+                        </p>
+                    </a>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Research Focus Page -->
+    <!-- RESEARCH PAGE -->
     <div id="research" class="page content-page">
         <div class="container">
-            <h2 class="section-title">Research Focus</h2>
-
-            <div class="content-card">
-                <h3><span class="content-icon" aria-hidden="true">🔬</span> Ectomycorrhizal Ecology & Microbiome</h3>
-                <p>
-                    Investigating core microbiomes of ectomycorrhizal fungi through cross-study phylogenetic
-                    analysis and metabarcoding. Specialized in <em>Tricholoma matsutake</em> holobiont systems,
-                    fine-scale community assembly, and spatial distribution patterns in forest ecosystems.
-                </p>
+            <div class="page-header">
+                <h1 class="page-title">Research</h1>
             </div>
 
-            <div class="content-card">
-                <h3><span class="content-icon" aria-hidden="true">🧬</span> Multi-Omics & Systems Biology</h3>
-                <p>
-                    Integrating transcriptomics, metabolomics, and genome-scale metabolic modeling to understand
-                    fungal physiology and microbe-environment interactions. Development of bioinformatics pipelines
-                    for heterogeneous amplicon sequence analysis using phylogenetic approaches.
-                </p>
+            <div class="section-group">
+                <h2 class="section-subtitle">Research Focus</h2>
+
+                <div class="content-card">
+                    <h3><span class="content-icon" aria-hidden="true">🔬</span> Ectomycorrhizal Ecology & Microbiome</h3>
+                    <p>
+                        Investigating core microbiomes of ectomycorrhizal fungi through cross-study phylogenetic
+                        analysis and metabarcoding. Specialized in <em>Tricholoma matsutake</em> holobiont systems,
+                        fine-scale community assembly, and spatial distribution patterns in forest ecosystems.
+                    </p>
+                </div>
+
+                <div class="content-card">
+                    <h3><span class="content-icon" aria-hidden="true">🧬</span> Multi-Omics & Systems Biology</h3>
+                    <p>
+                        Integrating transcriptomics, metabolomics, and genome-scale metabolic modeling to understand
+                        fungal physiology and microbe-environment interactions. Development of bioinformatics pipelines
+                        for heterogeneous amplicon sequence analysis using phylogenetic approaches.
+                    </p>
+                </div>
+
+                <div class="content-card">
+                    <h3><span class="content-icon" aria-hidden="true">🌲</span> Conservation & Sustainable Agriculture</h3>
+                    <p>
+                        Bridging fundamental mycology with climate change mitigation through carbon sequestration research.
+                        Developing cultivation technologies for valuable mushroom species and promoting public appreciation
+                        of fungi through education and wild mushroom foraging.
+                    </p>
+                </div>
             </div>
 
-            <div class="content-card">
-                <h3><span class="content-icon" aria-hidden="true">🌲</span> Conservation & Sustainable Agriculture</h3>
-                <p>
-                    Bridging fundamental mycology with climate change mitigation through carbon sequestration research.
-                    Developing cultivation technologies for valuable mushroom species and promoting public appreciation
-                    of fungi through education and wild mushroom foraging.
-                </p>
+            <div class="section-group">
+                <h2 class="section-subtitle">Technical Expertise</h2>
+
+                <div class="content-card">
+                    <h3><span class="content-icon" aria-hidden="true">🧪</span> Field & Experimental</h3>
+                    <ul>
+                        <li>Environmental sampling (soil, roots, fruiting bodies)</li>
+                        <li>Morphological identification of fungi</li>
+                        <li>Microbial isolation, cultivation, preservation</li>
+                        <li>Growth assays & Phenotype MicroArray™</li>
+                        <li>NGS library preparation optimization</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3><span class="content-icon" aria-hidden="true">💻</span> Bioinformatics & Analysis</h3>
+                    <ul>
+                        <li>R, Linux, conda environments</li>
+                        <li>Metabarcoding (QIIME2, MEGAN6, microeco)</li>
+                        <li>RNA-seq & differential gene expression</li>
+                        <li>Genome-scale metabolic modeling (Pathway Tools)</li>
+                        <li>Multivariate, network, spatial analyses</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3><span class="content-icon" aria-hidden="true">🧬</span> Phylogenetics & Genomics</h3>
+                    <ul>
+                        <li>Bayesian phylogenetic inference (BEAST2)</li>
+                        <li>DNA barcoding & phylogenetic identification</li>
+                        <li>Genome annotation & functional analysis</li>
+                        <li>Target-enrichment sequencing</li>
+                        <li>Cross-study phylogenetic placement</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3><span class="content-icon" aria-hidden="true">👨‍🏫</span> Communication & Teaching</h3>
+                    <ul>
+                        <li>English (professional), Korean (native)</li>
+                        <li>Lead TA for field taxonomy courses</li>
+                        <li>Grant proposal & report writing</li>
+                        <li>Scientific visualization (Inkscape, ImageJ)</li>
+                        <li>Outstanding Teaching Award (2019)</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Technical Expertise Page -->
-    <div id="skills" class="page content-page">
+    <!-- GALLERY PAGE -->
+    <div id="gallery" class="page gallery-page">
         <div class="container">
-            <h2 class="section-title">Technical Expertise</h2>
-
-            <div class="content-card">
-                <h3><span class="content-icon" aria-hidden="true">🧪</span> Field & Experimental</h3>
-                <ul>
-                    <li>Environmental sampling (soil, roots, fruiting bodies)</li>
-                    <li>Morphological identification of fungi</li>
-                    <li>Microbial isolation, cultivation, preservation</li>
-                    <li>Growth assays & Phenotype MicroArray™</li>
-                    <li>NGS library preparation optimization</li>
-                </ul>
+            <div class="page-header">
+                <h1 class="page-title">Gallery</h1>
             </div>
 
-            <div class="content-card">
-                <h3><span class="content-icon" aria-hidden="true">💻</span> Bioinformatics & Analysis</h3>
-                <ul>
-                    <li>R, Linux, conda environments</li>
-                    <li>Metabarcoding (QIIME2, MEGAN6, microeco)</li>
-                    <li>RNA-seq & differential gene expression</li>
-                    <li>Genome-scale metabolic modeling (Pathway Tools)</li>
-                    <li>Multivariate, network, spatial analyses</li>
-                </ul>
-            </div>
-
-            <div class="content-card">
-                <h3><span class="content-icon" aria-hidden="true">🧬</span> Phylogenetics & Genomics</h3>
-                <ul>
-                    <li>Bayesian phylogenetic inference (BEAST2)</li>
-                    <li>DNA barcoding & phylogenetic identification</li>
-                    <li>Genome annotation & functional analysis</li>
-                    <li>Target-enrichment sequencing</li>
-                    <li>Cross-study phylogenetic placement</li>
-                </ul>
-            </div>
-
-            <div class="content-card">
-                <h3><span class="content-icon" aria-hidden="true">👨‍🏫</span> Communication & Teaching</h3>
-                <ul>
-                    <li>English (professional), Korean (native)</li>
-                    <li>Lead TA for field taxonomy courses</li>
-                    <li>Grant proposal & report writing</li>
-                    <li>Scientific visualization (Inkscape, ImageJ)</li>
-                    <li>Outstanding Teaching Award (2019)</li>
-                </ul>
+            <div class="gallery-grid" id="fullGallery">
+                <!-- All 23 images will be inserted here by JavaScript -->
             </div>
         </div>
     </div>
 
-    <!-- Publications Page -->
+    <!-- PUBLICATIONS PAGE -->
     <div id="publications" class="page content-page">
         <div class="container">
-            <h2 class="section-title">Selected Publications</h2>
+            <div class="page-header">
+                <h1 class="page-title">Publications</h1>
+            </div>
 
             <a href="https://doi.org/10.1186/s40168-025-02329-x" target="_blank" rel="noopener" class="pub-card">
                 <div class="pub-title">
@@ -691,15 +788,36 @@
         </div>
     </div>
 
-    <!-- Footer -->
+    <!-- FOOTER (Contact) -->
     <footer>
-        <p>&copy; 2026 Shinnam Yoo | Mycological Research</p>
-        <p style="margin-top: var(--spacing-xs); font-size: 0.85rem;">
-            "The good life is one inspired by love and guided by knowledge" - Bertrand Russell
-        </p>
+        <div class="footer-content">
+            <h2 class="footer-title">Get in Touch</h2>
+
+            <div class="footer-contacts">
+                <div class="footer-contact">
+                    <div class="footer-icon" aria-hidden="true">✉</div>
+                    <span>dbqnchqkq93@snu.ac.kr</span>
+                </div>
+                <div class="footer-contact">
+                    <div class="footer-icon" aria-hidden="true">📍</div>
+                    <span>Seoul National University, Seoul, Republic of Korea</span>
+                </div>
+                <div class="footer-contact">
+                    <div class="footer-icon" aria-hidden="true">📞</div>
+                    <span>+82-10-3784-1636</span>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 Shinnam Yoo | Mycological Research</p>
+                <p class="footer-quote">
+                    "The good life is one inspired by love and guided by knowledge" - Bertrand Russell
+                </p>
+            </div>
+        </div>
     </footer>
 
-    <!-- Zoom Modal -->
+    <!-- ZOOM MODAL -->
     <div id="imageModal" class="modal" role="dialog" aria-modal="true" aria-label="Image gallery modal">
         <span class="modal-close" aria-label="Close modal">&times;</span>
         <img class="modal-content" id="modalImage" alt="">
@@ -709,9 +827,7 @@
     (function() {
         'use strict';
 
-        // App namespace
         const App = {
-            // All mushroom images
             mushroomImages: [
                 'images/Mushrooms/Asterophora lycoperdoides (덧붙이버섯), 주로 무당버섯 위에 발생 (9).JPG',
                 'images/Mushrooms/IMG_1713.JPG',
@@ -738,60 +854,44 @@
                 'images/Mushrooms/IMG_4976.JPG'
             ],
 
-            // Navigation module
             navigation: {
                 init() {
-                    const nav = document.querySelector('nav');
-                    if (!nav) return;
-
-                    nav.addEventListener('click', (e) => {
-                        if (e.target.classList.contains('nav-link')) {
+                    // Handle both nav links and card clicks
+                    document.addEventListener('click', (e) => {
+                        const link = e.target.closest('[data-page]');
+                        if (link) {
                             e.preventDefault();
-                            const pageId = e.target.dataset.page;
-                            this.showPage(pageId, e.target);
+                            const pageId = link.dataset.page;
+                            this.showPage(pageId, link);
                         }
                     });
                 },
 
                 showPage(pageId, element) {
-                    // Hide all pages
                     document.querySelectorAll('.page').forEach(page => {
                         page.classList.remove('active');
                     });
 
-                    // Remove active class from all nav links
                     document.querySelectorAll('.nav-link').forEach(link => {
                         link.classList.remove('active');
                     });
 
-                    // Show selected page
                     const targetPage = document.getElementById(pageId);
                     if (targetPage) {
                         targetPage.classList.add('active');
                     }
 
-                    // Add active class to clicked nav link
-                    if (element) {
-                        element.classList.add('active');
+                    // Update nav active state
+                    const navLink = document.querySelector(`.nav-link[data-page="${pageId}"]`);
+                    if (navLink) {
+                        navLink.classList.add('active');
                     }
 
-                    // Scroll to top
                     window.scrollTo(0, 0);
                 }
             },
 
-            // Gallery module
             gallery: {
-                // Fisher-Yates shuffle algorithm
-                shuffle(array) {
-                    const arr = [...array];
-                    for (let i = arr.length - 1; i > 0; i--) {
-                        const j = Math.floor(Math.random() * (i + 1));
-                        [arr[i], arr[j]] = [arr[j], arr[i]];
-                    }
-                    return arr;
-                },
-
                 getAltText(imgSrc) {
                     const filename = imgSrc.split('/').pop();
                     if (filename.includes('Asterophora')) {
@@ -800,16 +900,13 @@
                     return 'Mushroom field collection specimen';
                 },
 
-                showRandom() {
-                    const galleryEl = document.getElementById('randomGallery');
+                loadFullGallery() {
+                    const galleryEl = document.getElementById('fullGallery');
                     if (!galleryEl) return;
-
-                    const shuffled = this.shuffle(App.mushroomImages);
-                    const selected = shuffled.slice(0, 3);
 
                     const fragment = document.createDocumentFragment();
 
-                    selected.forEach(imgSrc => {
+                    App.mushroomImages.forEach(imgSrc => {
                         const div = document.createElement('div');
                         div.className = 'gallery-item';
 
@@ -825,16 +922,14 @@
                         fragment.appendChild(div);
                     });
 
-                    galleryEl.innerHTML = '';
                     galleryEl.appendChild(fragment);
                 },
 
                 init() {
-                    this.showRandom();
+                    this.loadFullGallery();
                 }
             },
 
-            // Modal module
             modal: {
                 element: null,
                 closeBtn: null,
@@ -847,14 +942,12 @@
 
                     if (!this.element) return;
 
-                    // Click on backdrop to close
                     this.element.addEventListener('click', (e) => {
                         if (e.target === this.element || e.target === this.closeBtn) {
                             this.close();
                         }
                     });
 
-                    // ESC key to close
                     document.addEventListener('keydown', (e) => {
                         if (e.key === 'Escape' && this.element.classList.contains('active')) {
                             this.close();
@@ -879,7 +972,6 @@
                 }
             },
 
-            // Initialize all modules
             init() {
                 this.navigation.init();
                 this.gallery.init();
@@ -887,7 +979,6 @@
             }
         };
 
-        // Initialize app when DOM is ready
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => App.init());
         } else {
