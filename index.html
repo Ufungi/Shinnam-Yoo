@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Karla:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
+            /* Colors */
             --primary: #3d2916;
             --secondary: #8b6f47;
             --accent: #c19a6b;
@@ -15,6 +16,26 @@
             --sage: #9cae8f;
             --forest: #4a5f3a;
             --mushroom: #d4c5b0;
+
+            /* Spacing */
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 2rem;
+            --spacing-lg: 4rem;
+
+            /* Sizes */
+            --profile-size: 300px;
+            --nav-height: 80px;
+            --gallery-gap: 1.5rem;
+
+            /* Transitions */
+            --transition-fast: 0.2s;
+            --transition-normal: 0.3s;
+            --transition-slow: 0.5s;
+
+            /* Z-index layers */
+            --z-nav: 100;
+            --z-modal: 1000;
         }
 
         * {
@@ -43,18 +64,18 @@
             right: 0;
             background: rgba(61, 41, 22, 0.95);
             backdrop-filter: blur(10px);
-            z-index: 100;
-            padding: 1rem 0;
+            z-index: var(--z-nav);
+            padding: var(--spacing-sm) 0;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .nav-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 2rem;
+            padding: 0 var(--spacing-md);
             display: flex;
             justify-content: center;
-            gap: 2rem;
+            gap: var(--spacing-md);
         }
 
         .nav-link {
@@ -62,9 +83,9 @@
             text-decoration: none;
             font-size: 1rem;
             font-weight: 500;
-            padding: 0.5rem 1rem;
+            padding: var(--spacing-xs) var(--spacing-sm);
             border-radius: 4px;
-            transition: background 0.3s ease, color 0.3s ease;
+            transition: background var(--transition-normal) ease, color var(--transition-normal) ease;
             cursor: pointer;
         }
 
@@ -73,11 +94,16 @@
             color: var(--primary);
         }
 
+        .nav-link:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
         /* Page Container */
         .page {
             display: none;
             min-height: 100vh;
-            padding-top: 80px;
+            padding-top: var(--nav-height);
         }
 
         .page.active {
@@ -87,7 +113,7 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 2rem;
+            padding: 0 var(--spacing-md);
         }
 
         /* Home Page */
@@ -96,7 +122,7 @@
             min-height: 100vh;
             display: flex;
             align-items: center;
-            padding: 4rem 0;
+            padding: var(--spacing-lg) 0;
         }
 
         .hero-content {
@@ -108,14 +134,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 2rem;
-            margin-bottom: 2rem;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
             flex-wrap: wrap;
         }
 
         .profile-photo {
-            width: 300px;
-            height: 300px;
+            width: var(--profile-size);
+            height: var(--profile-size);
             border-radius: 50%;
             object-fit: contain;
             background: white;
@@ -137,7 +163,7 @@
             font-size: clamp(1.2rem, 3vw, 1.8rem);
             color: var(--secondary);
             font-weight: 300;
-            margin-bottom: 2rem;
+            margin-bottom: var(--spacing-md);
             font-style: italic;
         }
 
@@ -150,7 +176,7 @@
             text-align: left;
         }
 
-        /* Gallery Gallery */
+        /* Gallery Section */
         .gallery-section {
             margin-top: 3rem;
             padding: 3rem 0;
@@ -161,7 +187,7 @@
             font-size: clamp(2rem, 5vw, 3rem);
             font-weight: 400;
             color: var(--primary);
-            margin-bottom: 2rem;
+            margin-bottom: var(--spacing-md);
             text-align: center;
             position: relative;
         }
@@ -172,14 +198,14 @@
             width: 80px;
             height: 3px;
             background: var(--accent);
-            margin: 1rem auto 0;
+            margin: var(--spacing-sm) auto 0;
         }
 
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-            margin-top: 2rem;
+            gap: var(--gallery-gap);
+            margin-top: var(--spacing-md);
         }
 
         .gallery-item {
@@ -187,7 +213,7 @@
             border-radius: 8px;
             overflow: hidden;
             cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform var(--transition-normal) ease, box-shadow var(--transition-normal) ease;
             aspect-ratio: 4/5;
         }
 
@@ -207,17 +233,17 @@
         .contact-inline {
             display: flex;
             justify-content: center;
-            gap: 1.5rem;
-            margin-top: 1rem;
+            gap: var(--gallery-gap);
+            margin-top: var(--spacing-sm);
             flex-wrap: wrap;
             max-width: 700px;
-            margin: 1rem auto 2rem;
+            margin: var(--spacing-sm) auto var(--spacing-md);
         }
 
         .contact-item {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: var(--spacing-xs);
             font-size: 0.85rem;
             color: var(--secondary);
         }
@@ -238,16 +264,16 @@
         /* Research & Skills Pages */
         .content-page {
             background: white;
-            padding: 4rem 0;
+            padding: var(--spacing-lg) 0;
         }
 
         .content-card {
             background: var(--cream);
-            padding: 2rem;
-            margin-bottom: 1.5rem;
+            padding: var(--spacing-md);
+            margin-bottom: var(--gallery-gap);
             border-radius: 2px;
             border-left: 4px solid var(--accent);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform var(--transition-normal) ease, box-shadow var(--transition-normal) ease;
         }
 
         .content-card:hover {
@@ -263,7 +289,7 @@
             font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: var(--spacing-sm);
         }
 
         .content-icon {
@@ -284,7 +310,7 @@
         .content-card li {
             padding: 0.4rem 0;
             position: relative;
-            padding-left: 1.5rem;
+            padding-left: var(--gallery-gap);
         }
 
         .content-card li::before {
@@ -298,11 +324,11 @@
         /* Publications Page */
         .pub-card {
             background: var(--cream);
-            padding: 2rem;
-            margin-bottom: 1.5rem;
+            padding: var(--spacing-md);
+            margin-bottom: var(--gallery-gap);
             border-radius: 2px;
             border-left: 4px solid var(--accent);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform var(--transition-normal) ease, box-shadow var(--transition-normal) ease;
             cursor: pointer;
             text-decoration: none;
             display: block;
@@ -336,17 +362,39 @@
             line-height: 1.6;
         }
 
+        /* Co-Authored Card */
+        .co-authored-card {
+            margin-top: var(--spacing-md);
+            padding: 1.8rem;
+            background: var(--cream);
+            border-radius: 2px;
+            border-left: 4px solid var(--sage);
+        }
+
+        .co-authored-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            color: var(--primary);
+            margin-bottom: 0.8rem;
+        }
+
+        .co-authored-card p {
+            color: var(--earth);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
         /* Zoom Modal */
         .modal {
             display: none;
             position: fixed;
-            z-index: 1000;
+            z-index: var(--z-modal);
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.95);
-            animation: fadeIn 0.3s ease;
+            animation: fadeIn var(--transition-normal) ease;
         }
 
         .modal.active {
@@ -359,23 +407,29 @@
             max-width: 90%;
             max-height: 90%;
             object-fit: contain;
-            animation: zoomIn 0.3s ease;
+            animation: zoomIn var(--transition-normal) ease;
+            pointer-events: none;
         }
 
         .modal-close {
             position: absolute;
-            top: 2rem;
+            top: var(--spacing-md);
             right: 3rem;
             color: white;
             font-size: 3rem;
             font-weight: 300;
             cursor: pointer;
-            transition: transform 0.3s ease;
-            z-index: 1001;
+            transition: transform var(--transition-normal) ease;
+            z-index: calc(var(--z-modal) + 1);
         }
 
         .modal-close:hover {
             transform: scale(1.2);
+        }
+
+        .modal-close:focus-visible {
+            outline: 2px solid white;
+            outline-offset: 4px;
         }
 
         /* Footer */
@@ -383,7 +437,7 @@
             background: var(--primary);
             color: var(--cream);
             text-align: center;
-            padding: 2rem 0;
+            padding: var(--spacing-md) 0;
             font-size: 0.9rem;
             opacity: 0.8;
         }
@@ -429,7 +483,7 @@
 
         @media (max-width: 768px) {
             .nav-container {
-                gap: 0.5rem;
+                gap: var(--spacing-xs);
             }
 
             .nav-link {
@@ -450,21 +504,21 @@
 </head>
 <body>
     <!-- Navigation -->
-    <nav>
+    <nav role="navigation" aria-label="Main navigation">
         <div class="nav-container">
-            <a class="nav-link active" onclick="showPage('home', this)">Home</a>
-            <a class="nav-link" onclick="showPage('research', this)">Research Focus</a>
-            <a class="nav-link" onclick="showPage('skills', this)">Technical Expertise</a>
-            <a class="nav-link" onclick="showPage('publications', this)">Publications</a>
+            <a href="#home" class="nav-link active" data-page="home">Home</a>
+            <a href="#research" class="nav-link" data-page="research">Research Focus</a>
+            <a href="#skills" class="nav-link" data-page="skills">Technical Expertise</a>
+            <a href="#publications" class="nav-link" data-page="publications">Publications</a>
         </div>
     </nav>
 
     <!-- Home Page -->
-    <div id="home" class="page active home-page">
+    <main id="home" class="page active home-page">
         <div class="container">
             <div class="hero-content">
                 <div class="hero-header">
-                    <img src="images/profile.jpg" alt="Shinnam Yoo" class="profile-photo">
+                    <img src="images/profile.jpg" alt="Shinnam Yoo profile photo" class="profile-photo">
                     <h1 class="hero-title">Shinnam Yoo</h1>
                 </div>
                 <p class="hero-subtitle">Exploring the Hidden World of Mycorrhizal Fungi</p>
@@ -478,20 +532,20 @@
                 <!-- Contact Info -->
                 <div class="contact-inline">
                     <div class="contact-item">
-                        <div class="contact-icon">✉</div>
+                        <div class="contact-icon" aria-hidden="true">✉</div>
                         <span>dbqnchqkq93@snu.ac.kr</span>
                     </div>
                     <div class="contact-item">
-                        <div class="contact-icon">📍</div>
+                        <div class="contact-icon" aria-hidden="true">📍</div>
                         <span>Seoul National University</span>
                     </div>
                     <div class="contact-item">
-                        <div class="contact-icon">📞</div>
+                        <div class="contact-icon" aria-hidden="true">📞</div>
                         <span>+82-10-3784-1636</span>
                     </div>
                 </div>
 
-                <!-- Gallery Gallery -->
+                <!-- Gallery Section -->
                 <div class="gallery-section">
                     <h2 class="section-title">Gallery</h2>
                     <div class="gallery-grid" id="randomGallery">
@@ -500,7 +554,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
     <!-- Research Focus Page -->
     <div id="research" class="page content-page">
@@ -508,7 +562,7 @@
             <h2 class="section-title">Research Focus</h2>
 
             <div class="content-card">
-                <h3><span class="content-icon">🔬</span> Ectomycorrhizal Ecology & Microbiome</h3>
+                <h3><span class="content-icon" aria-hidden="true">🔬</span> Ectomycorrhizal Ecology & Microbiome</h3>
                 <p>
                     Investigating core microbiomes of ectomycorrhizal fungi through cross-study phylogenetic
                     analysis and metabarcoding. Specialized in <em>Tricholoma matsutake</em> holobiont systems,
@@ -517,7 +571,7 @@
             </div>
 
             <div class="content-card">
-                <h3><span class="content-icon">🧬</span> Multi-Omics & Systems Biology</h3>
+                <h3><span class="content-icon" aria-hidden="true">🧬</span> Multi-Omics & Systems Biology</h3>
                 <p>
                     Integrating transcriptomics, metabolomics, and genome-scale metabolic modeling to understand
                     fungal physiology and microbe-environment interactions. Development of bioinformatics pipelines
@@ -526,7 +580,7 @@
             </div>
 
             <div class="content-card">
-                <h3><span class="content-icon">🌲</span> Conservation & Sustainable Agriculture</h3>
+                <h3><span class="content-icon" aria-hidden="true">🌲</span> Conservation & Sustainable Agriculture</h3>
                 <p>
                     Bridging fundamental mycology with climate change mitigation through carbon sequestration research.
                     Developing cultivation technologies for valuable mushroom species and promoting public appreciation
@@ -542,7 +596,7 @@
             <h2 class="section-title">Technical Expertise</h2>
 
             <div class="content-card">
-                <h3><span class="content-icon">🧪</span> Field & Experimental</h3>
+                <h3><span class="content-icon" aria-hidden="true">🧪</span> Field & Experimental</h3>
                 <ul>
                     <li>Environmental sampling (soil, roots, fruiting bodies)</li>
                     <li>Morphological identification of fungi</li>
@@ -553,7 +607,7 @@
             </div>
 
             <div class="content-card">
-                <h3><span class="content-icon">💻</span> Bioinformatics & Analysis</h3>
+                <h3><span class="content-icon" aria-hidden="true">💻</span> Bioinformatics & Analysis</h3>
                 <ul>
                     <li>R, Linux, conda environments</li>
                     <li>Metabarcoding (QIIME2, MEGAN6, microeco)</li>
@@ -564,7 +618,7 @@
             </div>
 
             <div class="content-card">
-                <h3><span class="content-icon">🧬</span> Phylogenetics & Genomics</h3>
+                <h3><span class="content-icon" aria-hidden="true">🧬</span> Phylogenetics & Genomics</h3>
                 <ul>
                     <li>Bayesian phylogenetic inference (BEAST2)</li>
                     <li>DNA barcoding & phylogenetic identification</li>
@@ -575,7 +629,7 @@
             </div>
 
             <div class="content-card">
-                <h3><span class="content-icon">👨‍🏫</span> Communication & Teaching</h3>
+                <h3><span class="content-icon" aria-hidden="true">👨‍🏫</span> Communication & Teaching</h3>
                 <ul>
                     <li>English (professional), Korean (native)</li>
                     <li>Lead TA for field taxonomy courses</li>
@@ -592,7 +646,7 @@
         <div class="container">
             <h2 class="section-title">Selected Publications</h2>
 
-            <a href="https://doi.org/10.1186/s40168-025-02329-x" target="_blank" class="pub-card">
+            <a href="https://doi.org/10.1186/s40168-025-02329-x" target="_blank" rel="noopener" class="pub-card">
                 <div class="pub-title">
                     Functionally distinct core microbes of Tricholoma matsutake revealed by cross-study analysis
                 </div>
@@ -602,7 +656,7 @@
                 </div>
             </a>
 
-            <a href="https://doi.org/10.1007/s00572-022-01088-z" target="_blank" class="pub-card">
+            <a href="https://doi.org/10.1007/s00572-022-01088-z" target="_blank" rel="noopener" class="pub-card">
                 <div class="pub-title">
                     Exploring Fine-Scale Assembly of Ectomycorrhizal Fungal Communities Through
                     Phylogenetic and Spatial Distribution Analyses
@@ -613,7 +667,7 @@
                 </div>
             </a>
 
-            <a href="https://doi.org/10.1080/12298093.2022.2097364" target="_blank" class="pub-card">
+            <a href="https://doi.org/10.1080/12298093.2022.2097364" target="_blank" rel="noopener" class="pub-card">
                 <div class="pub-title">
                     Fourteen Unrecorded Species of Agaricales Underw. (Agaricomycetes, Basidiomycota)
                     from the Republic of Korea
@@ -624,11 +678,9 @@
                 </div>
             </a>
 
-            <div style="margin-top: 2rem; padding: 1.8rem; background: var(--cream); border-radius: 2px; border-left: 4px solid var(--sage);">
-                <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--primary); margin-bottom: 0.8rem;">
-                    Co-Authored Publications
-                </h3>
-                <p style="color: var(--earth); line-height: 1.7; font-size: 0.95rem;">
+            <div class="co-authored-card">
+                <h3>Co-Authored Publications</h3>
+                <p>
                     Contributing author on 10+ peer-reviewed publications including research in
                     <em>IMA Fungus</em> (2026), <em>Journal of Microbiology and Biotechnology</em> (2025),
                     <em>Journal of Microbiology</em> (2023, 2025), <em>Frontiers in Microbiology</em> (2020),
@@ -642,118 +694,206 @@
     <!-- Footer -->
     <footer>
         <p>&copy; 2026 Shinnam Yoo | Mycological Research</p>
-        <p style="margin-top: 0.5rem; font-size: 0.85rem;">
+        <p style="margin-top: var(--spacing-xs); font-size: 0.85rem;">
             "The good life is one inspired by love and guided by knowledge" - Bertrand Russell
         </p>
     </footer>
 
     <!-- Zoom Modal -->
-    <div id="imageModal" class="modal" onclick="closeModal()">
-        <span class="modal-close">&times;</span>
-        <img class="modal-content" id="modalImage">
+    <div id="imageModal" class="modal" role="dialog" aria-modal="true" aria-label="Image gallery modal">
+        <span class="modal-close" aria-label="Close modal">&times;</span>
+        <img class="modal-content" id="modalImage" alt="">
     </div>
 
     <script>
-        // All mushroom images
-        const mushroomImages = [
-            'images/Mushrooms/Asterophora lycoperdoides (덧붙이버섯), 주로 무당버섯 위에 발생 (9).JPG',
-            'images/Mushrooms/IMG_1713.JPG',
-            'images/Mushrooms/IMG_1772.JPG',
-            'images/Mushrooms/IMG_1781.JPG',
-            'images/Mushrooms/IMG_1801.JPG',
-            'images/Mushrooms/IMG_1858.JPG',
-            'images/Mushrooms/IMG_1927.JPG',
-            'images/Mushrooms/IMG_1951.JPG',
-            'images/Mushrooms/IMG_2016.JPG',
-            'images/Mushrooms/IMG_2037.JPG',
-            'images/Mushrooms/IMG_3315.JPG',
-            'images/Mushrooms/IMG_3450.JPG',
-            'images/Mushrooms/IMG_3639.JPG',
-            'images/Mushrooms/IMG_3651.JPG',
-            'images/Mushrooms/IMG_3676.JPG',
-            'images/Mushrooms/IMG_3690.JPG',
-            'images/Mushrooms/IMG_3717.JPG',
-            'images/Mushrooms/IMG_4430.JPG',
-            'images/Mushrooms/IMG_4453.JPG',
-            'images/Mushrooms/IMG_4562 (2).JPG',
-            'images/Mushrooms/IMG_4873.JPG',
-            'images/Mushrooms/IMG_4931.JPG',
-            'images/Mushrooms/IMG_4976.JPG'
-        ];
+    (function() {
+        'use strict';
 
-        // Show random 3 images on page load
-        function showRandomImages() {
-            const gallery = document.getElementById('randomGallery');
-            gallery.innerHTML = '';
+        // App namespace
+        const App = {
+            // All mushroom images
+            mushroomImages: [
+                'images/Mushrooms/Asterophora lycoperdoides (덧붙이버섯), 주로 무당버섯 위에 발생 (9).JPG',
+                'images/Mushrooms/IMG_1713.JPG',
+                'images/Mushrooms/IMG_1772.JPG',
+                'images/Mushrooms/IMG_1781.JPG',
+                'images/Mushrooms/IMG_1801.JPG',
+                'images/Mushrooms/IMG_1858.JPG',
+                'images/Mushrooms/IMG_1927.JPG',
+                'images/Mushrooms/IMG_1951.JPG',
+                'images/Mushrooms/IMG_2016.JPG',
+                'images/Mushrooms/IMG_2037.JPG',
+                'images/Mushrooms/IMG_3315.JPG',
+                'images/Mushrooms/IMG_3450.JPG',
+                'images/Mushrooms/IMG_3639.JPG',
+                'images/Mushrooms/IMG_3651.JPG',
+                'images/Mushrooms/IMG_3676.JPG',
+                'images/Mushrooms/IMG_3690.JPG',
+                'images/Mushrooms/IMG_3717.JPG',
+                'images/Mushrooms/IMG_4430.JPG',
+                'images/Mushrooms/IMG_4453.JPG',
+                'images/Mushrooms/IMG_4562 (2).JPG',
+                'images/Mushrooms/IMG_4873.JPG',
+                'images/Mushrooms/IMG_4931.JPG',
+                'images/Mushrooms/IMG_4976.JPG'
+            ],
 
-            // Shuffle array and get first 3
-            const shuffled = [...mushroomImages].sort(() => Math.random() - 0.5);
-            const selected = shuffled.slice(0, 3);
+            // Navigation module
+            navigation: {
+                init() {
+                    const nav = document.querySelector('nav');
+                    if (!nav) return;
 
-            selected.forEach(imgSrc => {
-                const div = document.createElement('div');
-                div.className = 'gallery-item';
-                div.onclick = function() { openModal(this); };
+                    nav.addEventListener('click', (e) => {
+                        if (e.target.classList.contains('nav-link')) {
+                            e.preventDefault();
+                            const pageId = e.target.dataset.page;
+                            this.showPage(pageId, e.target);
+                        }
+                    });
+                },
 
-                const img = document.createElement('img');
-                img.src = imgSrc;
-                img.alt = 'Mushroom Collection';
+                showPage(pageId, element) {
+                    // Hide all pages
+                    document.querySelectorAll('.page').forEach(page => {
+                        page.classList.remove('active');
+                    });
 
-                div.appendChild(img);
-                gallery.appendChild(div);
-            });
-        }
+                    // Remove active class from all nav links
+                    document.querySelectorAll('.nav-link').forEach(link => {
+                        link.classList.remove('active');
+                    });
 
-        // Page navigation
-        function showPage(pageId, element) {
-            // Hide all pages
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-            });
+                    // Show selected page
+                    const targetPage = document.getElementById(pageId);
+                    if (targetPage) {
+                        targetPage.classList.add('active');
+                    }
 
-            // Remove active class from all nav links
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-            });
+                    // Add active class to clicked nav link
+                    if (element) {
+                        element.classList.add('active');
+                    }
 
-            // Show selected page
-            document.getElementById(pageId).classList.add('active');
+                    // Scroll to top
+                    window.scrollTo(0, 0);
+                }
+            },
 
-            // Add active class to clicked nav link
-            if (element) {
-                element.classList.add('active');
+            // Gallery module
+            gallery: {
+                // Fisher-Yates shuffle algorithm
+                shuffle(array) {
+                    const arr = [...array];
+                    for (let i = arr.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [arr[i], arr[j]] = [arr[j], arr[i]];
+                    }
+                    return arr;
+                },
+
+                getAltText(imgSrc) {
+                    const filename = imgSrc.split('/').pop();
+                    if (filename.includes('Asterophora')) {
+                        return 'Asterophora lycoperdoides mushroom specimen';
+                    }
+                    return 'Mushroom field collection specimen';
+                },
+
+                showRandom() {
+                    const galleryEl = document.getElementById('randomGallery');
+                    if (!galleryEl) return;
+
+                    const shuffled = this.shuffle(App.mushroomImages);
+                    const selected = shuffled.slice(0, 3);
+
+                    const fragment = document.createDocumentFragment();
+
+                    selected.forEach(imgSrc => {
+                        const div = document.createElement('div');
+                        div.className = 'gallery-item';
+
+                        const img = document.createElement('img');
+                        img.src = imgSrc;
+                        img.alt = this.getAltText(imgSrc);
+                        img.loading = 'lazy';
+                        img.decoding = 'async';
+
+                        div.appendChild(img);
+                        div.addEventListener('click', () => App.modal.open(imgSrc, img.alt));
+
+                        fragment.appendChild(div);
+                    });
+
+                    galleryEl.innerHTML = '';
+                    galleryEl.appendChild(fragment);
+                },
+
+                init() {
+                    this.showRandom();
+                }
+            },
+
+            // Modal module
+            modal: {
+                element: null,
+                closeBtn: null,
+                img: null,
+
+                init() {
+                    this.element = document.getElementById('imageModal');
+                    this.closeBtn = this.element?.querySelector('.modal-close');
+                    this.img = document.getElementById('modalImage');
+
+                    if (!this.element) return;
+
+                    // Click on backdrop to close
+                    this.element.addEventListener('click', (e) => {
+                        if (e.target === this.element || e.target === this.closeBtn) {
+                            this.close();
+                        }
+                    });
+
+                    // ESC key to close
+                    document.addEventListener('keydown', (e) => {
+                        if (e.key === 'Escape' && this.element.classList.contains('active')) {
+                            this.close();
+                        }
+                    });
+                },
+
+                open(imgSrc, altText) {
+                    if (!this.element || !this.img) return;
+
+                    this.img.src = imgSrc;
+                    this.img.alt = altText || 'Enlarged mushroom specimen';
+                    this.element.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                },
+
+                close() {
+                    if (!this.element) return;
+
+                    this.element.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            },
+
+            // Initialize all modules
+            init() {
+                this.navigation.init();
+                this.gallery.init();
+                this.modal.init();
             }
+        };
 
-            // Scroll to top
-            window.scrollTo(0, 0);
+        // Initialize app when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => App.init());
+        } else {
+            App.init();
         }
-
-        // Modal functions
-        function openModal(element) {
-            const modal = document.getElementById('imageModal');
-            const modalImg = document.getElementById('modalImage');
-            const img = element.querySelector('img');
-
-            modal.classList.add('active');
-            modalImg.src = img.src;
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal() {
-            const modal = document.getElementById('imageModal');
-            modal.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-
-        // Close modal with ESC key
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                closeModal();
-            }
-        });
-
-        // Initialize random images on page load
-        window.addEventListener('load', showRandomImages);
+    })();
     </script>
 </body>
 </html>
