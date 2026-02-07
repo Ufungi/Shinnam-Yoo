@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - Shinnam Yoo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Karla:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Colors */
+            --primary: #3d2916;
+            --secondary: #8b6f47;
+            --accent: #c19a6b;
+            --earth: #574433;
+            --cream: #f5f1e8;
+            --sage: #9cae8f;
+            --forest: #4a5f3a;
+            --mushroom: #d4c5b0;
+
+            /* Spacing */
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 2rem;
+            --spacing-lg: 4rem;
+
+            /* Sizes */
+            --nav-height: 70px;
+
+            /* Transitions */
+            --transition-fast: 0.2s;
+            --transition-normal: 0.3s;
+            --transition-slow: 0.5s;
+
+            /* Z-index */
+            --z-nav: 100;
+            --z-modal: 1000;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Karla', sans-serif;
+            background: var(--cream);
+            color: var(--primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(61, 41, 22, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: var(--z-nav);
+            padding: var(--spacing-sm) 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-md);
+        }
+
+        .nav-link {
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: 4px;
+            transition: background var(--transition-normal) ease, color var(--transition-normal) ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        .nav-link:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        /* Gallery Page */
+        .gallery-page {
+            background: linear-gradient(135deg, #f5f1e8 0%, #e8dcc8 100%);
+            padding: var(--spacing-lg) 0;
+            min-height: calc(100vh - var(--nav-height));
+            padding-top: calc(var(--nav-height) + var(--spacing-lg));
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .page-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 400;
+            color: var(--primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .page-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 3px;
+            background: var(--accent);
+            margin: var(--spacing-sm) auto 0;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-md);
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform var(--transition-normal) ease, box-shadow var(--transition-normal) ease;
+            aspect-ratio: 4/5;
+            box-shadow: 0 4px 15px rgba(61, 41, 22, 0.15);
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 35px rgba(61, 41, 22, 0.25);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: var(--z-modal);
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            animation: fadeIn var(--transition-normal) ease;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            animation: zoomIn var(--transition-normal) ease;
+            pointer-events: none;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: var(--spacing-md);
+            right: 3rem;
+            color: white;
+            font-size: 3rem;
+            font-weight: 300;
+            cursor: pointer;
+            transition: transform var(--transition-normal) ease;
+            z-index: calc(var(--z-modal) + 1);
+        }
+
+        .modal-close:hover {
+            transform: scale(1.2);
+        }
+
+        .modal-close:focus-visible {
+            outline: 2px solid white;
+            outline-offset: 4px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: var(--cream);
+            padding: var(--spacing-lg) 0 var(--spacing-md);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+            text-align: center;
+        }
+
+        .footer-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            margin-bottom: var(--spacing-md);
+            color: var(--accent);
+        }
+
+        .footer-contacts {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-lg);
+            flex-wrap: wrap;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .footer-contact {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            color: var(--cream);
+        }
+
+        .footer-icon {
+            width: 30px;
+            height: 30px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .footer-bottom {
+            margin-top: var(--spacing-md);
+            padding-top: var(--spacing-md);
+            border-top: 1px solid rgba(245, 241, 232, 0.2);
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .footer-quote {
+            margin-top: var(--spacing-xs);
+            font-size: 0.85rem;
+            font-style: italic;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-container {
+                gap: var(--spacing-xs);
+            }
+
+            .nav-link {
+                font-size: 0.85rem;
+                padding: 0.4rem 0.7rem;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+
+            .footer-contacts {
+                flex-direction: column;
+                gap: var(--spacing-sm);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="research.html" class="nav-link">Research</a>
+            <a href="gallery.html" class="nav-link active">Gallery</a>
+            <a href="publications.html" class="nav-link">Publications</a>
+        </div>
+    </nav>
+
+    <!-- GALLERY PAGE -->
+    <main class="gallery-page">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title">Gallery</h1>
+            </div>
+
+            <div class="gallery-grid" id="galleryGrid">
+                <!-- Images will be inserted here by JavaScript -->
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-content">
+            <h2 class="footer-title">Get in Touch</h2>
+
+            <div class="footer-contacts">
+                <div class="footer-contact">
+                    <div class="footer-icon" aria-hidden="true">✉</div>
+                    <span>dbqnchqkq93@snu.ac.kr</span>
+                </div>
+                <div class="footer-contact">
+                    <div class="footer-icon" aria-hidden="true">📍</div>
+                    <span>Seoul National University, Seoul, Republic of Korea</span>
+                </div>
+                <div class="footer-contact">
+                    <div class="footer-icon" aria-hidden="true">📞</div>
+                    <span>+82-10-3784-1636</span>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 Shinnam Yoo | Mycological Research</p>
+                <p class="footer-quote">
+                    "The good life is one inspired by love and guided by knowledge" - Bertrand Russell
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ZOOM MODAL -->
+    <div id="imageModal" class="modal" role="dialog" aria-modal="true" aria-label="Image gallery modal">
+        <span class="modal-close" aria-label="Close modal">&times;</span>
+        <img class="modal-content" id="modalImage" alt="">
+    </div>
+
+    <script>
+    (function() {
+        'use strict';
+
+        const mushroomImages = [
+            'images/Mushrooms/Asterophora lycoperdoides (덧붙이버섯), 주로 무당버섯 위에 발생 (9).JPG',
+            'images/Mushrooms/IMG_1713.JPG',
+            'images/Mushrooms/IMG_1772.JPG',
+            'images/Mushrooms/IMG_1781.JPG',
+            'images/Mushrooms/IMG_1801.JPG',
+            'images/Mushrooms/IMG_1858.JPG',
+            'images/Mushrooms/IMG_1927.JPG',
+            'images/Mushrooms/IMG_1951.JPG',
+            'images/Mushrooms/IMG_2016.JPG',
+            'images/Mushrooms/IMG_2037.JPG',
+            'images/Mushrooms/IMG_3315.JPG',
+            'images/Mushrooms/IMG_3450.JPG',
+            'images/Mushrooms/IMG_3639.JPG',
+            'images/Mushrooms/IMG_3651.JPG',
+            'images/Mushrooms/IMG_3676.JPG',
+            'images/Mushrooms/IMG_3690.JPG',
+            'images/Mushrooms/IMG_3717.JPG',
+            'images/Mushrooms/IMG_4430.JPG',
+            'images/Mushrooms/IMG_4453.JPG',
+            'images/Mushrooms/IMG_4562 (2).JPG',
+            'images/Mushrooms/IMG_4873.JPG',
+            'images/Mushrooms/IMG_4931.JPG',
+            'images/Mushrooms/IMG_4976.JPG'
+        ];
+
+        const Gallery = {
+            getAltText(imgSrc) {
+                const filename = imgSrc.split('/').pop();
+                if (filename.includes('Asterophora')) {
+                    return 'Asterophora lycoperdoides mushroom specimen';
+                }
+                return 'Mushroom field collection specimen';
+            },
+
+            loadGallery() {
+                const galleryEl = document.getElementById('galleryGrid');
+                if (!galleryEl) return;
+
+                const fragment = document.createDocumentFragment();
+
+                mushroomImages.forEach(imgSrc => {
+                    const div = document.createElement('div');
+                    div.className = 'gallery-item';
+
+                    const img = document.createElement('img');
+                    img.src = imgSrc;
+                    img.alt = this.getAltText(imgSrc);
+                    img.loading = 'lazy';
+                    img.decoding = 'async';
+
+                    div.appendChild(img);
+                    div.addEventListener('click', () => Modal.open(imgSrc, img.alt));
+
+                    fragment.appendChild(div);
+                });
+
+                galleryEl.appendChild(fragment);
+            },
+
+            init() {
+                this.loadGallery();
+            }
+        };
+
+        const Modal = {
+            element: null,
+            closeBtn: null,
+            img: null,
+
+            init() {
+                this.element = document.getElementById('imageModal');
+                this.closeBtn = this.element?.querySelector('.modal-close');
+                this.img = document.getElementById('modalImage');
+
+                if (!this.element) return;
+
+                this.element.addEventListener('click', (e) => {
+                    if (e.target === this.element || e.target === this.closeBtn) {
+                        this.close();
+                    }
+                });
+
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && this.element.classList.contains('active')) {
+                        this.close();
+                    }
+                });
+            },
+
+            open(imgSrc, altText) {
+                if (!this.element || !this.img) return;
+
+                this.img.src = imgSrc;
+                this.img.alt = altText || 'Enlarged mushroom specimen';
+                this.element.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            },
+
+            close() {
+                if (!this.element) return;
+
+                this.element.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        };
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                Gallery.init();
+                Modal.init();
+            });
+        } else {
+            Gallery.init();
+            Modal.init();
+        }
+    })();
+    </script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shinnam Yoo - Mycological Research</title>
+    <title>Publications - Shinnam Yoo</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Karla:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -24,9 +24,7 @@
             --spacing-lg: 4rem;
 
             /* Sizes */
-            --profile-size: 280px;
             --nav-height: 70px;
-            --card-height: 320px;
 
             /* Transitions */
             --transition-fast: 0.2s;
@@ -97,113 +95,101 @@
             outline-offset: 2px;
         }
 
-        /* Home Page */
-        .home-page {
-            background: linear-gradient(135deg, #f5f1e8 0%, #e8dcc8 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* Content Page */
+        .content-page {
+            background: white;
             padding: var(--spacing-lg) 0;
+            min-height: calc(100vh - var(--nav-height));
             padding-top: calc(var(--nav-height) + var(--spacing-lg));
         }
 
-        .landing-content {
-            text-align: center;
-            max-width: 900px;
+        .container {
+            max-width: 1200px;
             margin: 0 auto;
-            animation: fadeInUp 1s ease-out;
+            padding: 0 var(--spacing-md);
         }
 
-        .profile-section {
+        .page-header {
+            text-align: center;
             margin-bottom: var(--spacing-lg);
         }
 
-        .profile-photo {
-            width: var(--profile-size);
-            height: var(--profile-size);
-            border-radius: 50%;
-            object-fit: cover;
-            object-position: center;
-            border: 4px solid var(--accent);
-            box-shadow: 0 15px 40px rgba(61, 41, 22, 0.25);
-            margin: 0 auto var(--spacing-md);
-            display: block;
-            animation: fadeIn 1.2s ease-out;
-        }
-
-        .hero-title {
+        .page-title {
             font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            font-weight: 300;
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 400;
             color: var(--primary);
-            letter-spacing: 0.02em;
             margin-bottom: var(--spacing-sm);
         }
 
-        .hero-subtitle {
-            font-size: clamp(1rem, 2.5vw, 1.4rem);
-            color: var(--secondary);
-            font-weight: 400;
-            font-style: italic;
+        .page-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 3px;
+            background: var(--accent);
+            margin: var(--spacing-sm) auto 0;
+        }
+
+        .pub-card {
+            background: var(--cream);
+            padding: var(--spacing-md);
             margin-bottom: var(--spacing-md);
-        }
-
-        .hero-description {
-            font-size: 1.05rem;
-            color: var(--earth);
-            line-height: 1.8;
-            max-width: 700px;
-            margin: 0 auto var(--spacing-lg);
-        }
-
-        /* Main Cards */
-        .main-cards {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: var(--spacing-md);
-            margin-top: var(--spacing-lg);
-        }
-
-        .main-card {
-            background: white;
-            border-radius: 12px;
-            padding: var(--spacing-lg);
-            cursor: pointer;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent);
             transition: transform var(--transition-normal) ease, box-shadow var(--transition-normal) ease;
-            box-shadow: 0 4px 20px rgba(61, 41, 22, 0.1);
-            text-align: center;
-            min-height: var(--card-height);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            cursor: pointer;
             text-decoration: none;
+            display: block;
             color: inherit;
         }
 
-        .main-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 40px rgba(61, 41, 22, 0.2);
+        .pub-card:hover {
+            transform: translateX(8px);
+            box-shadow: -8px 8px 25px rgba(61, 41, 22, 0.15);
+            background: #f8f4eb;
         }
 
-        .card-icon {
-            font-size: 4rem;
-            margin-bottom: var(--spacing-sm);
-        }
-
-        .card-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.8rem;
+        .pub-title {
+            font-size: 1.2rem;
             color: var(--primary);
-            margin-bottom: var(--spacing-sm);
             font-weight: 600;
+            margin-bottom: 0.7rem;
+            line-height: 1.4;
         }
 
-        .card-description {
-            font-size: 0.95rem;
+        .pub-journal {
+            color: var(--accent);
+            font-style: italic;
+            margin-bottom: 0.4rem;
+            font-size: 1rem;
+        }
+
+        .pub-authors {
             color: var(--earth);
+            font-size: 0.92rem;
             line-height: 1.6;
+        }
+
+        .co-authored-card {
+            margin-top: var(--spacing-md);
+            padding: 1.8rem;
+            background: var(--cream);
+            border-radius: 8px;
+            border-left: 4px solid var(--sage);
+        }
+
+        .co-authored-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            color: var(--primary);
+            margin-bottom: 0.8rem;
+        }
+
+        .co-authored-card p {
+            color: var(--earth);
+            line-height: 1.7;
+            font-size: 0.95rem;
         }
 
         /* Footer */
@@ -267,23 +253,6 @@
             font-style: italic;
         }
 
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
         /* Responsive */
         @media (max-width: 768px) {
             .nav-container {
@@ -293,10 +262,6 @@
             .nav-link {
                 font-size: 0.85rem;
                 padding: 0.4rem 0.7rem;
-            }
-
-            .main-cards {
-                grid-template-columns: 1fr;
             }
 
             .footer-contacts {
@@ -310,50 +275,61 @@
     <!-- Navigation -->
     <nav role="navigation" aria-label="Main navigation">
         <div class="nav-container">
-            <a href="index.html" class="nav-link active">Home</a>
+            <a href="index.html" class="nav-link">Home</a>
             <a href="research.html" class="nav-link">Research</a>
             <a href="gallery.html" class="nav-link">Gallery</a>
-            <a href="publications.html" class="nav-link">Publications</a>
+            <a href="publications.html" class="nav-link active">Publications</a>
         </div>
     </nav>
 
-    <!-- HOME PAGE -->
-    <main class="home-page">
-        <div class="landing-content">
-            <div class="profile-section">
-                <img src="images/profile.jpg" alt="Shinnam Yoo profile photo" class="profile-photo">
-                <h1 class="hero-title">Shinnam Yoo</h1>
-                <p class="hero-subtitle">Mycological Researcher</p>
-                <p class="hero-description">
-                    Exploring the hidden world of mycorrhizal fungi to understand their environmental interactions
-                    and contribute to carbon sequestration and climate change mitigation strategies.
-                </p>
+    <!-- PUBLICATIONS PAGE -->
+    <main class="content-page">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title">Publications</h1>
             </div>
 
-            <div class="main-cards">
-                <a href="research.html" class="main-card">
-                    <div class="card-icon" aria-hidden="true">🔬</div>
-                    <h2 class="card-title">Research</h2>
-                    <p class="card-description">
-                        Explore my work in ectomycorrhizal ecology, multi-omics, and sustainable agriculture
-                    </p>
-                </a>
+            <a href="https://doi.org/10.1186/s40168-025-02329-x" target="_blank" rel="noopener" class="pub-card">
+                <div class="pub-title">
+                    Functionally distinct core microbes of Tricholoma matsutake revealed by cross-study analysis
+                </div>
+                <div class="pub-journal">Microbiome (2026)</div>
+                <div class="pub-authors">
+                    Yoo, S., Seo, C. W. & Lim, Y. W.
+                </div>
+            </a>
 
-                <a href="gallery.html" class="main-card">
-                    <div class="card-icon" aria-hidden="true">📸</div>
-                    <h2 class="card-title">Gallery</h2>
-                    <p class="card-description">
-                        View my field collection of mushroom specimens from various ecosystems
-                    </p>
-                </a>
+            <a href="https://doi.org/10.1007/s00572-022-01088-z" target="_blank" rel="noopener" class="pub-card">
+                <div class="pub-title">
+                    Exploring Fine-Scale Assembly of Ectomycorrhizal Fungal Communities Through
+                    Phylogenetic and Spatial Distribution Analyses
+                </div>
+                <div class="pub-journal">Mycorrhiza (2022)</div>
+                <div class="pub-authors">
+                    Yoo, S., Cho, Y., Park, K. H., & Lim, Y. W.
+                </div>
+            </a>
 
-                <a href="publications.html" class="main-card">
-                    <div class="card-icon" aria-hidden="true">📄</div>
-                    <h2 class="card-title">Publications</h2>
-                    <p class="card-description">
-                        Browse my peer-reviewed research in leading mycology journals
-                    </p>
-                </a>
+            <a href="https://doi.org/10.1080/12298093.2022.2097364" target="_blank" rel="noopener" class="pub-card">
+                <div class="pub-title">
+                    Fourteen Unrecorded Species of Agaricales Underw. (Agaricomycetes, Basidiomycota)
+                    from the Republic of Korea
+                </div>
+                <div class="pub-journal">Mycobiology (2022)</div>
+                <div class="pub-authors">
+                    Yoo, S., Cho, Y., Kim, J. S., Kim, M., & Lim, Y. W.
+                </div>
+            </a>
+
+            <div class="co-authored-card">
+                <h3>Co-Authored Publications</h3>
+                <p>
+                    Contributing author on 10+ peer-reviewed publications including research in
+                    <em>IMA Fungus</em> (2026), <em>Journal of Microbiology and Biotechnology</em> (2025),
+                    <em>Journal of Microbiology</em> (2023, 2025), <em>Frontiers in Microbiology</em> (2020),
+                    and <em>Sustainability</em> (2021), covering topics in fungal systematics, microbiome ecology,
+                    and environmental microbiology.
+                </p>
             </div>
         </div>
     </main>
