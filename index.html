@@ -118,7 +118,10 @@
         }
 
         .profile-section {
-            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
         }
 
         .profile-photo {
@@ -129,9 +132,13 @@
             object-position: center;
             border: 4px solid var(--accent);
             box-shadow: 0 15px 40px rgba(61, 41, 22, 0.25);
-            margin: 0 auto 0.75rem;
-            display: block;
+            flex-shrink: 0;
             animation: fadeIn 1.2s ease-out;
+        }
+
+        .profile-text {
+            flex: 1;
+            text-align: left;
         }
 
         .hero-title {
@@ -154,9 +161,7 @@
         .hero-description {
             font-size: 0.9rem;
             color: var(--earth);
-            line-height: 1.5;
-            max-width: 600px;
-            margin: 0 auto 1.5rem;
+            line-height: 1.6;
         }
 
         /* Main Cards */
@@ -301,6 +306,15 @@
                 grid-template-columns: 1fr;
             }
 
+            .profile-section {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profile-text {
+                text-align: center;
+            }
+
             .footer-contacts {
                 flex-direction: column;
                 gap: var(--spacing-sm);
@@ -324,12 +338,13 @@
         <div class="landing-content">
             <div class="profile-section">
                 <img src="images/profile.jpg" alt="Shinnam Yoo profile photo" class="profile-photo">
-                <h1 class="hero-title">Shinnam Yoo</h1>
-                <p class="hero-subtitle">Mycological Researcher</p>
-                <p class="hero-description">
-                    Exploring the hidden world of mycorrhizal fungi to understand their environmental interactions
-                    and contribute to carbon sequestration and climate change mitigation strategies.
-                </p>
+                <div class="profile-text">
+                    <h1 class="hero-title">Shinnam Yoo</h1>
+                    <p class="hero-subtitle">Mycological Researcher</p>
+                    <p class="hero-description">
+                        I have a passionate interest in various aspects of ectomycorrhizal fungi. Currently, my research focuses on the microbiome and metabolism of <em>Tricholoma matsutake</em>. I hope my research will one day contribute to biodiversity conservation and preventing climate change. In my free time, I enjoy foraging mushrooms and educating others about the fascinating world of fungi.
+                    </p>
+                </div>
             </div>
 
             <div class="main-cards">
