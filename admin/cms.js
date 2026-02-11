@@ -132,19 +132,28 @@
         }
         /* Gallery: trash button on each photo */
         .gallery-item { position: relative; }
-        .cms-trash {
-            position: absolute; top: 0.4rem; right: 0.4rem;
+        .cms-trash, .cms-rotate {
+            position: absolute; top: 0.4rem;
             width: 28px; height: 28px; border-radius: 50%;
             background: rgba(20,10,4,0.88);
-            border: 1px solid rgba(201,107,107,0.55);
-            color: #e8a0a0; font-size: 0.78rem;
             cursor: pointer; display: none;
             align-items: center; justify-content: center;
             z-index: 20; padding: 0; line-height: 1;
-            transition: background 0.15s;
+            transition: background 0.15s; font-size: 0.78rem;
+        }
+        .cms-trash {
+            right: 0.4rem;
+            border: 1px solid rgba(201,107,107,0.55); color: #e8a0a0;
         }
         .cms-trash:hover { background: rgba(201,107,107,0.5); }
-        body.cms-admin .gallery-item .cms-trash { display: flex; }
+        .cms-rotate {
+            right: 2.4rem;
+            border: 1px solid rgba(193,154,107,0.5); color: #c19a6b; font-size: 1rem;
+        }
+        .cms-rotate:hover { background: rgba(193,154,107,0.3); }
+        .cms-rotate:disabled { opacity: 0.4; cursor: not-allowed; }
+        body.cms-admin .gallery-item .cms-trash,
+        body.cms-admin .gallery-item .cms-rotate { display: flex; }
         /* Gallery: add photo button */
         .cms-add-btn {
             display: none; width: 100%; margin-top: 0.75rem;
@@ -293,6 +302,7 @@
             // Extract filename from src (works for both thumb and direct paths)
             const filename = decodeURIComponent(img.getAttribute('src').split('/').pop().split('?')[0]);
             addTrashBtn(item, filename, info);
+            addRotateBtn(item, filename, info);
         });
 
         // Add "+" button after each section's masonry grid
@@ -317,6 +327,79 @@
             cmsDeletePhoto(item, filename, info);
         });
         item.appendChild(btn);
+    }
+
+    function addRotateBtn(item, filename, info) {
+        const btn = document.createElement('button');
+        btn.className = 'cms-rotate';
+        btn.title = 'Rotate 90° clockwise';
+        btn.innerHTML = '&#8635;';
+        btn.addEventListener('click', e => {
+            e.stopPropagation();
+            cmsRotatePhoto(item, btn, filename, info);
+        });
+        item.appendChild(btn);
+    }
+
+    async function cmsRotatePhoto(item, btn, filename, info) {
+        btn.disabled = true;
+        setStatus('Rotating…');
+        try {
+            // Load full-size image onto a canvas (not thumbnail)
+            const fullSrc = info.src + encodeURIComponent(filename) + '?t=' + Date.now();
+            const img = await new Promise((res, rej) => {
+                const i = new Image();
+                i.crossOrigin = 'anonymous';
+                i.onload = () => res(i);
+                i.onerror = () => rej(new Error('Could not load image for rotation'));
+                i.src = fullSrc;
+            });
+
+            // Rotate 90° clockwise: swap canvas width/height
+            const canvas = document.createElement('canvas');
+            canvas.width  = img.naturalHeight;
+            canvas.height = img.naturalWidth;
+            const ctx = canvas.getContext('2d');
+            ctx.translate(canvas.width / 2, canvas.height / 2);
+            ctx.rotate(Math.PI / 2);
+            ctx.drawImage(img, -img.naturalWidth / 2, -img.naturalHeight / 2);
+
+            const b64content = canvas.toDataURL('image/jpeg', 0.92).split(',')[1];
+
+            // Upload rotated image (replace original)
+            const filePath = info.dir + '/' + filename;
+            const f = await getFile(filePath);
+            await putFileBin(filePath, b64content, f.sha, 'admin: rotate ' + filename);
+
+            // Regenerate thumbnail for Mushrooms section
+            if (info.key === 'mushroom') {
+                const THUMB_MAX = 400;
+                const scale = THUMB_MAX / Math.max(canvas.width, canvas.height);
+                const tc = document.createElement('canvas');
+                tc.width  = Math.round(canvas.width  * scale);
+                tc.height = Math.round(canvas.height * scale);
+                tc.getContext('2d').drawImage(canvas, 0, 0, tc.width, tc.height);
+                const thumbB64 = tc.toDataURL('image/jpeg', 0.8).split(',')[1];
+                const thumbName = filename.replace(/\.\w+$/, '.jpg');
+                const tp = 'images/Mushrooms/thumbs/' + thumbName;
+                let thumbSha = '';
+                try { const tf = await getFile(tp); thumbSha = tf.sha; } catch (_) {}
+                await putFileBin(tp, thumbB64, thumbSha, 'admin: rotate thumb ' + thumbName);
+            }
+
+            // Refresh the displayed image (bust cache)
+            const displayImg = item.querySelector('img');
+            if (displayImg) {
+                const base = displayImg.getAttribute('src').split('?')[0];
+                displayImg.src = base + '?t=' + Date.now();
+            }
+
+            setStatus('Rotated!');
+        } catch (e) {
+            setStatus(e.message);
+        } finally {
+            btn.disabled = false;
+        }
     }
 
     async function cmsDeletePhoto(item, filename, info) {
@@ -390,6 +473,7 @@
                 img.loading = 'lazy';
                 item.appendChild(img);
                 addTrashBtn(item, filename, info);
+                addRotateBtn(item, filename, info);
                 grid.appendChild(item);
 
                 // Update count
