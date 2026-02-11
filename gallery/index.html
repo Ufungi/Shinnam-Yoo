@@ -107,16 +107,18 @@
 
         /* ── GALLERY SECTIONS ────────────────────────── */
         .gallery-section {
-            margin-bottom: 4rem;
+            max-width: 1200px;
+            margin: 0 auto 4rem;
             padding: 0 2rem;
         }
 
         .section-header {
-            max-width: 1200px;
-            margin: 0 auto 1.5rem;
             display: flex;
             align-items: baseline;
             gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border);
         }
 
         .section-title {
@@ -131,36 +133,16 @@
             color: var(--text-secondary);
         }
 
-        /* ── SCROLL STRIP ────────────────────────────── */
-        .scroll-wrapper {
-            max-width: 100%;
-            overflow: hidden;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            background: var(--bg-section);
-        }
-
-        .scroll-track {
-            display: flex;
-            gap: 0.75rem;
-            padding: 0.75rem;
-            /* width set by JS */
-            will-change: transform;
-            animation: autoScroll var(--scroll-dur, 50s) linear infinite;
-        }
-
-        .scroll-track:hover {
-            animation-play-state: paused;
-        }
-
-        @keyframes autoScroll {
-            from { transform: translateX(0); }
-            to   { transform: translateX(-50%); }
+        /* ── MASONRY GRID ─────────────────────────────── */
+        .masonry-grid {
+            columns: 3 280px;
+            column-gap: 0.75rem;
         }
 
         /* ── GALLERY ITEMS ───────────────────────────── */
         .gallery-item {
-            flex: 0 0 auto;
+            break-inside: avoid;
+            margin-bottom: 0.75rem;
             cursor: pointer;
             border-radius: 8px;
             overflow: hidden;
@@ -176,9 +158,8 @@
 
         .gallery-item img {
             display: block;
-            height: 220px;
-            width: auto;
-            object-fit: cover;
+            width: 100%;
+            height: auto;
         }
 
         /* caption for named specimens */
@@ -189,7 +170,7 @@
             color: var(--text-primary);
             font-size: 0.8rem;
             font-style: italic;
-            padding: 1.2rem 0.7rem 0.6rem;
+            padding: 1.5rem 0.75rem 0.6rem;
             text-align: center;
             pointer-events: none;
         }
@@ -215,7 +196,7 @@
             object-fit: contain;
             border-radius: 6px;
             pointer-events: none;
-            animation: zoomIn 0.25s ease;
+            animation: zoomIn 0.2s ease;
         }
 
         .modal-close {
@@ -244,7 +225,7 @@
         }
 
         @keyframes zoomIn {
-            from { transform: scale(0.6); opacity: 0; }
+            from { transform: scale(0.7); opacity: 0; }
             to   { transform: scale(1); opacity: 1; }
         }
 
@@ -306,14 +287,12 @@
         @media (max-width: 768px) {
             .nav-brand { font-size: 1rem; }
             .nav-link  { font-size: 0.8rem; padding: 0.35rem 0.6rem; }
+            .masonry-grid { columns: 2 180px; }
+            .footer-contacts { flex-direction: column; gap: 1rem; align-items: center; }
+        }
 
-            .gallery-item img { height: 160px; }
-
-            .footer-contacts {
-                flex-direction: column;
-                gap: 1rem;
-                align-items: center;
-            }
+        @media (max-width: 480px) {
+            .masonry-grid { columns: 1; }
         }
     </style>
 </head>
@@ -345,9 +324,7 @@
                 <h2 class="section-title">Mushrooms</h2>
                 <span class="section-count" id="mushroomCount"></span>
             </div>
-            <div class="scroll-wrapper">
-                <div class="scroll-track" id="mushroomTrack"></div>
-            </div>
+            <div class="masonry-grid" id="mushroomGrid"></div>
         </section>
 
         <!-- Animals Section -->
@@ -356,9 +333,7 @@
                 <h2 class="section-title">Animals</h2>
                 <span class="section-count" id="animalCount"></span>
             </div>
-            <div class="scroll-wrapper">
-                <div class="scroll-track" id="animalTrack"></div>
-            </div>
+            <div class="masonry-grid" id="animalGrid"></div>
         </section>
 
         <!-- Sampling Section -->
@@ -367,9 +342,7 @@
                 <h2 class="section-title">Sampling</h2>
                 <span class="section-count" id="samplingCount"></span>
             </div>
-            <div class="scroll-wrapper">
-                <div class="scroll-track" id="samplingTrack"></div>
-            </div>
+            <div class="masonry-grid" id="samplingGrid"></div>
         </section>
 
     </main>
@@ -414,17 +387,17 @@
 
         /* ── DATA ─────────────────────────────────────── */
         const mushroomImages = [
-            'Asterophora lycoperdoides.JPG',
-            'IMG_1713.JPG', 'IMG_1772.JPG', 'IMG_1781.JPG', 'IMG_1801.JPG',
-            'IMG_1858.JPG', 'IMG_1927.JPG', 'IMG_1951.JPG', 'IMG_2016.JPG',
-            'IMG_2037.JPG', 'IMG_3315.JPG', 'IMG_3450.JPG', 'IMG_3639.JPG',
-            'IMG_3651.JPG', 'IMG_3676.JPG', 'IMG_3690.JPG', 'IMG_3717.JPG',
-            'IMG_4430.JPG', 'IMG_4453.JPG', 'IMG_4562 (2).JPG', 'IMG_4873.JPG',
-            'IMG_4931.JPG', 'IMG_4976.JPG'
+            'Asterophora lycoperdoides.jpg',
+            'IMG_1713.jpg', 'IMG_1772.jpg', 'IMG_1781.jpg', 'IMG_1801.jpg',
+            'IMG_1858.jpg', 'IMG_1927.jpg', 'IMG_1951.jpg', 'IMG_2016.jpg',
+            'IMG_2037.jpg', 'IMG_3315.jpg', 'IMG_3450.jpg', 'IMG_3639.jpg',
+            'IMG_3651.jpg', 'IMG_3676.jpg', 'IMG_3690.jpg', 'IMG_3717.jpg',
+            'IMG_3769.jpg', 'IMG_4430.jpg', 'IMG_4453.jpg', 'IMG_4562 (2).jpg',
+            'IMG_4873.jpg', 'IMG_4931.jpg', 'IMG_4976.jpg'
         ];
 
         const animalImages = [
-            'IMG_3563.JPG', 'IMG_3579.JPG', 'IMG_3615.JPG'
+            'IMG_3563.jpg', 'IMG_3579.jpg', 'IMG_3615.jpg'
         ];
 
         const samplingImages = [
@@ -437,51 +410,43 @@
 
         /* ── SPECIES NAME EXTRACTION ──────────────────── */
         function getSpeciesName(filename) {
-            // Only extract if NOT an IMG_ or date-named file
             if (/^IMG_/i.test(filename) || /^\d{4}-/.test(filename)) return null;
-            // Match "Genus species" at start of filename
             const m = filename.match(/^([A-Z][a-z]+ [a-z]+)/);
             return m ? m[1] : null;
         }
 
-        /* ── BUILD SCROLL TRACK ───────────────────────── */
-        function buildTrack(trackEl, countEl, files, basePath, thumbPath) {
-            if (!trackEl) return;
+        /* ── BUILD MASONRY GRID ───────────────────────── */
+        function buildGrid(gridEl, countEl, files, basePath, thumbPath) {
+            if (!gridEl) return;
 
             countEl && (countEl.textContent = files.length + ' photos');
 
-            // Set animation duration proportional to image count (more images = slower)
-            const dur = Math.max(30, files.length * 3.5);
-            trackEl.style.setProperty('--scroll-dur', dur + 's');
-            trackEl.parentElement.style.setProperty('--scroll-dur', dur + 's');
+            files.forEach(filename => {
+                const species = getSpeciesName(filename);
+                const fullSrc = basePath + encodeURIComponent(filename);
+                const thumbSrc = thumbPath
+                    ? thumbPath + encodeURIComponent(filename)
+                    : fullSrc;
 
-            // Build twice for seamless infinite loop
-            [0, 1].forEach(() => {
-                files.forEach(filename => {
-                    const species = getSpeciesName(filename);
-                    const fullSrc = basePath + filename;
-                    const thumbSrc = thumbPath ? thumbPath + filename : fullSrc;
+                const item = document.createElement('div');
+                item.className = 'gallery-item';
 
-                    const item = document.createElement('div');
-                    item.className = 'gallery-item';
+                const img = document.createElement('img');
+                img.src = thumbSrc;
+                img.alt = species ? species + ' specimen' : 'Field specimen';
+                img.loading = 'lazy';
+                img.decoding = 'async';
+                item.appendChild(img);
 
-                    const img = document.createElement('img');
-                    img.src = thumbSrc;
-                    img.alt = species ? species + ' specimen' : 'Field specimen';
-                    img.loading = 'lazy';
-                    img.decoding = 'async';
-                    item.appendChild(img);
+                if (species) {
+                    const caption = document.createElement('div');
+                    caption.className = 'species-caption';
+                    caption.textContent = species;
+                    item.appendChild(caption);
+                }
 
-                    if (species) {
-                        const caption = document.createElement('div');
-                        caption.className = 'species-caption';
-                        caption.textContent = species;
-                        item.appendChild(caption);
-                    }
-
-                    item.addEventListener('click', () => Modal.open(fullSrc, species));
-                    trackEl.appendChild(item);
-                });
+                item.addEventListener('click', () => Modal.open(fullSrc, species));
+                gridEl.appendChild(item);
             });
         }
 
@@ -506,7 +471,7 @@
             open(src, species) {
                 this.img.src = src;
                 this.img.alt = species || 'Field specimen';
-                this.cap.textContent = species ? species : '';
+                this.cap.textContent = species || '';
                 this.el.classList.add('active');
                 document.body.style.overflow = 'hidden';
             },
@@ -518,24 +483,24 @@
 
         /* ── INIT ─────────────────────────────────────── */
         function init() {
-            buildTrack(
-                document.getElementById('mushroomTrack'),
+            buildGrid(
+                document.getElementById('mushroomGrid'),
                 document.getElementById('mushroomCount'),
                 mushroomImages,
                 '../images/Mushrooms/',
                 '../images/Mushrooms/thumbs/'
             );
 
-            buildTrack(
-                document.getElementById('animalTrack'),
+            buildGrid(
+                document.getElementById('animalGrid'),
                 document.getElementById('animalCount'),
                 animalImages,
                 '../images/Animals/',
                 null
             );
 
-            buildTrack(
-                document.getElementById('samplingTrack'),
+            buildGrid(
+                document.getElementById('samplingGrid'),
                 document.getElementById('samplingCount'),
                 samplingImages,
                 '../images/Sampling/',
