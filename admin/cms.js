@@ -46,14 +46,18 @@
         return btoa(unescape(encodeURIComponent(str)));
     }
 
+    function encodePath(p) {
+        return p.split('/').map(encodeURIComponent).join('/');
+    }
+
     async function getFile(path) {
-        const r = await gh('/repos/' + OWNER + '/' + REPO + '/contents/' + encodeURIComponent(path) + '?ref=' + BRANCH);
+        const r = await gh('/repos/' + OWNER + '/' + REPO + '/contents/' + encodePath(path) + '?ref=' + BRANCH);
         if (!r.ok) throw new Error(path + ': HTTP ' + r.status);
         return r.json();
     }
 
     async function putFile(path, content, sha, msg) {
-        const r = await gh('/repos/' + OWNER + '/' + REPO + '/contents/' + encodeURIComponent(path), {
+        const r = await gh('/repos/' + OWNER + '/' + REPO + '/contents/' + encodePath(path), {
             method:  'PUT',
             headers: { 'Content-Type': 'application/json' },
             body:    JSON.stringify({ message: msg, content: b64(content), sha, branch: BRANCH })
@@ -69,7 +73,7 @@
     async function putFileBin(path, b64content, sha, msg) {
         const body = { message: msg, content: b64content, branch: BRANCH };
         if (sha) body.sha = sha;
-        const r = await gh('/repos/' + OWNER + '/' + REPO + '/contents/' + encodeURIComponent(path), {
+        const r = await gh('/repos/' + OWNER + '/' + REPO + '/contents/' + encodePath(path), {
             method:  'PUT',
             headers: { 'Content-Type': 'application/json' },
             body:    JSON.stringify(body)
@@ -81,7 +85,7 @@
     }
 
     async function deleteFile(path, sha, msg) {
-        const r = await gh('/repos/' + OWNER + '/' + REPO + '/contents/' + encodeURIComponent(path), {
+        const r = await gh('/repos/' + OWNER + '/' + REPO + '/contents/' + encodePath(path), {
             method:  'DELETE',
             headers: { 'Content-Type': 'application/json' },
             body:    JSON.stringify({ message: msg, sha, branch: BRANCH })
@@ -197,18 +201,10 @@
     /* ── Text editing (non-gallery pages) ──────── */
     let editMode = false;
 
-    // Selectors for editable text blocks on each page
-    const EDIT_SELECTORS = [
-        '.bio-text',
-        '.hero-tagline',
-        '.course-description',
-        '.course-title',
-        '.course-details li',
-        '.research-block p',
-        '.research-block h3',
-        '.section-intro',
-        'h1.page-title',
-    ].join(',');
+    // All text-bearing elements except nav, footer, and admin UI
+    const EDIT_SELECTORS = ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'blockquote', 'figcaption']
+        .map(t => t + ':not(nav *):not(footer *):not(#cms-bar *):not(.cms-trash *):not(.cms-rotate *):not(.cms-add-btn *)')
+        .join(',');
 
     window.cmsToggleEdit = function () {
         editMode = !editMode;
