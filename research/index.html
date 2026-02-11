@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research - Shinnam Yoo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Karla:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark:       #1a0f07;
+            --bg-section:    #231508;
+            --bg-card:       rgba(255,255,255,0.06);
+            --bg-card-hover: rgba(255,255,255,0.10);
+            --text-primary:  #f0ebe0;
+            --text-secondary:#c4aa88;
+            --accent:        #c19a6b;
+            --border:        rgba(193,154,107,0.25);
+            --nav-height:    64px;
+            --transition:    0.25s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Karla', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ── NAV ─────────────────────────────────────── */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: var(--nav-height);
+            background: rgba(26,15,7,0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-brand {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .nav-links { display: flex; gap: 0.25rem; }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 0.4rem 0.9rem;
+            border-radius: 4px;
+            transition: color var(--transition), background var(--transition);
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--text-primary);
+            background: rgba(193,154,107,0.15);
+        }
+
+        /* ── PAGE ────────────────────────────────────── */
+        .content-page {
+            padding-top: var(--nav-height);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .page-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.2rem, 5vw, 3.2rem);
+            font-weight: 400;
+            color: var(--text-primary);
+        }
+
+        .page-title::after {
+            content: '';
+            display: block;
+            width: 70px;
+            height: 3px;
+            background: var(--accent);
+            margin: 1rem auto 0;
+        }
+
+        /* ── FIRST-AUTHOR PAPERS ─────────────────────── */
+        .papers-section {
+            margin-bottom: 5rem;
+        }
+
+        .section-heading {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.9rem;
+            font-weight: 400;
+            color: var(--accent);
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .paper-row {
+            display: flex;
+            gap: 3rem;
+            align-items: center;
+            margin-bottom: 4rem;
+            padding-bottom: 4rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .paper-row:last-child {
+            border-bottom: none;
+        }
+
+        .paper-row.reverse {
+            flex-direction: row-reverse;
+        }
+
+        .paper-figure {
+            flex: 0 0 45%;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            border: 1px solid var(--border);
+        }
+
+        .paper-figure img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+
+        .paper-figure:hover img {
+            transform: scale(1.03);
+        }
+
+        .paper-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .paper-journal {
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 0.6rem;
+        }
+
+        .paper-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.35;
+            margin-bottom: 0.8rem;
+        }
+
+        .paper-authors {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+
+        .paper-abstract {
+            font-size: 0.93rem;
+            color: var(--text-secondary);
+            line-height: 1.75;
+            margin-bottom: 1.4rem;
+        }
+
+        .paper-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            background: rgba(193,154,107,0.12);
+            border: 1px solid var(--accent);
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 6px;
+            font-size: 0.88rem;
+            font-weight: 500;
+            transition: background var(--transition), color var(--transition);
+        }
+
+        .paper-link:hover {
+            background: var(--accent);
+            color: var(--bg-dark);
+        }
+
+        /* ── RESEARCH FOCUS CARDS ────────────────────── */
+        .cards-section {
+            background: var(--bg-section);
+            border-radius: 12px;
+            padding: 3rem 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .content-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            padding: 1.5rem 1.75rem;
+            border-radius: 8px;
+            margin-bottom: 1.25rem;
+            transition: background var(--transition), transform var(--transition);
+        }
+
+        .content-card:last-child { margin-bottom: 0; }
+
+        .content-card:hover {
+            background: var(--bg-card-hover);
+            transform: translateX(4px);
+        }
+
+        .content-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.35rem;
+            color: var(--text-primary);
+            margin-bottom: 0.7rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .content-card p, .content-card ul {
+            color: var(--text-secondary);
+            line-height: 1.75;
+            font-size: 0.93rem;
+        }
+
+        .content-card ul { list-style: none; }
+
+        .content-card li {
+            padding: 0.3rem 0 0.3rem 1.3rem;
+            position: relative;
+        }
+
+        .content-card li::before {
+            content: '◆';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-size: 0.6rem;
+            top: 0.55rem;
+        }
+
+        /* ── FOOTER ──────────────────────────────────── */
+        footer {
+            background: #110a04;
+            border-top: 1px solid var(--border);
+            padding: 3rem 0 2rem;
+        }
+
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        .footer-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.6rem;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-contacts {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .footer-contact {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .footer-contact i { color: var(--accent); }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border);
+            padding-top: 1.5rem;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            opacity: 0.8;
+        }
+
+        .footer-quote {
+            margin-top: 0.4rem;
+            font-style: italic;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        /* ── RESPONSIVE ──────────────────────────────── */
+        @media (max-width: 768px) {
+            .paper-row,
+            .paper-row.reverse {
+                flex-direction: column;
+                gap: 1.75rem;
+                margin-bottom: 3rem;
+                padding-bottom: 3rem;
+            }
+
+            .paper-figure { flex: none; width: 100%; }
+
+            .nav-brand { font-size: 1rem; }
+            .nav-link  { font-size: 0.8rem; padding: 0.35rem 0.6rem; }
+
+            .footer-contacts {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav role="navigation" aria-label="Main navigation">
+        <div class="nav-inner">
+            <a href="../" class="nav-brand">Shinnam Yoo</a>
+            <div class="nav-links">
+                <a href="../"               class="nav-link">Home</a>
+                <a href="../research/"      class="nav-link active">Research</a>
+                <a href="../gallery/"       class="nav-link">Gallery</a>
+                <a href="../publications/"  class="nav-link">Publications</a>
+                <a href="../teaching/"      class="nav-link">Teaching</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN -->
+    <main class="content-page">
+        <div class="container">
+
+            <div class="page-header">
+                <h1 class="page-title">Research</h1>
+            </div>
+
+            <!-- FIRST-AUTHOR PAPERS -->
+            <section class="papers-section">
+                <h2 class="section-heading">First-Author Publications</h2>
+
+                <!-- Paper 1: Microbiome 2026 – figure LEFT -->
+                <div class="paper-row">
+                    <div class="paper-figure">
+                        <img src="../Research/Microbiome_figure.jpg" alt="Microbiome 2026 figure" loading="lazy">
+                    </div>
+                    <div class="paper-info">
+                        <p class="paper-journal">Microbiome &middot; 2026</p>
+                        <h3 class="paper-title">Functionally distinct core microbes of <em>Tricholoma matsutake</em> revealed by cross-study analysis</h3>
+                        <p class="paper-authors">Yoo, S., Seo, C. W. &amp; Lim, Y. W.</p>
+                        <p class="paper-abstract">
+                            Cross-study meta-analysis of <em>T. matsutake</em> microbiomes across diverse geographic
+                            and environmental contexts reveals a functionally distinct set of core bacterial associates.
+                            Phylogenetic placement and functional annotation indicate consistent ecological roles
+                            within the holobiont, suggesting co-evolutionary relationships between the mushroom
+                            and its microbial partners.
+                        </p>
+                        <a href="https://doi.org/10.1186/s40168-025-02329-x" target="_blank" rel="noopener" class="paper-link">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Read Paper
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Paper 2: Mycorrhiza 2022 – figure RIGHT -->
+                <div class="paper-row reverse">
+                    <div class="paper-figure">
+                        <img src="../Research/Mycorrhiza_figure.jpg" alt="Mycorrhiza 2022 figure" loading="lazy">
+                    </div>
+                    <div class="paper-info">
+                        <p class="paper-journal">Mycorrhiza &middot; 2022</p>
+                        <h3 class="paper-title">Exploring Fine-Scale Assembly of Ectomycorrhizal Fungal Communities Through Phylogenetic and Spatial Distribution Analyses</h3>
+                        <p class="paper-authors">Yoo, S., Cho, Y., Park, K. H., &amp; Lim, Y. W.</p>
+                        <p class="paper-abstract">
+                            Integrates phylogenetic and spatial approaches to examine fine-scale community
+                            assembly of ectomycorrhizal fungi in Korean forest ecosystems. Results reveal
+                            significant phylogenetic signal in spatial distribution, highlighting the roles
+                            of host specificity and dispersal limitation in structuring ECM communities
+                            at local scales.
+                        </p>
+                        <a href="https://doi.org/10.1007/s00572-022-01088-z" target="_blank" rel="noopener" class="paper-link">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Read Paper
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Paper 3: Mycobiology 2022 – figure LEFT -->
+                <div class="paper-row">
+                    <div class="paper-figure">
+                        <img src="../Research/Mycobiology_figure.jpg" alt="Mycobiology 2022 figure" loading="lazy">
+                    </div>
+                    <div class="paper-info">
+                        <p class="paper-journal">Mycobiology &middot; 2022</p>
+                        <h3 class="paper-title">Fourteen Unrecorded Species of Agaricales Underw. (Agaricomycetes, Basidiomycota) from the Republic of Korea</h3>
+                        <p class="paper-authors">Yoo, S., Cho, Y., Kim, J. S., Kim, M., &amp; Lim, Y. W.</p>
+                        <p class="paper-abstract">
+                            Documents fourteen new records of Agaricales for the Republic of Korea, based
+                            on morphological characterization and molecular phylogenetic analysis.
+                            Each species is described with diagnostic features, ecology, and distribution,
+                            expanding the known macrofungal diversity of East Asia and providing a
+                            foundation for future ecological and taxonomic studies.
+                        </p>
+                        <a href="https://doi.org/10.1080/12298093.2022.2097364" target="_blank" rel="noopener" class="paper-link">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Read Paper
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- RESEARCH FOCUS -->
+            <div class="cards-section">
+                <h2 class="section-heading" style="margin-bottom:2rem;">Research Focus</h2>
+
+                <div class="content-card">
+                    <h3><span aria-hidden="true">🔬</span> Ectomycorrhizal Ecology &amp; Microbiome</h3>
+                    <p>
+                        Investigating core microbiomes of ectomycorrhizal fungi through cross-study phylogenetic
+                        analysis and metabarcoding. Specialized in <em>Tricholoma matsutake</em> holobiont systems,
+                        fine-scale community assembly, and spatial distribution patterns in forest ecosystems.
+                    </p>
+                </div>
+
+                <div class="content-card">
+                    <h3><span aria-hidden="true">🧬</span> Multi-Omics &amp; Systems Biology</h3>
+                    <p>
+                        Integrating transcriptomics, metabolomics, and genome-scale metabolic modeling to understand
+                        fungal physiology and microbe-environment interactions. Development of bioinformatics pipelines
+                        for heterogeneous amplicon sequence analysis using phylogenetic approaches.
+                    </p>
+                </div>
+
+                <div class="content-card">
+                    <h3><span aria-hidden="true">🌲</span> Conservation &amp; Sustainable Agriculture</h3>
+                    <p>
+                        Bridging fundamental mycology with climate change mitigation through carbon sequestration research.
+                        Developing cultivation technologies for valuable mushroom species and promoting public appreciation
+                        of fungi through education and wild mushroom foraging.
+                    </p>
+                </div>
+            </div>
+
+            <!-- TECHNICAL EXPERTISE -->
+            <div class="cards-section">
+                <h2 class="section-heading" style="margin-bottom:2rem;">Technical Expertise</h2>
+
+                <div class="content-card">
+                    <h3><span aria-hidden="true">🧪</span> Field &amp; Experimental</h3>
+                    <ul>
+                        <li>Environmental sampling (soil, roots, fruiting bodies)</li>
+                        <li>Morphological identification of fungi</li>
+                        <li>Microbial isolation, cultivation, preservation</li>
+                        <li>Growth assays &amp; Phenotype MicroArray&trade;</li>
+                        <li>NGS library preparation optimization</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3><span aria-hidden="true">💻</span> Bioinformatics &amp; Analysis</h3>
+                    <ul>
+                        <li>R, Linux, conda environments</li>
+                        <li>Metabarcoding (QIIME2, MEGAN6, microeco)</li>
+                        <li>RNA-seq &amp; differential gene expression</li>
+                        <li>Genome-scale metabolic modeling (Pathway Tools)</li>
+                        <li>Multivariate, network, spatial analyses</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3><span aria-hidden="true">🧬</span> Phylogenetics &amp; Genomics</h3>
+                    <ul>
+                        <li>Bayesian phylogenetic inference (BEAST2)</li>
+                        <li>DNA barcoding &amp; phylogenetic identification</li>
+                        <li>Genome annotation &amp; functional analysis</li>
+                        <li>Target-enrichment sequencing</li>
+                        <li>Cross-study phylogenetic placement</li>
+                    </ul>
+                </div>
+
+                <div class="content-card">
+                    <h3><span aria-hidden="true">👨‍🏫</span> Communication &amp; Teaching</h3>
+                    <ul>
+                        <li>English (professional), Korean (native)</li>
+                        <li>Lead TA for field taxonomy courses</li>
+                        <li>Grant proposal &amp; report writing</li>
+                        <li>Scientific visualization (Inkscape, ImageJ)</li>
+                        <li>Outstanding Teaching Award (2019)</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-inner">
+            <h2 class="footer-title">Get in Touch</h2>
+            <div class="footer-contacts">
+                <div class="footer-contact">
+                    <i class="fa-solid fa-envelope"></i>
+                    <span>dbqnchqkq93@snu.ac.kr</span>
+                </div>
+                <div class="footer-contact">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span>Seoul National University, Seoul, Korea</span>
+                </div>
+                <div class="footer-contact">
+                    <i class="fa-solid fa-phone"></i>
+                    <span>+82-10-3784-1636</span>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Shinnam Yoo | Mycological Research</p>
+                <p class="footer-quote">
+                    "The real voyage of discovery consists not in seeking new landscapes, but in having new eyes." — Marcel Proust
+                </p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

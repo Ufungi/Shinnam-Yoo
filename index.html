@@ -307,7 +307,7 @@
             margin: 0 auto;
             padding: 0 2rem;
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 1.5rem;
         }
 
@@ -436,7 +436,7 @@
             .nav-link  { font-size: 0.8rem; padding: 0.35rem 0.6rem; }
 
             .cards-inner {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
             }
 
             .footer-contacts {
@@ -452,12 +452,13 @@
     <!-- NAVIGATION -->
     <nav>
         <div class="nav-inner">
-            <a href="index.html" class="nav-brand">Shinnam Yoo</a>
+            <a href="./" class="nav-brand">Shinnam Yoo</a>
             <div class="nav-links">
-                <a href="index.html"       class="nav-link active">Home</a>
-                <a href="research.html"    class="nav-link">Research</a>
-                <a href="gallery.html"     class="nav-link">Gallery</a>
-                <a href="publications.html" class="nav-link">Publications</a>
+                <a href="./"              class="nav-link active">Home</a>
+                <a href="research/"       class="nav-link">Research</a>
+                <a href="gallery/"        class="nav-link">Gallery</a>
+                <a href="publications/"   class="nav-link">Publications</a>
+                <a href="teaching/"       class="nav-link">Teaching</a>
             </div>
         </div>
     </nav>
@@ -550,20 +551,25 @@
     <!-- NAVIGATION CARDS -->
     <section class="nav-cards-section">
         <div class="cards-inner">
-            <a href="research.html" class="main-card">
+            <a href="research/" class="main-card">
                 <div class="card-icon">🔬</div>
                 <div class="card-title">Research</div>
                 <p class="card-description">Ectomycorrhizal ecology, multi-omics, and sustainable agriculture</p>
             </a>
-            <a href="gallery.html" class="main-card">
+            <a href="gallery/" class="main-card">
                 <div class="card-icon">📸</div>
                 <div class="card-title">Gallery</div>
                 <p class="card-description">Field collection of mushroom specimens from various ecosystems</p>
             </a>
-            <a href="publications.html" class="main-card">
+            <a href="publications/" class="main-card">
                 <div class="card-icon">📄</div>
                 <div class="card-title">Publications</div>
                 <p class="card-description">Peer-reviewed research in leading mycology journals</p>
+            </a>
+            <a href="teaching/" class="main-card">
+                <div class="card-icon">🌿</div>
+                <div class="card-title">Teaching</div>
+                <p class="card-description">Field taxonomy courses and citizen science outreach programs</p>
             </a>
         </div>
     </section>
