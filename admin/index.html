@@ -228,8 +228,9 @@
     <h2>GitHub Personal Access Token</h2>
     <input type="password" id="patInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
     <p id="loginHint">
-        Token needs <strong>repo</strong> scope.
-        <a href="https://github.com/settings/tokens/new?scopes=repo&description=SiteAdmin" target="_blank" rel="noopener">Create one here</a>.
+        Token needs <strong>repo</strong> scope (classic), or <strong>Contents: Read &amp; write</strong> (fine-grained).<br>
+        <a href="https://github.com/settings/tokens/new?scopes=repo&description=SiteAdmin" target="_blank" rel="noopener">Create classic token here</a>.
+        <br><small style="opacity:0.75">If you see "404 Not Found" on save → your token only has read access. Delete it and create a new one with write scope.</small>
     </p>
     <button class="btn btn-primary" onclick="login()">Login</button>
     <div id="loginStatus"></div>
@@ -481,8 +482,9 @@
             })
         });
         if (!putR.ok) {
-            const err = await putR.json();
-            throw new Error('Commit failed: ' + (err.message || putR.status));
+            const err = await putR.json().catch(() => ({}));
+            const hint = putR.status === 404 ? ' (PAT lacks write/repo scope)' : putR.status === 422 ? ' (SHA mismatch — try Reload)' : '';
+            throw new Error('Commit failed: ' + (err.message || putR.status) + hint);
         }
     }
 
