@@ -294,6 +294,28 @@
         @media (max-width: 480px) {
             .masonry-grid { columns: 1; }
         }
+
+        .nav-hamburger {
+            display: none;
+            background: none; border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem; cursor: pointer;
+            padding: 0.25rem 0.5rem; line-height: 1;
+        }
+
+        @media (max-width: 640px) {
+            nav { position: relative; }
+            .nav-hamburger { display: block; }
+            .nav-links {
+                display: none; flex-direction: column;
+                position: absolute; top: 100%; left: 0; right: 0;
+                background: rgba(26,15,7,0.97);
+                padding: 0.5rem 1rem;
+                border-bottom: 1px solid var(--border);
+                gap: 0.15rem;
+            }
+            .nav-links.open { display: flex; }
+        }
     </style>
 </head>
 <body>
@@ -302,6 +324,7 @@
     <nav role="navigation" aria-label="Main navigation">
         <div class="nav-inner">
             <a href="../" class="nav-brand">Shinnam Yoo</a>
+            <button class="nav-hamburger" aria-label="Toggle navigation" onclick="this.closest('nav').querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
             <div class="nav-links">
                 <a href="../"               class="nav-link">Home</a>
                 <a href="../research/"      class="nav-link">Research</a>

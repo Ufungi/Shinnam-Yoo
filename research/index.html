@@ -244,6 +244,39 @@
             transform: translateX(4px);
         }
 
+        /* ── RESEARCH FOCUS GRID ─────────────────────── */
+        .focus-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+        }
+
+        .focus-grid .content-card {
+            margin-bottom: 0;
+            font-size: 0.88rem;
+        }
+
+        .focus-grid .content-card h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .focus-grid .content-card:hover {
+            transform: translateY(-4px);
+        }
+
+        /* ── MOBILE NAV ──────────────────────────────── */
+        .nav-hamburger {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            line-height: 1;
+        }
+
         .content-card h3 {
             font-family: 'Cormorant Garamond', serif;
             font-size: 1.35rem;
@@ -351,6 +384,24 @@
                 gap: 1rem;
                 align-items: center;
             }
+
+            .focus-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 640px) {
+            nav { position: relative; }
+            .nav-hamburger { display: block; }
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%; left: 0; right: 0;
+                background: rgba(26,15,7,0.97);
+                padding: 0.5rem 1rem;
+                border-bottom: 1px solid var(--border);
+                gap: 0.15rem;
+            }
+            .nav-links.open { display: flex; }
         }
     </style>
 </head>
@@ -360,6 +411,7 @@
     <nav role="navigation" aria-label="Main navigation">
         <div class="nav-inner">
             <a href="../" class="nav-brand">Shinnam Yoo</a>
+            <button class="nav-hamburger" aria-label="Toggle navigation" onclick="this.closest('nav').querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
             <div class="nav-links">
                 <a href="../"               class="nav-link">Home</a>
                 <a href="../research/"      class="nav-link active">Research</a>
@@ -378,6 +430,39 @@
                 <h1 class="page-title">Research</h1>
             </div>
 
+            <!-- RESEARCH FOCUS -->
+            <div class="cards-section">
+                <h2 class="section-heading" style="margin-bottom:2rem;">Research Focus</h2>
+                <div class="focus-grid">
+                    <div class="content-card">
+                        <h3><span aria-hidden="true">🔬</span> Ectomycorrhizal Ecology &amp; Microbiome</h3>
+                        <p>
+                            Investigating core microbiomes of ectomycorrhizal fungi through cross-study phylogenetic
+                            analysis and metabarcoding. Specialized in <em>Tricholoma matsutake</em> holobiont systems,
+                            fine-scale community assembly, and spatial distribution patterns in forest ecosystems.
+                        </p>
+                    </div>
+
+                    <div class="content-card">
+                        <h3><span aria-hidden="true">🧬</span> Multi-Omics &amp; Systems Biology</h3>
+                        <p>
+                            Integrating transcriptomics, metabolomics, and genome-scale metabolic modeling to understand
+                            fungal physiology and microbe-environment interactions. Development of bioinformatics pipelines
+                            for heterogeneous amplicon sequence analysis using phylogenetic approaches.
+                        </p>
+                    </div>
+
+                    <div class="content-card">
+                        <h3><span aria-hidden="true">🌲</span> Conservation &amp; Sustainable Agriculture</h3>
+                        <p>
+                            Bridging fundamental mycology with climate change mitigation through carbon sequestration research.
+                            Developing cultivation technologies for valuable mushroom species and promoting public appreciation
+                            of fungi through education and wild mushroom foraging.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
             <!-- FIRST-AUTHOR PAPERS -->
             <section class="papers-section">
                 <h2 class="section-heading">First-Author Publications</h2>
@@ -392,11 +477,13 @@
                         <h3 class="paper-title">Functionally distinct core microbes of <em>Tricholoma matsutake</em> revealed by cross-study analysis</h3>
                         <p class="paper-authors">Yoo, S., Seo, C. W. &amp; Lim, Y. W.</p>
                         <p class="paper-abstract">
-                            Cross-study meta-analysis of <em>T. matsutake</em> microbiomes across diverse geographic
-                            and environmental contexts reveals a functionally distinct set of core bacterial associates.
-                            Phylogenetic placement and functional annotation indicate consistent ecological roles
-                            within the holobiont, suggesting co-evolutionary relationships between the mushroom
-                            and its microbial partners.
+                            Through cross-study phylogenetic analysis of <em>T. matsutake</em> shiro microbiomes
+                            compiled from geographically diverse datasets, this study identifies core microbial
+                            phylotypes conserved across shiro environments alongside niche-specific microbes
+                            associated with distinct microhabitats (soil, colonized roots, fruitbodies).
+                            These associates perform key functions including degradation of aromatic compounds
+                            and fruitbody development, providing a foundation for improving matsutake
+                            cultivation strategies.
                         </p>
                         <a href="https://doi.org/10.1186/s40168-025-02329-x" target="_blank" rel="noopener" class="paper-link">
                             <i class="fa-solid fa-arrow-up-right-from-square"></i> Read Paper
@@ -412,13 +499,15 @@
                     <div class="paper-info">
                         <p class="paper-journal">Mycorrhiza &middot; 2022</p>
                         <h3 class="paper-title">Exploring Fine-Scale Assembly of Ectomycorrhizal Fungal Communities Through Phylogenetic and Spatial Distribution Analyses</h3>
-                        <p class="paper-authors">Yoo, S., Cho, Y., Park, K. H., &amp; Lim, Y. W.</p>
+                        <p class="paper-authors">Yoo, S., Cho, Y., Park, K. H. &amp; Lim, Y. W.</p>
                         <p class="paper-abstract">
-                            Integrates phylogenetic and spatial approaches to examine fine-scale community
-                            assembly of ectomycorrhizal fungi in Korean forest ecosystems. Results reveal
-                            significant phylogenetic signal in spatial distribution, highlighting the roles
-                            of host specificity and dispersal limitation in structuring ECM communities
-                            at local scales.
+                            Compares ectomycorrhizal fungal community assembly on pine seedlings between
+                            disturbed habitats and mature Korean forests using phylogenetic and spatial analyses.
+                            In disturbed areas, phylogenetically restricted lineages dominated and similar
+                            species aggregated at the seedling scale, while root-tip-level analysis revealed
+                            spatial segregation consistent with limiting similarity as an assembly mechanism.
+                            Mature forest communities showed no distinct phylogenetic signal, indicating that
+                            assembly mechanisms vary by habitat and spatial scale.
                         </p>
                         <a href="https://doi.org/10.1007/s00572-022-01088-z" target="_blank" rel="noopener" class="paper-link">
                             <i class="fa-solid fa-arrow-up-right-from-square"></i> Read Paper
@@ -434,13 +523,14 @@
                     <div class="paper-info">
                         <p class="paper-journal">Mycobiology &middot; 2022</p>
                         <h3 class="paper-title">Fourteen Unrecorded Species of Agaricales Underw. (Agaricomycetes, Basidiomycota) from the Republic of Korea</h3>
-                        <p class="paper-authors">Yoo, S., Cho, Y., Kim, J. S., Kim, M., &amp; Lim, Y. W.</p>
+                        <p class="paper-authors">Yoo, S., Cho, Y., Kim, J. S., Kim, M. &amp; Lim, Y. W.</p>
                         <p class="paper-abstract">
-                            Documents fourteen new records of Agaricales for the Republic of Korea, based
-                            on morphological characterization and molecular phylogenetic analysis.
-                            Each species is described with diagnostic features, ecology, and distribution,
-                            expanding the known macrofungal diversity of East Asia and providing a
-                            foundation for future ecological and taxonomic studies.
+                            Reports 14 Agaricales species newly recorded for the Republic of Korea, collected
+                            between 2018 and 2020 and spanning nine genera including <em>Cortinarius</em>,
+                            <em>Inocybe</em>, and <em>Hygrocybe</em>. Each species was identified by molecular
+                            phylogenetic analysis of ITS sequences combined with microscopic examination,
+                            establishing reliable reference descriptions that improve upon previous
+                            morphology-only identifications.
                         </p>
                         <a href="https://doi.org/10.1080/12298093.2022.2097364" target="_blank" rel="noopener" class="paper-link">
                             <i class="fa-solid fa-arrow-up-right-from-square"></i> Read Paper
@@ -448,38 +538,6 @@
                     </div>
                 </div>
             </section>
-
-            <!-- RESEARCH FOCUS -->
-            <div class="cards-section">
-                <h2 class="section-heading" style="margin-bottom:2rem;">Research Focus</h2>
-
-                <div class="content-card">
-                    <h3><span aria-hidden="true">🔬</span> Ectomycorrhizal Ecology &amp; Microbiome</h3>
-                    <p>
-                        Investigating core microbiomes of ectomycorrhizal fungi through cross-study phylogenetic
-                        analysis and metabarcoding. Specialized in <em>Tricholoma matsutake</em> holobiont systems,
-                        fine-scale community assembly, and spatial distribution patterns in forest ecosystems.
-                    </p>
-                </div>
-
-                <div class="content-card">
-                    <h3><span aria-hidden="true">🧬</span> Multi-Omics &amp; Systems Biology</h3>
-                    <p>
-                        Integrating transcriptomics, metabolomics, and genome-scale metabolic modeling to understand
-                        fungal physiology and microbe-environment interactions. Development of bioinformatics pipelines
-                        for heterogeneous amplicon sequence analysis using phylogenetic approaches.
-                    </p>
-                </div>
-
-                <div class="content-card">
-                    <h3><span aria-hidden="true">🌲</span> Conservation &amp; Sustainable Agriculture</h3>
-                    <p>
-                        Bridging fundamental mycology with climate change mitigation through carbon sequestration research.
-                        Developing cultivation technologies for valuable mushroom species and promoting public appreciation
-                        of fungi through education and wild mushroom foraging.
-                    </p>
-                </div>
-            </div>
 
             <!-- TECHNICAL EXPERTISE -->
             <div class="cards-section">
