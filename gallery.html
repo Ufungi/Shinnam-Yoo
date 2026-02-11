@@ -57,42 +57,56 @@
         /* Navigation */
         nav {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(61, 41, 22, 0.95);
-            backdrop-filter: blur(10px);
+            top: 0; left: 0; right: 0;
+            height: var(--nav-height);
+            background: rgba(26, 15, 7, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(193, 154, 107, 0.25);
             z-index: var(--z-nav);
-            padding: var(--spacing-sm) 0;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
         }
 
-        .nav-container {
+        .nav-inner {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 var(--spacing-md);
+            padding: 0 2rem;
+            width: 100%;
             display: flex;
-            justify-content: center;
-            gap: var(--spacing-md);
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-brand {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #f0ebe0;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.25rem;
         }
 
         .nav-link {
-            color: var(--cream);
+            color: #c4aa88;
             text-decoration: none;
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 500;
-            padding: var(--spacing-xs) var(--spacing-sm);
+            padding: 0.4rem 0.9rem;
             border-radius: 4px;
-            transition: background var(--transition-normal) ease, color var(--transition-normal) ease;
+            transition: color 0.25s ease, background 0.25s ease;
         }
 
         .nav-link:hover, .nav-link.active {
-            background: var(--accent);
-            color: var(--primary);
+            color: #f0ebe0;
+            background: rgba(193, 154, 107, 0.15);
         }
 
         .nav-link:focus-visible {
-            outline: 2px solid var(--accent);
+            outline: 2px solid #c19a6b;
             outline-offset: 2px;
         }
 
@@ -310,11 +324,14 @@
 <body>
     <!-- Navigation -->
     <nav role="navigation" aria-label="Main navigation">
-        <div class="nav-container">
-            <a href="index.html" class="nav-link">Home</a>
-            <a href="research.html" class="nav-link">Research</a>
-            <a href="gallery.html" class="nav-link active">Gallery</a>
-            <a href="publications.html" class="nav-link">Publications</a>
+        <div class="nav-inner">
+            <a href="index.html" class="nav-brand">Shinnam Yoo</a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="research.html" class="nav-link">Research</a>
+                <a href="gallery.html" class="nav-link active">Gallery</a>
+                <a href="publications.html" class="nav-link">Publications</a>
+            </div>
         </div>
     </nav>
 
