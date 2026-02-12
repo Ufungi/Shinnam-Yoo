@@ -628,6 +628,7 @@
         { label: 'Background', v: '--bg-dark' },
         { label: 'Section bg',  v: '--bg-section' },
         { label: 'Accent',     v: '--accent' },
+        { label: 'Cursor',     v: '--cursor-fill' },
         { label: 'Text',       v: '--text-primary' }
     ];
 
@@ -662,6 +663,7 @@
         panel.querySelectorAll('input[type="color"]').forEach(input => {
             document.documentElement.style.setProperty(input.dataset.var, input.value);
         });
+        if (typeof window.updateSporeCursor === 'function') window.updateSporeCursor();
     }
 
     window.cmsApplyColors = function () {

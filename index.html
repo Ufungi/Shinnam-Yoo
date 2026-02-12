@@ -26,6 +26,7 @@
             --border:       rgba(193, 154, 107, 0.25);
             --nav-height:   64px;
             --transition:   0.25s ease;
+            --cursor-fill:  #c19a6b;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -625,6 +626,26 @@
         </div>
     </footer>
     <script src="admin/cms.js"></script>
+    <script>
+    /* Spore cursor generator - uses --cursor-fill CSS variable */
+    (function () {
+        function genCursor() {
+            var fill = getComputedStyle(document.documentElement).getPropertyValue('--cursor-fill').trim() || '#c19a6b';
+            var stroke = getComputedStyle(document.documentElement).getPropertyValue('--bg-dark').trim() || '#1a0f07';
+            var svg = "<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24'>" +
+                "<g transform='rotate(-30,12,12)'>" +
+                "<ellipse cx='12' cy='9' rx='5' ry='7' fill='" + fill + "' stroke='" + stroke + "' stroke-width='1.2'/>" +
+                "<path d='M7,9 Q12,20 17,9' fill='" + fill + "' stroke='" + stroke + "' stroke-width='1.2'/>" +
+                "</g></svg>";
+            var uri = 'data:image/svg+xml;base64,' + btoa(svg);
+            var style = document.getElementById('spore-cursor-style');
+            if (!style) { style = document.createElement('style'); style.id = 'spore-cursor-style'; document.head.appendChild(style); }
+            style.textContent = '* { cursor: url("' + uri + '") 7 4, auto !important; }';
+        }
+        genCursor();
+        window.updateSporeCursor = genCursor;
+    })();
+    </script>
     <script>
     (function () {
         var ov = document.createElement('div');

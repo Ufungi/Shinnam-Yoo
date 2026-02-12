@@ -1,5 +1,3 @@
 /* ── Custom spore cursor ─────────────────────────────────────────────────── */
-/* Hotspot: bottom-left tip after 30° CCW rotation, 24x24 cursor */
-* {
-    cursor: url('images/cursor-spore.png') 6 18, auto !important;
-}
+/* Cursor is generated dynamically via JS using --cursor-fill CSS variable */
+/* See inline script in HTML files for implementation */
