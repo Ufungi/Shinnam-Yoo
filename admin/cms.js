@@ -711,7 +711,29 @@
                 el.classList.remove('cms-sec-draggable', 'sec-drag-over');
                 el.style.opacity = '';
             });
-            clone.querySelector('body')?.classList.remove('cms-admin', 'cms-edit');
+            const bodyEl = clone.querySelector('body');
+            if (bodyEl) bodyEl.classList.remove('cms-admin', 'cms-edit');
+
+            // Strip browser-extension-injected content
+            // 1. Remove extension <style> tags (identified by data attributes or known content)
+            clone.querySelectorAll('style[data-id], style[data-emotion], style[data-s]').forEach(el => el.remove());
+            clone.querySelectorAll('style').forEach(s => {
+                const t = s.textContent;
+                if (t.includes('immersive-translate') || t.includes('#clip_copy') || t.includes('#web-copy-btn-wk')) s.remove();
+            });
+            // 2. Remove extension DOM elements (custom elements + known IDs)
+            ['qb-highlighter', 'qb-toolbar', 'qb-div', 'deepl-input-controller',
+             'grammarly-desktop-integration', '#torrent-scanner-popup', '#__endic_crx__',
+             '#immersive-translate-popup', '[data-wxt-integrated]',
+             '#cms-op-toast', '#cms-upload-toast'].forEach(sel => {
+                try { clone.querySelectorAll(sel).forEach(el => el.remove()); } catch (_) {}
+            });
+            // 3. Remove extension attributes from <html> and <body>
+            ['data-qb-installed', 'data-new-gr-c-s-check-loaded', 'data-gr-ext-installed',
+             'data-new-gr-c-s-loaded'].forEach(attr => {
+                clone.removeAttribute(attr);
+                if (bodyEl) bodyEl.removeAttribute(attr);
+            });
 
             const newHtml = '<!DOCTYPE html>\n' + clone.outerHTML;
             const file = await getFile(REPO_PATH);
