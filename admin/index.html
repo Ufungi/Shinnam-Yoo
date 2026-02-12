@@ -13,7 +13,6 @@
             --muted: #c4aa88;
             --accent:#c19a6b;
             --border:rgba(193,154,107,0.25);
-            --green: #7cba6b;
             --red:   #c96b6b;
         }
         * { margin:0; padding:0; box-sizing:border-box; }
@@ -22,10 +21,14 @@
             background: var(--bg);
             color: var(--text);
             min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 2rem;
         }
+        .container { width: 100%; max-width: 420px; }
         h1 {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 500;
             color: var(--accent);
             margin-bottom: 2rem;
@@ -33,13 +36,9 @@
             border-bottom: 1px solid var(--border);
             letter-spacing: 0.04em;
         }
-        /* ── LOGIN ───────────────────────────── */
-        #loginSection {
-            max-width: 480px;
-            margin: 6rem auto;
-        }
+        /* LOGIN */
         #loginSection h2 {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 400;
             color: var(--muted);
             margin-bottom: 1rem;
@@ -58,257 +57,123 @@
         }
         #patInput:focus { border-color: var(--accent); }
         #loginHint {
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             color: var(--muted);
             margin-bottom: 1.25rem;
+            line-height: 1.5;
         }
         #loginHint a { color: var(--accent); }
-        /* ── ADMIN PANEL ─────────────────────── */
-        #adminPanel { max-width: 720px; margin: 0 auto; }
-        .user-bar {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 2rem;
+        #loginStatus { font-size: 0.85rem; margin-top: 0.75rem; color: var(--muted); }
+        /* LOGGED-IN PANEL */
+        #loggedSection { display: none; text-align: center; }
+        .user-greeting {
             font-size: 0.9rem;
             color: var(--muted);
+            margin-bottom: 2rem;
         }
-        .user-bar strong { color: var(--text); }
+        .user-greeting strong { color: var(--text); }
+        .edit-btn {
+            display: block;
+            width: 100%;
+            padding: 0.9rem 1.5rem;
+            background: var(--accent);
+            color: #1a0f07;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            margin-bottom: 1rem;
+            transition: opacity 0.2s;
+        }
+        .edit-btn:hover { opacity: 0.85; }
+        .page-links {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .page-link {
+            padding: 0.55rem 0.75rem;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.83rem;
+            text-align: center;
+            transition: background 0.15s, color 0.15s;
+        }
+        .page-link:hover { background: rgba(193,154,107,0.12); color: var(--text); }
         .logout-btn {
-            margin-left: auto;
             background: none;
             border: 1px solid var(--border);
             color: var(--muted);
-            padding: 0.3rem 0.75rem;
-            border-radius: 4px;
+            padding: 0.4rem 1rem;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.82rem;
         }
         .logout-btn:hover { border-color: var(--red); color: var(--red); }
-        .section {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-        .section h3 {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--muted);
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            margin-bottom: 1.25rem;
-        }
-        .field { margin-bottom: 1rem; }
-        label {
-            display: block;
-            font-size: 0.85rem;
-            color: var(--muted);
-            margin-bottom: 0.35rem;
-        }
-        .color-row {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        input[type="color"] {
-            width: 44px;
-            height: 36px;
-            padding: 2px;
-            border: 1px solid var(--border);
-            border-radius: 5px;
-            background: var(--panel);
-            cursor: pointer;
-        }
-        .color-hex {
-            flex: 1;
-            padding: 0.55rem 0.8rem;
-            background: var(--panel);
-            border: 1px solid var(--border);
-            border-radius: 5px;
-            color: var(--text);
-            font-family: monospace;
-            font-size: 0.9rem;
-            outline: none;
-        }
-        .color-hex:focus { border-color: var(--accent); }
-        textarea {
-            width: 100%;
-            padding: 0.75rem;
-            background: var(--panel);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            color: var(--text);
-            font-size: 0.9rem;
-            line-height: 1.6;
-            resize: vertical;
-            min-height: 120px;
-            font-family: inherit;
-            outline: none;
-        }
-        textarea:focus { border-color: var(--accent); }
-        /* photo */
-        .photo-row {
-            display: flex;
-            gap: 1.5rem;
-            align-items: flex-start;
-        }
-        #currentPhoto {
-            width: 90px;
-            height: 90px;
-            object-fit: cover;
-            border-radius: 50%;
-            border: 2px solid var(--border);
-        }
-        .photo-right { flex: 1; }
-        .file-label {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            background: rgba(193,154,107,0.12);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            color: var(--accent);
-            cursor: pointer;
-            font-size: 0.88rem;
-            transition: background 0.2s;
-        }
-        .file-label:hover { background: rgba(193,154,107,0.22); }
-        #photoInput { display: none; }
-        #photoName { font-size: 0.82rem; color: var(--muted); margin-top: 0.5rem; }
-        /* buttons */
-        .btn {
+        /* shared button */
+        .btn-primary {
             display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
             padding: 0.65rem 1.4rem;
             border: none;
             border-radius: 6px;
             font-size: 0.92rem;
             font-weight: 500;
             cursor: pointer;
-            transition: opacity 0.2s;
-        }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .btn-primary {
             background: var(--accent);
             color: #1a0f07;
+            transition: opacity 0.2s;
         }
-        .btn-primary:hover:not(:disabled) { opacity: 0.85; }
-        .btn-secondary {
-            background: rgba(255,255,255,0.08);
-            color: var(--text);
-            border: 1px solid var(--border);
-        }
-        .btn-secondary:hover:not(:disabled) { background: rgba(255,255,255,0.12); }
-        .btn-row {
-            display: flex;
-            gap: 0.75rem;
-            margin-top: 1.5rem;
-        }
-        /* status messages */
-        #statusMsg {
-            padding: 0.65rem 1rem;
-            border-radius: 6px;
-            font-size: 0.88rem;
-            display: none;
-            margin-top: 1rem;
-        }
-        #statusMsg.ok  { background: rgba(124,186,107,0.15); border:1px solid rgba(124,186,107,0.4); color: var(--green); display: block; }
-        #statusMsg.err { background: rgba(201,107,107,0.15); border:1px solid rgba(201,107,107,0.4); color: var(--red);   display: block; }
-        #statusMsg.loading { background: rgba(193,154,107,0.1); border:1px solid var(--border); color: var(--muted); display: block; }
+        .btn-primary:hover { opacity: 0.85; }
     </style>
 </head>
 <body>
+<div class="container">
 
-<h1>&#9702; Site Admin</h1>
+    <h1>&#9702; Site Admin</h1>
 
-<!-- LOGIN SECTION -->
-<div id="loginSection">
-    <h2>GitHub Personal Access Token</h2>
-    <input type="password" id="patInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
-    <p id="loginHint">
-        Token needs <strong>repo</strong> scope (classic), or <strong>Contents: Read &amp; write</strong> (fine-grained).<br>
-        <a href="https://github.com/settings/tokens/new?scopes=repo&description=SiteAdmin" target="_blank" rel="noopener">Create classic token here</a>.
-        <br><small style="opacity:0.75">If you see "404 Not Found" on save → your token only has read access. Delete it and create a new one with write scope.</small>
-    </p>
-    <button class="btn btn-primary" onclick="login()">Login</button>
-    <div id="loginStatus"></div>
-</div>
+    <!-- LOGIN -->
+    <div id="loginSection">
+        <h2>GitHub Personal Access Token</h2>
+        <input type="password" id="patInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
+        <p id="loginHint">
+            Token needs <strong>repo</strong> scope (classic), or <strong>Contents: Read &amp; write</strong> (fine-grained).<br>
+            <a href="https://github.com/settings/tokens/new?scopes=repo&description=SiteAdmin" target="_blank" rel="noopener">Create classic token</a>
+        </p>
+        <button class="btn-primary" onclick="login()">Login</button>
+        <div id="loginStatus"></div>
+    </div>
 
-<!-- ADMIN PANEL (hidden until logged in) -->
-<div id="adminPanel" style="display:none">
+    <!-- LOGGED IN -->
+    <div id="loggedSection">
+        <p class="user-greeting">Logged in as <strong id="ghUser"></strong></p>
 
-    <div class="user-bar">
-        Logged in as <strong id="ghUser"></strong>
+        <a href="../" class="edit-btn">&#9998; Edit Site</a>
+
+        <div class="page-links">
+            <a href="../research/" class="page-link">Research</a>
+            <a href="../publications/" class="page-link">Publications</a>
+            <a href="../teaching/" class="page-link">Teaching</a>
+            <a href="../gallery/" class="page-link">Gallery</a>
+        </div>
+
         <button class="logout-btn" onclick="logout()">Logout</button>
     </div>
 
-    <!-- COLORS -->
-    <div class="section">
-        <h3>Colors</h3>
-        <div class="field">
-            <label>Background</label>
-            <div class="color-row">
-                <input type="color" id="colorBg" value="#1a0f07" oninput="syncHex(this,'hexBg')">
-                <input type="text" class="color-hex" id="hexBg" value="#1a0f07" oninput="syncColor(this,'colorBg')" maxlength="7">
-            </div>
-        </div>
-        <div class="field">
-            <label>Accent</label>
-            <div class="color-row">
-                <input type="color" id="colorAccent" value="#c19a6b" oninput="syncHex(this,'hexAccent')">
-                <input type="text" class="color-hex" id="hexAccent" value="#c19a6b" oninput="syncColor(this,'colorAccent')" maxlength="7">
-            </div>
-        </div>
-    </div>
-
-    <!-- BIO TEXT -->
-    <div class="section">
-        <h3>Bio Text</h3>
-        <div class="field">
-            <textarea id="bioText" rows="5"></textarea>
-        </div>
-    </div>
-
-    <!-- PROFILE PHOTO -->
-    <div class="section">
-        <h3>Profile Photo</h3>
-        <div class="photo-row">
-            <img id="currentPhoto" src="" alt="Current profile photo">
-            <div class="photo-right">
-                <label class="file-label" for="photoInput">Choose new photo</label>
-                <input type="file" id="photoInput" accept="image/*" onchange="onPhotoSelect(this)">
-                <p id="photoName">No file chosen</p>
-                <p style="font-size:0.8rem; color:var(--muted); margin-top:0.5rem;">
-                    JPEG or PNG · will be saved as images/profile.jpg
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <div class="btn-row">
-        <button class="btn btn-primary" id="saveBtn" onclick="saveAll()">Save &amp; Commit</button>
-        <button class="btn btn-secondary" onclick="loadFromGitHub()">&#8635; Reload from GitHub</button>
-    </div>
-    <div id="statusMsg"></div>
-
 </div>
-
 <script>
 (function () {
     'use strict';
 
-    const OWNER  = 'Ufungi';
-    const REPO   = 'Shinnam-Yoo';
-    const BRANCH = 'main';
-    const API    = 'https://api.github.com';
+    const API = 'https://api.github.com';
+    let ghPat = '';
 
-    let ghPat  = '';
-    let indexSha  = '';   // SHA of index.html on GitHub (needed for update)
-    let photoFile = null; // File object if user picked a new photo
-
-    /* ─── HELPERS ─────────────────────────────── */
     function gh(path, opts = {}) {
         return fetch(API + path, {
             ...opts,
@@ -320,41 +185,13 @@
         });
     }
 
-    function status(msg, type) {
-        const el = document.getElementById('statusMsg');
-        el.textContent = msg;
-        el.className = type;
-    }
-
-    function b64encode(str) {
-        return btoa(unescape(encodeURIComponent(str)));
-    }
-
-    /* ─── COLOR SYNC ──────────────────────────── */
-    window.syncHex   = (picker, hexId) => document.getElementById(hexId).value = picker.value;
-    window.syncColor = (hexInput, colorId) => {
-        if (/^#[0-9a-f]{6}$/i.test(hexInput.value)) {
-            document.getElementById(colorId).value = hexInput.value;
-        }
-    };
-
-    /* ─── PHOTO SELECTION ─────────────────────── */
-    window.onPhotoSelect = function(input) {
-        if (!input.files[0]) return;
-        photoFile = input.files[0];
-        document.getElementById('photoName').textContent = photoFile.name;
-        const url = URL.createObjectURL(photoFile);
-        document.getElementById('currentPhoto').src = url;
-    };
-
-    /* ─── LOGIN ───────────────────────────────── */
-    window.login = async function() {
+    window.login = async function () {
         const pat = document.getElementById('patInput').value.trim();
         if (!pat) return;
         ghPat = pat;
 
         const loginStatus = document.getElementById('loginStatus');
-        loginStatus.style.cssText = 'color:var(--muted);font-size:0.85rem;margin-top:0.75rem;';
+        loginStatus.style.color = 'var(--muted)';
         loginStatus.textContent = 'Verifying…';
 
         try {
@@ -365,176 +202,28 @@
             localStorage.setItem('adminPat', ghPat);
             document.getElementById('ghUser').textContent = user.login;
             document.getElementById('loginSection').style.display = 'none';
-            document.getElementById('adminPanel').style.display  = 'block';
-
-            await loadFromGitHub();
+            document.getElementById('loggedSection').style.display = 'block';
         } catch (e) {
             loginStatus.style.color = 'var(--red)';
             loginStatus.textContent = e.message;
         }
     };
 
-    window.logout = function() {
+    window.logout = function () {
         localStorage.removeItem('adminPat');
         ghPat = '';
         document.getElementById('patInput').value = '';
         document.getElementById('loginSection').style.display = 'block';
-        document.getElementById('adminPanel').style.display  = 'none';
+        document.getElementById('loggedSection').style.display = 'none';
     };
 
-    /* ─── LOAD FROM GITHUB ────────────────────── */
-    window.loadFromGitHub = async function() {
-        status('Loading current site content…', 'loading');
-        try {
-            const r = await gh(`/repos/${OWNER}/${REPO}/contents/index.html?ref=${BRANCH}`);
-            if (!r.ok) throw new Error('Could not fetch index.html');
-            const data = await r.json();
-            indexSha = data.sha;
-            const html = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
-
-            // Extract background color
-            const bgMatch = html.match(/--bg-dark:\s*(#[0-9a-fA-F]{6})/);
-            if (bgMatch) {
-                document.getElementById('colorBg').value = bgMatch[1];
-                document.getElementById('hexBg').value   = bgMatch[1];
-            }
-            // Extract accent color
-            const accentMatch = html.match(/--accent:\s*(#[0-9a-fA-F]{6})/);
-            if (accentMatch) {
-                document.getElementById('colorAccent').value = accentMatch[1];
-                document.getElementById('hexAccent').value   = accentMatch[1];
-            }
-            // Extract bio text (content of <p class="bio-text">…</p>)
-            const bioMatch = html.match(/<p\s+class="bio-text">([\s\S]*?)<\/p>/);
-            if (bioMatch) {
-                document.getElementById('bioText').value = bioMatch[1]
-                    .replace(/<em>(.*?)<\/em>/g, '*$1*')
-                    .trim();
-            }
-
-            // Load profile photo preview
-            document.getElementById('currentPhoto').src =
-                `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/images/profile.jpg?t=${Date.now()}`;
-
-            status('Loaded from GitHub.', 'ok');
-        } catch (e) {
-            status('Error: ' + e.message, 'err');
-        }
-    };
-
-    /* ─── SAVE ALL ────────────────────────────── */
-    window.saveAll = async function() {
-        const btn = document.getElementById('saveBtn');
-        btn.disabled = true;
-        status('Saving…', 'loading');
-
-        try {
-            // 1. Update index.html (colors + bio)
-            await saveIndexHtml();
-            // 2. Upload profile photo if changed
-            if (photoFile) await savePhoto();
-
-            status('Saved and committed successfully!', 'ok');
-            // Refresh SHA
-            await loadFromGitHub();
-        } catch (e) {
-            status('Error: ' + e.message, 'err');
-        } finally {
-            btn.disabled = false;
-        }
-    };
-
-    async function saveIndexHtml() {
-        // Fetch latest content
-        const r = await gh(`/repos/${OWNER}/${REPO}/contents/index.html?ref=${BRANCH}`);
-        if (!r.ok) throw new Error('Could not fetch index.html for update');
-        const data = await r.json();
-        indexSha = data.sha;
-        let html = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
-
-        // Replace background color
-        const newBg = document.getElementById('hexBg').value.trim();
-        if (/^#[0-9a-f]{6}$/i.test(newBg)) {
-            html = html.replace(/(--bg-dark:\s*)#[0-9a-fA-F]{6}/g, '$1' + newBg);
-        }
-        // Replace accent color
-        const newAccent = document.getElementById('hexAccent').value.trim();
-        if (/^#[0-9a-f]{6}$/i.test(newAccent)) {
-            html = html.replace(/(--accent:\s*)#[0-9a-fA-F]{6}/g, '$1' + newAccent);
-        }
-        // Replace bio text
-        const rawBio = document.getElementById('bioText').value.trim();
-        const bioHtml = rawBio.replace(/\*(.*?)\*/g, '<em>$1</em>');
-        html = html.replace(
-            /(<p\s+class="bio-text">)[\s\S]*?(<\/p>)/,
-            '$1\n                    ' + bioHtml + '\n                $2'
-        );
-
-        // Commit
-        const putR = await gh(`/repos/${OWNER}/${REPO}/contents/index.html`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                message: 'admin: update colors and bio text',
-                content: b64encode(html),
-                sha:     indexSha,
-                branch:  BRANCH
-            })
-        });
-        if (!putR.ok) {
-            const err = await putR.json().catch(() => ({}));
-            const hint = putR.status === 404 ? ' (PAT lacks write/repo scope)' : putR.status === 422 ? ' (SHA mismatch — try Reload)' : '';
-            throw new Error('Commit failed: ' + (err.message || putR.status) + hint);
-        }
-    }
-
-    async function savePhoto() {
-        // Read file as base64
-        const b64 = await new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload  = () => resolve(reader.result.split(',')[1]);
-            reader.onerror = reject;
-            reader.readAsDataURL(photoFile);
-        });
-
-        // Get current SHA of profile.jpg (if it exists)
-        let photoSha = '';
-        const check = await gh(`/repos/${OWNER}/${REPO}/contents/images/profile.jpg?ref=${BRANCH}`);
-        if (check.ok) {
-            const d = await check.json();
-            photoSha = d.sha;
-        }
-
-        const body = {
-            message: 'admin: update profile photo',
-            content: b64,
-            branch:  BRANCH
-        };
-        if (photoSha) body.sha = photoSha;
-
-        const r = await gh(`/repos/${OWNER}/${REPO}/contents/images/profile.jpg`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body)
-        });
-        if (!r.ok) {
-            const err = await r.json();
-            throw new Error('Photo upload failed: ' + (err.message || r.status));
-        }
-        photoFile = null;
-        document.getElementById('photoInput').value = '';
-        document.getElementById('photoName').textContent = 'No file chosen';
-    }
-
-    /* ─── AUTO-LOGIN ──────────────────────────── */
+    /* Auto-login if token is already saved */
     const saved = localStorage.getItem('adminPat');
     if (saved) {
         document.getElementById('patInput').value = saved;
         login();
     }
-
 })();
 </script>
-
 </body>
 </html>

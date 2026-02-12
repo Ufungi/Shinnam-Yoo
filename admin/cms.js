@@ -672,7 +672,7 @@
                 el.classList.remove('cms-sec-draggable', 'sec-drag-over');
                 el.style.opacity = '';
             });
-            clone.classList.remove('cms-admin', 'cms-edit');
+            clone.querySelector('body')?.classList.remove('cms-admin', 'cms-edit');
 
             const newHtml = '<!DOCTYPE html>\n' + clone.outerHTML;
             const file = await getFile(REPO_PATH);
@@ -893,11 +893,17 @@
         try {
             const oldPath = info.dir + '/' + oldName;
             const newPath = info.dir + '/' + newName;
-            const oldFile = await getFile(oldPath);
-            const content = oldFile.content.replace(/\n/g, '');
-            // Create new file, delete old
-            await putFileBin(newPath, content, null, 'admin: rename ' + oldName + ' to ' + newName);
-            await deleteFile(oldPath, oldFile.sha, 'admin: rename (del) ' + oldName);
+
+            // Try to rename the original file; silently skip if it doesn't exist in GitHub
+            try {
+                const oldFile = await getFile(oldPath);
+                const content = oldFile.content.replace(/\n/g, '');
+                await putFileBin(newPath, content, null, 'admin: rename ' + oldName + ' to ' + newName);
+                await deleteFile(oldPath, oldFile.sha, 'admin: rename (del) ' + oldName);
+            } catch (e) {
+                // 404 = original not in repo (only thumbnail exists), skip silently
+                if (!e.message.includes('HTTP 404')) throw e;
+            }
 
             // Rename thumbnail for Mushrooms
             if (info.key === 'mushroom') {
@@ -921,11 +927,13 @@
             item.dataset.cmsFilename = newName;
             const img = item.querySelector('img');
             if (img) {
-                const newSrc = img.getAttribute('src').replace(
-                    encodeURIComponent(oldName),
-                    encodeURIComponent(newName)
-                );
-                img.src = newSrc.split('?')[0] + '?t=' + Date.now();
+                const oldEncoded = encodeURIComponent(oldName);
+                const newEncoded = encodeURIComponent(newName);
+                const src = img.getAttribute('src');
+                img.src = (src.includes(oldEncoded)
+                    ? src.replace(oldEncoded, newEncoded)
+                    : src.replace(oldName, newName)
+                ).split('?')[0] + '?t=' + Date.now();
             }
 
             setStatus('Renamed to ' + newName);
