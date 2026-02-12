@@ -1,5 +1,5 @@
 /* ── Custom spore cursor ─────────────────────────────────────────────────── */
-/* Hotspot: bottom pointed tip of spore shape (19, 46) for 48x48 cursor */
+/* Hotspot: bottom-left tip after 30° CCW rotation, 24x24 cursor */
 * {
-    cursor: url('images/cursor-spore.png') 19 46, auto !important;
+    cursor: url('images/cursor-spore.png') 6 18, auto !important;
 }
