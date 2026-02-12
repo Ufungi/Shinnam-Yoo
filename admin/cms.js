@@ -229,8 +229,8 @@
         }
         .cms-pub-del:hover { background: rgba(201,107,107,0.5); }
         .cms-add-pub { margin: 1rem 0; display: block; width: 100%; }
-        /* upload progress toast */
-        #cms-upload-toast {
+        /* upload progress toast + operation toast */
+        #cms-upload-toast, #cms-op-toast {
             position: fixed; bottom: 5.5rem; right: 1.25rem; z-index: 10000;
             background: rgba(20,10,4,0.97);
             border: 1px solid rgba(193,154,107,0.5);
@@ -238,11 +238,12 @@
             font-family: 'Segoe UI', system-ui, sans-serif; font-size: 0.82rem;
             color: #c4aa88; box-shadow: 0 4px 24px rgba(0,0,0,0.65);
         }
-        #cms-upload-toast .upt-title { color: #f0ebe0; font-weight: 600; margin-bottom: 0.35rem; }
+        #cms-upload-toast .upt-title, #cms-op-toast .upt-title { color: #f0ebe0; font-weight: 600; margin-bottom: 0.35rem; }
         #cms-upload-toast .upt-file  { font-size: 0.73rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; opacity: 0.8; }
         #cms-upload-toast .upt-bar-bg   { margin-top: 0.5rem; height: 4px; background: rgba(193,154,107,0.18); border-radius: 2px; }
         #cms-upload-toast .upt-bar-fill { height: 100%; background: #c19a6b; border-radius: 2px; transition: width 0.25s; }
-        #cms-upload-toast.done .upt-title { color: #7cba6b; }
+        #cms-upload-toast.done .upt-title, #cms-op-toast.done .upt-title { color: #7cba6b; }
+        #cms-op-toast.error .upt-title { color: #e8a0a0; }
         #cms-color-panel {
             position: absolute; bottom: 3.5rem; right: 0;
             background: rgba(20,10,4,0.98);
@@ -271,6 +272,30 @@
     function setStatus(msg) {
         const el = document.getElementById('cms-status');
         if (el) el.textContent = msg;
+    }
+
+    let opToastTimer = null;
+    function showOp(msg, state) {
+        if (opToastTimer) { clearTimeout(opToastTimer); opToastTimer = null; }
+        let el = document.getElementById('cms-op-toast');
+        if (state === 'hide') { el?.remove(); return; }
+        if (!el) {
+            el = document.createElement('div');
+            el.id = 'cms-op-toast';
+            document.body.appendChild(el);
+        }
+        el.className = '';
+        if (state === 'done') {
+            el.classList.add('done');
+            el.innerHTML = '<div class="upt-title">&#10003; ' + msg + '</div>';
+            opToastTimer = setTimeout(() => { el.remove(); opToastTimer = null; }, 2000);
+        } else if (state === 'error') {
+            el.classList.add('error');
+            el.innerHTML = '<div class="upt-title">&#10007; ' + msg + '</div>';
+            opToastTimer = setTimeout(() => { el.remove(); opToastTimer = null; }, 3500);
+        } else {
+            el.innerHTML = '<div class="upt-title">&#8230; ' + msg + '</div>';
+        }
     }
 
     function injectBar() {
@@ -400,15 +425,15 @@
             });
             const relSrc = img.getAttribute('src');
             const repoImgPath = resolveRepoPath(REPO_PATH, relSrc);
-            setStatus('Uploading…');
+            showOp('Uploading image…', 'busy');
             try {
                 let sha = null;
                 try { const f = await getFile(repoImgPath); sha = f.sha; } catch (_) {}
                 await putFileBin(repoImgPath, b64content, sha, 'admin: replace ' + repoImgPath.split('/').pop());
                 img.src = img.src.split('?')[0] + '?t=' + Date.now();
-                setStatus('Image replaced!');
+                showOp('Image replaced!', 'done');
             } catch (err) {
-                setStatus('Error: ' + err.message);
+                showOp(err.message, 'error');
             }
         };
         input.click();
@@ -648,7 +673,7 @@
         applyColorsToDom();
         const panel = document.getElementById('cms-color-panel');
         if (!panel) return;
-        setStatus('Saving colors…');
+        showOp('Saving colors…', 'busy');
         try {
             const file = await getFile(REPO_PATH);
             let html = decodeURIComponent(escape(atob(file.content.replace(/\n/g, ''))));
@@ -660,9 +685,9 @@
                 );
             });
             await putFile(REPO_PATH, html, file.sha, 'admin: update colors ' + REPO_PATH);
-            setStatus('Colors saved!');
+            showOp('Colors saved!', 'done');
         } catch (err) {
-            setStatus('Error: ' + err.message);
+            showOp(err.message, 'error');
         }
     };
 
@@ -670,7 +695,7 @@
     window.cmsSave = async function () {
         const btn = document.getElementById('cms-save-btn');
         if (btn) btn.disabled = true;
-        setStatus('Saving…');
+        showOp('Saving page…', 'busy');
         try {
             const clone = document.documentElement.cloneNode(true);
             clone.querySelector('#cms-bar')?.remove();
@@ -692,7 +717,8 @@
             const file = await getFile(REPO_PATH);
             await putFile(REPO_PATH, newHtml, file.sha, 'admin: update ' + REPO_PATH);
 
-            setStatus('Saved!');
+            showOp('Saved!', 'done');
+            setStatus('');
             editMode = false;
             document.designMode = 'off';
             document.body.classList.remove('cms-edit');
@@ -705,7 +731,7 @@
             if (resizeHandleEl) resizeHandleEl.classList.remove('cmsov-on');
             cleanupSectionReorder();
         } catch (e) {
-            setStatus(e.message);
+            showOp(e.message, 'error');
         } finally {
             if (btn) btn.disabled = false;
         }
@@ -798,7 +824,7 @@
     window.cmsGallerySave = async function () {
         const btn = document.getElementById('cms-gallery-save');
         if (btn) btn.disabled = true;
-        setStatus('Saving order…');
+        showOp('Saving order…', 'busy');
         try {
             const getFilenames = gridId => [...document.querySelectorAll('#' + gridId + ' .gallery-item img')]
                 .map(img => decodeURIComponent(img.getAttribute('src').split('/').pop().split('?')[0]));
@@ -820,9 +846,9 @@
 
             await putFile('gallery/index.html', html, file.sha, 'admin: reorder gallery photos');
             if (btn) btn.style.display = 'none';
-            setStatus('Order saved!');
+            showOp('Order saved!', 'done');
         } catch (e) {
-            setStatus(e.message);
+            showOp(e.message, 'error');
         } finally {
             if (btn) btn.disabled = false;
         }
@@ -903,7 +929,7 @@
         const newBase = prompt('Rename "' + oldName + '" to (without extension):', base);
         if (!newBase || newBase.trim() === '' || newBase.trim() === base) return;
         const newName = newBase.trim() + '.' + ext;
-        setStatus('Renaming…');
+        showOp('Renaming…', 'busy');
         try {
             const oldPath = info.dir + '/' + oldName;
             const newPath = info.dir + '/' + newName;
@@ -950,15 +976,15 @@
                 ).split('?')[0] + '?t=' + Date.now();
             }
 
-            setStatus('Renamed to ' + newName);
+            showOp('Renamed to ' + newName, 'done');
         } catch (err) {
-            setStatus('Error: ' + err.message);
+            showOp(err.message, 'error');
         }
     }
 
     async function cmsRotatePhoto(item, btn, filename, info) {
         btn.disabled = true;
-        setStatus('Rotating…');
+        showOp('Rotating…', 'busy');
         try {
             const fullSrc = info.src + encodeURIComponent(filename) + '?t=' + Date.now();
             const img = await new Promise((res, rej) => {
@@ -1004,9 +1030,9 @@
                 displayImg.src = base + '?t=' + Date.now();
             }
 
-            setStatus('Rotated!');
+            showOp('Rotated!', 'done');
         } catch (e) {
-            setStatus(e.message);
+            showOp(e.message, 'error');
         } finally {
             btn.disabled = false;
         }
@@ -1015,7 +1041,7 @@
     async function cmsDeletePhoto(item, filename, info) {
         if (!filename || !info) return;
         if (!confirm('Delete "' + filename + '" from gallery?\nThis cannot be undone.')) return;
-        setStatus('Deleting…');
+        showOp('Deleting…', 'busy');
         try {
             const filePath = info.dir + '/' + filename;
             const f = await getFile(filePath);
@@ -1040,9 +1066,9 @@
                 const n = gridEl?.querySelectorAll('.gallery-item').length;
                 if (n !== undefined) countEl.textContent = n + ' photos';
             }
-            setStatus('Deleted.');
+            showOp('Deleted', 'done');
         } catch (e) {
-            setStatus(e.message);
+            showOp(e.message, 'error');
         }
     }
 
