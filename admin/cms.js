@@ -127,15 +127,12 @@
             font-size: 0.75rem; color: #c4aa88;
             max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
         }
-        body.cms-edit [data-cmseditable] {
-            outline: 2px dashed rgba(193,154,107,0.5); cursor: text; border-radius: 3px;
-        }
-        body.cms-edit [data-cmseditable]:focus {
-            outline: 2px solid #c19a6b; outline-offset: 2px;
+        body.cms-edit {
+            caret-color: #c19a6b;
         }
         body.cms-edit img.cms-img-replace {
             outline: 2px dashed rgba(107,154,193,0.6);
-            cursor: pointer !important;
+            cursor: zoom-in !important;
         }
         body.cms-edit img.cms-img-replace:hover {
             outline: 2px solid #6b9ac1;
@@ -253,11 +250,6 @@
     /* ── Text editing (non-gallery pages) ──────── */
     let editMode = false;
 
-    // All text-bearing elements except nav, footer, and admin UI
-    const EDIT_SELECTORS = ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'blockquote', 'figcaption']
-        .map(t => t + ':not(nav *):not(footer *):not(#cms-bar *):not(.cms-trash *):not(.cms-rotate *):not(.cms-add-btn *)')
-        .join(',');
-
     window.cmsToggleEdit = function () {
         editMode = !editMode;
         document.body.classList.toggle('cms-edit', editMode);
@@ -266,22 +258,22 @@
         if (editBtn) editBtn.classList.toggle('cms-active', editMode);
         if (saveBtn) saveBtn.style.display = editMode ? '' : 'none';
 
-        document.querySelectorAll(EDIT_SELECTORS).forEach(el => {
-            if (editMode) {
-                el.setAttribute('data-cmseditable', '1');
-                el.contentEditable = 'true';
-            } else {
-                el.removeAttribute('data-cmseditable');
-                el.contentEditable = 'false';
-            }
-        });
-
-        // Image replacement
         if (editMode) {
+            // Native browser editing mode — makes entire page editable
+            document.designMode = 'on';
+            // Lock out UI chrome from being edited
+            document.querySelectorAll('#cms-bar, nav, footer').forEach(el => {
+                el.contentEditable = 'false';
+            });
             initImgReplace();
         } else {
+            document.designMode = 'off';
+            document.querySelectorAll('#cms-bar, nav, footer').forEach(el => {
+                el.removeAttribute('contenteditable');
+            });
             document.querySelectorAll('img.cms-img-replace').forEach(img => {
                 img.classList.remove('cms-img-replace');
+                img.removeAttribute('contenteditable');
                 img.removeEventListener('click', handleImgReplace);
             });
         }
@@ -295,12 +287,14 @@
                     btn.className = 'cms-pub-del';
                     btn.innerHTML = '&#10005;';
                     btn.title = 'Delete this publication';
+                    btn.contentEditable = 'false';
                     btn.addEventListener('click', () => entry.remove());
                     entry.appendChild(btn);
                 });
                 const addBtn = document.createElement('button');
                 addBtn.className = 'cms-btn cms-add-pub';
                 addBtn.id = 'cms-add-pub-btn';
+                addBtn.contentEditable = 'false';
                 addBtn.textContent = '+ Add Publication';
                 addBtn.addEventListener('click', cmsAddPublication);
                 document.querySelector('.pub-list')?.after(addBtn);
@@ -311,7 +305,7 @@
             }
         }
 
-        setStatus(editMode ? 'Click text or image to edit' : '');
+        setStatus(editMode ? 'Click anywhere to edit text — double-click image to replace' : '');
     };
 
     /* ── Image replacement (non-gallery) ───────── */
@@ -319,8 +313,11 @@
         document.querySelectorAll('img:not(#cms-bar *):not(nav *)')
             .forEach(img => {
                 img.classList.add('cms-img-replace');
-                img.removeEventListener('click', handleImgReplace);
-                img.addEventListener('click', handleImgReplace);
+                // contentEditable=false prevents browser's resize-handle UI in designMode
+                // while still allowing our click handler to fire
+                img.contentEditable = 'false';
+                img.removeEventListener('dblclick', handleImgReplace);
+                img.addEventListener('dblclick', handleImgReplace);
             });
     }
 
@@ -444,10 +441,7 @@
             const clone = document.documentElement.cloneNode(true);
             clone.querySelector('#cms-bar')?.remove();
             clone.querySelector('#cms-styles')?.remove();
-            clone.querySelectorAll('[data-cmseditable]').forEach(el => {
-                el.removeAttribute('data-cmseditable');
-                el.removeAttribute('contenteditable');
-            });
+            clone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
             clone.querySelectorAll('.cms-pub-del, #cms-add-pub-btn').forEach(el => el.remove());
             clone.querySelectorAll('.pub-item').forEach(e => e.style.position = '');
             clone.querySelectorAll('img.cms-img-replace').forEach(img => img.classList.remove('cms-img-replace'));
@@ -459,15 +453,15 @@
 
             setStatus('Saved!');
             editMode = false;
+            document.designMode = 'off';
             document.body.classList.remove('cms-edit');
             document.getElementById('cms-edit-btn')?.classList.remove('cms-active');
             if (btn) btn.style.display = 'none';
-            document.querySelectorAll('[data-cmseditable]').forEach(el => {
-                el.removeAttribute('data-cmseditable');
-                el.contentEditable = 'false';
-            });
+            document.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
             document.querySelectorAll('.cms-pub-del, #cms-add-pub-btn').forEach(el => el.remove());
-            document.querySelectorAll('img.cms-img-replace').forEach(img => img.classList.remove('cms-img-replace'));
+            document.querySelectorAll('img.cms-img-replace').forEach(img => {
+                img.classList.remove('cms-img-replace');
+            });
         } catch (e) {
             setStatus(e.message);
         } finally {
@@ -485,14 +479,15 @@
         li.innerHTML =
             '<span class="pub-num" aria-hidden="true"></span>' +
             '<div class="pub-body">' +
-            '<div class="pub-authors" contenteditable="true" data-cmseditable="1">Author, A. &amp; Author, B.</div>' +
-            '<div class="pub-title" contenteditable="true" data-cmseditable="1">Paper title here</div>' +
-            '<div class="pub-meta" contenteditable="true" data-cmseditable="1"><em>Journal</em> (Year)</div>' +
+            '<div class="pub-authors">Author, A. &amp; Author, B.</div>' +
+            '<div class="pub-title">Paper title here</div>' +
+            '<div class="pub-meta"><em>Journal</em> (Year)</div>' +
             '</div>';
         const delBtn = document.createElement('button');
         delBtn.className = 'cms-pub-del';
         delBtn.innerHTML = '&#10005;';
         delBtn.title = 'Delete this publication';
+        delBtn.contentEditable = 'false';
         delBtn.addEventListener('click', () => li.remove());
         li.appendChild(delBtn);
         list.appendChild(li);
