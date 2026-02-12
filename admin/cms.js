@@ -964,7 +964,9 @@
                 let newSha = null;
                 try { const nf = await getFile(newPath); newSha = nf.sha; } catch (_) {}
                 await putFileBin(newPath, content, newSha, 'admin: rename ' + oldName + ' to ' + newName);
-                await deleteFile(oldPath, oldFile.sha, 'admin: rename (del) ' + oldName);
+                // Re-fetch SHA before delete to avoid 409 conflict
+                const oldFileRefresh = await getFile(oldPath);
+                await deleteFile(oldPath, oldFileRefresh.sha, 'admin: rename (del) ' + oldName);
             } catch (e) {
                 // 404 = original not in repo (only thumbnail exists), skip silently
                 if (!e.message.includes('HTTP 404')) throw e;
@@ -974,13 +976,16 @@
             if (info.key === 'mushroom') {
                 const oldThumbName = oldName.replace(/\.\w+$/, '.jpg');
                 const newThumbName = newBase.trim() + '.jpg';
+                const oldThumbPath = 'images/Mushrooms/thumbs/' + oldThumbName;
                 try {
-                    const tf = await getFile('images/Mushrooms/thumbs/' + oldThumbName);
+                    const tf = await getFile(oldThumbPath);
                     // Check if new thumb path already exists
                     let newThumbSha = null;
                     try { const ntf = await getFile('images/Mushrooms/thumbs/' + newThumbName); newThumbSha = ntf.sha; } catch (_) {}
                     await putFileBin('images/Mushrooms/thumbs/' + newThumbName, tf.content.replace(/\n/g, ''), newThumbSha, 'admin: rename thumb');
-                    await deleteFile('images/Mushrooms/thumbs/' + oldThumbName, tf.sha, 'admin: rename thumb (del)');
+                    // Re-fetch SHA before delete to avoid 409 conflict
+                    const tfRefresh = await getFile(oldThumbPath);
+                    await deleteFile(oldThumbPath, tfRefresh.sha, 'admin: rename thumb (del)');
                 } catch (_) {}
             }
 
