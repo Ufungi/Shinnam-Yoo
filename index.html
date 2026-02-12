@@ -627,24 +627,7 @@
     </footer>
     <script src="admin/cms.js"></script>
     <script>
-    /* Spore cursor generator - uses --cursor-fill CSS variable */
-    (function () {
-        function genCursor() {
-            var fill = getComputedStyle(document.documentElement).getPropertyValue('--cursor-fill').trim() || '#c19a6b';
-            var stroke = getComputedStyle(document.documentElement).getPropertyValue('--bg-dark').trim() || '#1a0f07';
-            var svg = "<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24'>" +
-                "<g transform='rotate(-30,12,12)'>" +
-                "<ellipse cx='12' cy='9' rx='5' ry='7' fill='" + fill + "' stroke='" + stroke + "' stroke-width='1.2'/>" +
-                "<path d='M7,9 Q12,20 17,9' fill='" + fill + "' stroke='" + stroke + "' stroke-width='1.2'/>" +
-                "</g></svg>";
-            var uri = 'data:image/svg+xml;base64,' + btoa(svg);
-            var style = document.getElementById('spore-cursor-style');
-            if (!style) { style = document.createElement('style'); style.id = 'spore-cursor-style'; document.head.appendChild(style); }
-            style.textContent = '* { cursor: url("' + uri + '") 7 4, auto !important; }';
-        }
-        genCursor();
-        window.updateSporeCursor = genCursor;
-    })();
+    (function(){var P='m -189.84035,268.21665 c -0.89145,0.74106 -2.08466,0.74976 -3.16904,0.92231 -1.02841,0.16364 -1.6854,1.06957 -2.08231,1.98025 -0.45252,1.03826 -0.53715,2.36012 0.22737,3.27894 1.0362,1.24533 2.6305,1.76486 4.04722,2.43503 0.78661,0.3721 1.48575,0.91487 1.95813,1.67219 1.76958,2.83698 2.37327,6.24297 4.33297,8.98781 2.98526,4.18128 7.03573,7.54691 11.53305,10.00372 4.36588,2.385 9.65628,3.22493 14.48671,1.91147 2.92167,-0.79444 5.83916,-2.34397 7.47831,-4.9106 1.10223,-1.72591 1.77531,-3.70166 2.19352,-5.69176 0.52889,-2.51677 0.73133,-5.15342 0.0931,-7.68007 -0.98815,-3.91188 -3.35969,-7.29231 -6.0006,-10.27609 -2.40891,-2.72166 -5.08347,-5.30083 -8.36232,-6.95743 -2.68136,-1.35472 -5.55921,-2.76363 -8.55032,-2.69032 -3.80683,0.0933 -7.64333,0.78476 -11.10194,2.43611 -2.5461,1.21566 -4.85123,2.86871 -7.08384,4.57844 z';function g(){var f=getComputedStyle(document.documentElement).getPropertyValue('--cursor-fill').trim()||'#c19a6b';var s=getComputedStyle(document.documentElement).getPropertyValue('--bg-dark').trim()||'#1a0f07';var v="<svg xmlns='http://www.w3.org/2000/svg' width='24' height='32' viewBox='0 0 24 32'><g transform='translate(12,4) scale(0.5) translate(195,-261)'><path d='"+P+"' fill='"+f+"' stroke='"+s+"' stroke-width='2'/></g></svg>";var u='data:image/svg+xml;base64,'+btoa(v);var t=document.getElementById('spore-cursor-style');if(!t){t=document.createElement('style');t.id='spore-cursor-style';document.head.appendChild(t);}t.textContent='*{cursor:url(\"'+u+'\") 2 2,auto!important}';}g();window.updateSporeCursor=g;})();
     </script>
     <script>
     (function () {
