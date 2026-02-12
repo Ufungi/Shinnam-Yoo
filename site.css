@@ -1,5 +1,5 @@
 /* ── Custom spore cursor ─────────────────────────────────────────────────── */
-/* Hotspot: bottom pointed tip of spore shape (12, 30) in 24×32 svg */
+/* Hotspot: bottom pointed tip of spore shape (1, 47) for 48x48 cursor */
 * {
-    cursor: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScyNCcgaGVpZ2h0PSczMicgdmlld0JveD0nMCAwIDI0IDMyJz4KICA8cGF0aCBkPSdNMTIsMzAgQzMsMjUgMSwxNyAxLDEyIEMxLDYgNiwxIDEyLDEgQzE4LDEgMjMsNiAyMywxMiBDMjMsMTcgMjEsMjUgMTIsMzAgWicKICAgICAgICBmaWxsPSdyZ2JhKDE5MywxNTQsMTA3LDAuODgpJyBzdHJva2U9J3JnYmEoMjAsOCwyLDAuNzUpJyBzdHJva2Utd2lkdGg9JzEuNScgc3Ryb2tlLWxpbmVqb2luPSdyb3VuZCcvPgogIDxjaXJjbGUgY3g9JzEyJyBjeT0nMTInIHI9JzIuOCcgZmlsbD0ncmdiYSg4MCw0MCw4LDAuNjUpJy8+CiAgPGNpcmNsZSBjeD0nNy41JyBjeT0nOC41JyByPScxLjQnIGZpbGw9J3JnYmEoODAsNDAsOCwwLjQ1KScvPgogIDxjaXJjbGUgY3g9JzE2LjUnIGN5PSc4LjUnIHI9JzEuNCcgZmlsbD0ncmdiYSg4MCw0MCw4LDAuNDUpJy8+CiAgPGNpcmNsZSBjeD0nOCcgY3k9JzE3JyByPScxLjEnIGZpbGw9J3JnYmEoODAsNDAsOCwwLjM4KScvPgogIDxjaXJjbGUgY3g9JzE2JyBjeT0nMTcnIHI9JzEuMScgZmlsbD0ncmdiYSg4MCw0MCw4LDAuMzgpJy8+Cjwvc3ZnPg==') 12 30, auto !important;
+    cursor: url('images/cursor-spore.png') 1 47, auto !important;
 }
