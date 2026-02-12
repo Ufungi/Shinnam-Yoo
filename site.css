@@ -1,5 +1,5 @@
 /* ── Custom spore cursor ─────────────────────────────────────────────────── */
-/* Hotspot: bottom pointed tip of spore shape (10, 45) for 48x48 cursor */
+/* Hotspot: bottom pointed tip of spore shape (19, 46) for 48x48 cursor */
 * {
-    cursor: url('images/cursor-spore.png') 10 45, auto !important;
+    cursor: url('images/cursor-spore.png') 19 46, auto !important;
 }
