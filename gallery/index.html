@@ -291,8 +291,27 @@
             .footer-contacts { flex-direction: column; gap: 1rem; align-items: center; }
         }
 
-        @media (max-width: 480px) {
-            .masonry-grid { columns: 1; }
+        /* Mobile: compact square-tile grid */
+        @media (max-width: 640px) {
+            .masonry-grid {
+                columns: unset;
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 3px;
+            }
+            .masonry-grid .gallery-item {
+                break-inside: unset;
+                margin-bottom: 0;
+                border-radius: 2px;
+                aspect-ratio: 1;
+                overflow: hidden;
+            }
+            .masonry-grid .gallery-item img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+            .species-caption { display: none; }
         }
 
         .nav-hamburger {

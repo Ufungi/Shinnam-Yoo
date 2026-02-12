@@ -229,6 +229,20 @@
         }
         .cms-pub-del:hover { background: rgba(201,107,107,0.5); }
         .cms-add-pub { margin: 1rem 0; display: block; width: 100%; }
+        /* upload progress toast */
+        #cms-upload-toast {
+            position: fixed; bottom: 5.5rem; right: 1.25rem; z-index: 10000;
+            background: rgba(20,10,4,0.97);
+            border: 1px solid rgba(193,154,107,0.5);
+            border-radius: 8px; padding: 0.75rem 1rem; min-width: 215px;
+            font-family: 'Segoe UI', system-ui, sans-serif; font-size: 0.82rem;
+            color: #c4aa88; box-shadow: 0 4px 24px rgba(0,0,0,0.65);
+        }
+        #cms-upload-toast .upt-title { color: #f0ebe0; font-weight: 600; margin-bottom: 0.35rem; }
+        #cms-upload-toast .upt-file  { font-size: 0.73rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; opacity: 0.8; }
+        #cms-upload-toast .upt-bar-bg   { margin-top: 0.5rem; height: 4px; background: rgba(193,154,107,0.18); border-radius: 2px; }
+        #cms-upload-toast .upt-bar-fill { height: 100%; background: #c19a6b; border-radius: 2px; transition: width 0.25s; }
+        #cms-upload-toast.done .upt-title { color: #7cba6b; }
         #cms-color-panel {
             position: absolute; bottom: 3.5rem; right: 0;
             background: rgba(20,10,4,0.98);
@@ -1032,50 +1046,81 @@
         }
     }
 
+    function showUploadToast(current, total, filename, state) {
+        let el = document.getElementById('cms-upload-toast');
+        if (state === 'remove') { el?.remove(); return; }
+        if (!el) {
+            el = document.createElement('div');
+            el.id = 'cms-upload-toast';
+            document.body.appendChild(el);
+        }
+        el.className = '';
+        if (state === 'done') {
+            el.classList.add('done');
+            el.innerHTML = '<div class="upt-title">&#10003; ' + total + ' photo' + (total !== 1 ? 's' : '') + ' uploaded</div>';
+            setTimeout(() => el.remove(), 2500);
+        } else {
+            const pct = total > 1 ? Math.round(((current - 1) / total) * 100) : 10;
+            el.innerHTML =
+                '<div class="upt-title">Uploading ' + current + ' / ' + total + '</div>' +
+                '<div class="upt-file">' + filename + '</div>' +
+                '<div class="upt-bar-bg"><div class="upt-bar-fill" style="width:' + pct + '%"></div></div>';
+        }
+    }
+
+    async function uploadSinglePhoto(file, info, grid) {
+        const b64content = await new Promise((res, rej) => {
+            const reader = new FileReader();
+            reader.onload  = () => res(reader.result.split(',')[1]);
+            reader.onerror = rej;
+            reader.readAsDataURL(file);
+        });
+        const filename  = file.name;
+        const filePath  = info.dir + '/' + filename;
+        let sha = '';
+        try { const ex = await getFile(filePath); sha = ex.sha; } catch (_) {}
+        await putFileBin(filePath, b64content, sha, 'admin: add ' + filename);
+        await updateGalleryArr(info.arr, filename, 'add');
+
+        const item = document.createElement('div');
+        item.className = 'gallery-item';
+        item.dataset.cmsFilename = filename;
+        const img = document.createElement('img');
+        img.src = (info.thumb || info.src) + encodeURIComponent(filename);
+        img.loading = 'lazy';
+        item.appendChild(img);
+        addGalleryButtons(item);
+        makeDraggable(item);
+        grid.appendChild(item);
+
+        const countIds = { mushroomImages: 'mushroomCount', animalImages: 'animalCount', samplingImages: 'samplingCount' };
+        const countEl = document.getElementById(countIds[info.arr]);
+        if (countEl) countEl.textContent = grid.querySelectorAll('.gallery-item').length + ' photos';
+    }
+
     async function cmsUploadPhoto(info, grid) {
         const input = document.createElement('input');
         input.type = 'file';
         input.accept = 'image/*';
+        input.multiple = true;
         input.addEventListener('change', async () => {
-            const file = input.files[0];
-            if (!file) return;
-            setStatus('Uploading…');
-            try {
-                const b64content = await new Promise((res, rej) => {
-                    const reader = new FileReader();
-                    reader.onload  = () => res(reader.result.split(',')[1]);
-                    reader.onerror = rej;
-                    reader.readAsDataURL(file);
-                });
-
-                const filename = file.name;
-                const filePath = info.dir + '/' + filename;
-
-                let sha = '';
-                try { const ex = await getFile(filePath); sha = ex.sha; } catch (_) {}
-
-                await putFileBin(filePath, b64content, sha, 'admin: add ' + filename);
-                await updateGalleryArr(info.arr, filename, 'add');
-
-                const item = document.createElement('div');
-                item.className = 'gallery-item';
-                item.dataset.cmsFilename = filename;
-                const img = document.createElement('img');
-                img.src = (info.thumb || info.src) + encodeURIComponent(filename);
-                img.loading = 'lazy';
-                item.appendChild(img);
-                addGalleryButtons(item);
-                makeDraggable(item);
-                grid.appendChild(item);
-
-                const countIds = { mushroomImages: 'mushroomCount', animalImages: 'animalCount', samplingImages: 'samplingCount' };
-                const countEl = document.getElementById(countIds[info.arr]);
-                if (countEl) countEl.textContent = grid.querySelectorAll('.gallery-item').length + ' photos';
-
-                setStatus('Uploaded!');
-            } catch (e) {
-                setStatus(e.message);
+            const files = [...input.files];
+            if (!files.length) return;
+            let done = 0, failed = 0;
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                showUploadToast(i + 1, files.length, file.name, 'uploading');
+                setStatus('Uploading ' + (i + 1) + ' / ' + files.length + '…');
+                try {
+                    await uploadSinglePhoto(file, info, grid);
+                    done++;
+                } catch (e) {
+                    failed++;
+                    console.error('Upload failed:', file.name, e);
+                }
             }
+            showUploadToast(null, done, '', 'done');
+            setStatus(done + ' uploaded' + (failed ? ', ' + failed + ' failed' : ''));
         });
         input.click();
     }
