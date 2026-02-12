@@ -1068,18 +1068,67 @@
         }
     }
 
-    async function uploadSinglePhoto(file, info, grid) {
-        const b64content = await new Promise((res, rej) => {
-            const reader = new FileReader();
-            reader.onload  = () => res(reader.result.split(',')[1]);
-            reader.onerror = rej;
-            reader.readAsDataURL(file);
+    // Process image for upload: resize to max 1920px, add watermark, generate thumbnail
+    function processForUpload(file) {
+        const MAX_PX   = 1920;
+        const THUMB_PX = 400;
+        const WATERMARK = '\u00a9 Shinnam Yoo';
+        return new Promise((res, rej) => {
+            const img = new Image();
+            const url = URL.createObjectURL(file);
+            img.onload = () => {
+                URL.revokeObjectURL(url);
+                const { naturalWidth: w, naturalHeight: h } = img;
+                const scale = Math.min(1, MAX_PX / Math.max(w, h));
+                const c = document.createElement('canvas');
+                c.width  = Math.round(w * scale);
+                c.height = Math.round(h * scale);
+                const ctx = c.getContext('2d');
+                ctx.drawImage(img, 0, 0, c.width, c.height);
+
+                // Thumbnail (clean, before watermark)
+                const ts = Math.min(1, THUMB_PX / Math.max(c.width, c.height));
+                const tc = document.createElement('canvas');
+                tc.width  = Math.round(c.width  * ts);
+                tc.height = Math.round(c.height * ts);
+                tc.getContext('2d').drawImage(c, 0, 0, tc.width, tc.height);
+                const thumbB64 = tc.toDataURL('image/jpeg', 0.82).split(',')[1];
+
+                // Watermark on main image
+                const sz  = Math.max(13, Math.round(c.width / 38));
+                const pad = Math.round(sz * 0.65);
+                ctx.font         = 'italic ' + sz + 'px Georgia, serif';
+                ctx.textAlign    = 'right';
+                ctx.textBaseline = 'bottom';
+                ctx.fillStyle = 'rgba(0,0,0,0.38)';
+                ctx.fillText(WATERMARK, c.width - pad + 1, c.height - pad + 1);
+                ctx.fillStyle = 'rgba(255,255,255,0.62)';
+                ctx.fillText(WATERMARK, c.width - pad, c.height - pad);
+
+                res({ mainB64: c.toDataURL('image/jpeg', 0.88).split(',')[1], thumbB64 });
+            };
+            img.onerror = rej;
+            img.src = url;
         });
-        const filename  = file.name;
-        const filePath  = info.dir + '/' + filename;
+    }
+
+    async function uploadSinglePhoto(file, info, grid) {
+        const { mainB64, thumbB64 } = await processForUpload(file);
+        const filename = file.name;
+        const filePath = info.dir + '/' + filename;
         let sha = '';
         try { const ex = await getFile(filePath); sha = ex.sha; } catch (_) {}
-        await putFileBin(filePath, b64content, sha, 'admin: add ' + filename);
+        await putFileBin(filePath, mainB64, sha, 'admin: add ' + filename);
+
+        // Upload thumbnail for Mushrooms section
+        if (info.key === 'mushroom') {
+            const thumbName = filename.replace(/\.\w+$/, '.jpg');
+            const thumbPath = 'images/Mushrooms/thumbs/' + thumbName;
+            let thumbSha = '';
+            try { const tf = await getFile(thumbPath); thumbSha = tf.sha; } catch (_) {}
+            await putFileBin(thumbPath, thumbB64, thumbSha, 'admin: add thumb ' + thumbName);
+        }
+
         await updateGalleryArr(info.arr, filename, 'add');
 
         const item = document.createElement('div');

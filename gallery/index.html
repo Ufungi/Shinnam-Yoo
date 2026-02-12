@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gallery - Shinnam Yoo</title>
+    <meta name="description" content="Field photography gallery by mycologist Shinnam Yoo — mushrooms, fungi, animals, and sampling photos from Korean forests.">
+    <meta name="author" content="Shinnam Yoo">
+    <meta property="og:title" content="Gallery — Shinnam Yoo">
+    <meta property="og:description" content="Field photography gallery by mycologist Shinnam Yoo — mushrooms and fungi from Korean forests.">
+    <meta property="og:type" content="website">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Karla:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
@@ -160,6 +165,9 @@
             display: block;
             width: 100%;
             height: auto;
+            -webkit-user-drag: none;
+            user-drag: none;
+            -webkit-touch-callout: none;
         }
 
         /* caption for named specimens */
@@ -196,6 +204,9 @@
             object-fit: contain;
             border-radius: 6px;
             pointer-events: none;
+            -webkit-user-drag: none;
+            user-drag: none;
+            -webkit-touch-callout: none;
             animation: zoomIn 0.2s ease;
         }
 
@@ -478,6 +489,8 @@
                 img.alt = species ? species + ' specimen' : 'Field specimen';
                 img.loading = 'lazy';
                 img.decoding = 'async';
+                img.setAttribute('draggable', 'false');
+                img.addEventListener('contextmenu', e => e.preventDefault());
                 item.appendChild(img);
 
                 if (species) {
