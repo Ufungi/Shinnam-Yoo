@@ -1138,9 +1138,20 @@
         });
     }
 
+    function sanitizeFilename(name) {
+        // Replace characters GitHub's git backend rejects in path components
+        let safe = name.replace(/[\\/:*?"<>|\x00-\x1f]/g, '_').trim();
+        // Truncate to 80 chars (keeping extension) to avoid GitHub path length limits
+        const dotIdx = safe.lastIndexOf('.');
+        const ext  = dotIdx >= 0 ? safe.slice(dotIdx) : '';
+        const base = dotIdx >= 0 ? safe.slice(0, dotIdx) : safe;
+        if (base.length > 80) safe = base.slice(0, 80) + ext;
+        return safe || ('photo_' + Date.now() + '.jpg');
+    }
+
     async function uploadSinglePhoto(file, info, grid) {
         const { mainB64, thumbB64 } = await processForUpload(file);
-        const filename = file.name;
+        const filename = sanitizeFilename(file.name);
         const filePath = info.dir + '/' + filename;
         let sha = '';
         try { const ex = await getFile(filePath); sha = ex.sha; } catch (_) {}
@@ -1191,10 +1202,15 @@
                     done++;
                 } catch (e) {
                     failed++;
+                    showOp(file.name + ': ' + e.message, 'error');
                     console.error('Upload failed:', file.name, e);
                 }
             }
-            showUploadToast(null, done, '', 'done');
+            if (done > 0) {
+                showUploadToast(null, done, '', 'done');
+            } else {
+                showUploadToast('remove', 0, '', 'remove');
+            }
             setStatus(done + ' uploaded' + (failed ? ', ' + failed + ' failed' : ''));
         });
         input.click();
