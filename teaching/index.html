@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teaching - Shinnam Yoo</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Karla:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&amp;family=Karla:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         :root {
@@ -365,19 +364,19 @@
         }
     </style>
 </head>
-<body>
+<body class="cms-admin cms-edit">
 
     <!-- NAV -->
     <nav role="navigation" aria-label="Main navigation">
         <div class="nav-inner">
             <a href="../" class="nav-brand">Shinnam Yoo</a>
-            <button class="nav-hamburger" aria-label="Toggle navigation" onclick="this.closest('nav').querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+            <button class="nav-hamburger" aria-label="Toggle navigation" onclick="this.closest('nav').querySelector('.nav-links').classList.toggle('open')">☰</button>
             <div class="nav-links">
-                <a href="../"               class="nav-link">Home</a>
-                <a href="../research/"      class="nav-link">Research</a>
-                <a href="../gallery/"       class="nav-link">Gallery</a>
-                <a href="../publications/"  class="nav-link">Publications</a>
-                <a href="../teaching/"      class="nav-link active">Teaching</a>
+                <a href="../" class="nav-link">Home</a>
+                <a href="../research/" class="nav-link">Research</a>
+                <a href="../gallery/" class="nav-link">Gallery</a>
+                <a href="../publications/" class="nav-link">Publications</a>
+                <a href="../teaching/" class="nav-link active">Teaching</a>
             </div>
         </div>
     </nav>
@@ -393,7 +392,7 @@
             <!-- Course 1: Field Practice in Biology -->
             <div class="course-card">
                 <div class="course-media">
-                    <img src="../Teaching/Field Practice in Biology.jpg" alt="Field Practice in Biology course" loading="lazy">
+                    <img src="../Teaching/Field Practice in Biology.jpg" alt="Field Practice in Biology course" loading="lazy" class="">
                 </div>
                 <div class="course-info">
                     <span class="course-tag">Undergraduate Course</span>
@@ -422,23 +421,20 @@
             <div class="course-card">
                 <div class="course-media">
                     <div class="slideshow" id="slideshow2">
+                        <div class="slide">
+                            <img src="../Teaching/Field Taxonomy Training Program for Citizen Scientists (1).jpg" alt="Field Taxonomy Training Program — session 1" loading="lazy" class="">
+                        </div>
                         <div class="slide active">
-                            <img src="../Teaching/Field Taxonomy Training Program for Citizen Scientists (1).jpg"
-                                 alt="Field Taxonomy Training Program — session 1" loading="lazy">
+                            <img src="../Teaching/Field Taxonomy Training Program for Citizen Scientists (2).jpg" alt="Field Taxonomy Training Program — session 2" loading="lazy" class="">
                         </div>
                         <div class="slide">
-                            <img src="../Teaching/Field Taxonomy Training Program for Citizen Scientists (2).jpg"
-                                 alt="Field Taxonomy Training Program — session 2" loading="lazy">
+                            <img src="../Teaching/Field Taxonomy Training Program for Citizen Scientists (3).jpg" alt="Field Taxonomy Training Program — session 3" loading="lazy" class="">
                         </div>
-                        <div class="slide">
-                            <img src="../Teaching/Field Taxonomy Training Program for Citizen Scientists (3).jpg"
-                                 alt="Field Taxonomy Training Program — session 3" loading="lazy">
-                        </div>
-                        <button class="slide-btn prev" aria-label="Previous">&#8249;</button>
-                        <button class="slide-btn next" aria-label="Next">&#8250;</button>
+                        <button class="slide-btn prev" aria-label="Previous">‹</button>
+                        <button class="slide-btn next" aria-label="Next">›</button>
                         <div class="slideshow-controls">
-                            <button class="dot active" data-index="0" aria-label="Slide 1"></button>
-                            <button class="dot" data-index="1" aria-label="Slide 2"></button>
+                            <button class="dot" data-index="0" aria-label="Slide 1"></button>
+                            <button class="dot active" data-index="1" aria-label="Slide 2"></button>
                             <button class="dot" data-index="2" aria-label="Slide 3"></button>
                         </div>
                     </div>
@@ -457,7 +453,7 @@
                         <li>Introduction to macrofungal diversity and ecology</li>
                         <li>Safe identification of edible vs. toxic species</li>
                         <li>Field data recording and citizen science platforms</li>
-                        <li>iNaturalist and national biodiversity database contributions</li>
+                        <li><br></li>
                         <li>Conservation ethics and ecosystem stewardship</li>
                     </ul>
                 </div>
@@ -485,7 +481,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 Shinnam Yoo | Mycological Research</p>
+                <p>© 2026 Shinnam Yoo | Mycological Research</p>
                 <p class="footer-quote">
                     "The real voyage of discovery consists not in seeking new landscapes, but in having new eyes." — Marcel Proust
                 </p>
@@ -525,5 +521,6 @@
     </script>
     <script src="../admin/cms.js"></script>
 
-</body>
-</html>
+
+
+</body></html>
