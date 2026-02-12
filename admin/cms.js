@@ -130,6 +130,45 @@
         body.cms-edit {
             caret-color: #c19a6b;
         }
+        /* image overlay toolbar */
+        #cms-img-overlay {
+            position: absolute; z-index: 9998; display: none;
+            align-items: center; gap: 0.3rem;
+            background: rgba(20,10,4,0.93);
+            border: 1px solid rgba(193,154,107,0.4);
+            border-radius: 5px; padding: 0.2rem 0.4rem;
+        }
+        #cms-img-overlay.cmsov-on { display: flex; }
+        .cmsov-btn {
+            padding: 0.18rem 0.5rem; border-radius: 4px;
+            border: 1px solid rgba(193,154,107,0.3);
+            background: rgba(193,154,107,0.1); color: #f0ebe0;
+            cursor: pointer; font-size: 0.72rem; font-family: inherit;
+            transition: background 0.15s;
+        }
+        .cmsov-btn:hover { background: rgba(193,154,107,0.3); }
+        /* image resize handle */
+        #cms-resize-handle {
+            position: absolute; z-index: 9998; display: none;
+            width: 13px; height: 13px;
+            background: #c19a6b; border: 2px solid #1a0f07;
+            border-radius: 2px; cursor: se-resize;
+        }
+        #cms-resize-handle.cmsov-on { display: block; }
+        /* section drag handle */
+        .cms-sec-draggable { position: relative; }
+        .cms-sec-handle {
+            position: absolute; top: 0.45rem; right: 0.45rem; z-index: 10;
+            width: 1.4rem; height: 1.4rem;
+            background: rgba(20,10,4,0.88);
+            border: 1px solid rgba(193,154,107,0.45);
+            border-radius: 3px; color: rgba(193,154,107,0.8);
+            cursor: grab; font-size: 1rem; line-height: 1;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.15s; user-select: none;
+        }
+        .cms-sec-draggable:hover > .cms-sec-handle { opacity: 1; }
+        .cms-sec-draggable.sec-drag-over { outline: 2px dashed rgba(193,154,107,0.7); border-radius: 4px; }
         body.cms-edit img.cms-img-replace {
             outline: 2px dashed rgba(107,154,193,0.6);
             cursor: zoom-in !important;
@@ -249,6 +288,12 @@
 
     /* ── Text editing (non-gallery pages) ──────── */
     let editMode = false;
+    let imgOverlayEl   = null;
+    let imgOverlayTarget = null;
+    let resizeHandleEl = null;
+    let secDragSrc    = null;
+    let secDraggables = [];
+    const secAbortCtrls = [];
 
     window.cmsToggleEdit = function () {
         editMode = !editMode;
@@ -261,21 +306,23 @@
         if (editMode) {
             // Native browser editing mode — makes entire page editable
             document.designMode = 'on';
-            // Lock out UI chrome from being edited
-            document.querySelectorAll('#cms-bar, nav, footer').forEach(el => {
-                el.contentEditable = 'false';
-            });
+            // Only lock the admin bar itself; nav + footer are now fully editable
+            const bar = document.getElementById('cms-bar');
+            if (bar) bar.contentEditable = 'false';
             initImgReplace();
+            initSectionReorder();
         } else {
             document.designMode = 'off';
-            document.querySelectorAll('#cms-bar, nav, footer').forEach(el => {
-                el.removeAttribute('contenteditable');
-            });
+            const bar = document.getElementById('cms-bar');
+            if (bar) bar.removeAttribute('contenteditable');
             document.querySelectorAll('img.cms-img-replace').forEach(img => {
                 img.classList.remove('cms-img-replace');
                 img.removeAttribute('contenteditable');
-                img.removeEventListener('click', handleImgReplace);
+                img.removeEventListener('dblclick', handleImgReplace);
             });
+            if (imgOverlayEl)  imgOverlayEl.classList.remove('cmsov-on');
+            if (resizeHandleEl) resizeHandleEl.classList.remove('cmsov-on');
+            cleanupSectionReorder();
         }
 
         // Publications: add/delete controls
@@ -305,7 +352,7 @@
             }
         }
 
-        setStatus(editMode ? 'Click anywhere to edit text — double-click image to replace' : '');
+        setStatus(editMode ? 'Click to edit · Dbl-click image to replace · ⠿ drag to reorder · corner to resize' : '');
     };
 
     /* ── Image replacement (non-gallery) ───────── */
@@ -362,6 +409,179 @@
             else if (seg !== '.') parts.push(seg);
         });
         return parts.join('/');
+    }
+
+    /* ── Image overlay toolbar + resize ─────────── */
+    function initImgOverlay() {
+        // Toolbar (Replace / Rotate)
+        imgOverlayEl = document.createElement('div');
+        imgOverlayEl.id = 'cms-img-overlay';
+        imgOverlayEl.contentEditable = 'false';
+        imgOverlayEl.innerHTML =
+            '<button class="cmsov-btn" id="cmsov-repl">&#8593; Replace</button>' +
+            '<button class="cmsov-btn" id="cmsov-rot">&#8635; Rotate</button>';
+        document.body.appendChild(imgOverlayEl);
+        imgOverlayEl.querySelector('#cmsov-repl').addEventListener('click', e => {
+            e.stopPropagation();
+            if (imgOverlayTarget) imgOverlayTarget.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+        });
+        imgOverlayEl.querySelector('#cmsov-rot').addEventListener('click', e => {
+            e.stopPropagation();
+            if (imgOverlayTarget) cmsRotateContentImg(imgOverlayTarget);
+        });
+
+        // Resize handle (bottom-right corner of hovered image)
+        resizeHandleEl = document.createElement('div');
+        resizeHandleEl.id = 'cms-resize-handle';
+        resizeHandleEl.contentEditable = 'false';
+        resizeHandleEl.title = 'Drag to resize';
+        document.body.appendChild(resizeHandleEl);
+
+        let rsStartX, rsStartW, rsTarget;
+        resizeHandleEl.addEventListener('mousedown', e => {
+            e.preventDefault();
+            e.stopPropagation();
+            rsTarget  = imgOverlayTarget;
+            rsStartX  = e.clientX;
+            rsStartW  = rsTarget ? rsTarget.offsetWidth : 0;
+            const onMove = ev => {
+                if (!rsTarget) return;
+                const newW = Math.max(40, rsStartW + (ev.clientX - rsStartX));
+                rsTarget.style.width  = newW + 'px';
+                rsTarget.style.height = 'auto';
+                const r = rsTarget.getBoundingClientRect();
+                resizeHandleEl.style.top  = (r.bottom + window.scrollY - 7) + 'px';
+                resizeHandleEl.style.left = (r.right  + window.scrollX - 7) + 'px';
+                imgOverlayEl.style.top  = (r.top  + window.scrollY + 4) + 'px';
+                imgOverlayEl.style.left = (r.left + window.scrollX + 4) + 'px';
+            };
+            const onUp = () => {
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onUp);
+            };
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onUp);
+        });
+
+        // Show/hide overlay + handle on hover
+        document.addEventListener('mouseover', e => {
+            if (!editMode) return;
+            const img = e.target instanceof Element ? e.target.closest('img.cms-img-replace') : null;
+            if (img) {
+                imgOverlayTarget = img;
+                const r = img.getBoundingClientRect();
+                imgOverlayEl.style.top   = (r.top    + window.scrollY + 4) + 'px';
+                imgOverlayEl.style.left  = (r.left   + window.scrollX + 4) + 'px';
+                resizeHandleEl.style.top  = (r.bottom + window.scrollY - 7) + 'px';
+                resizeHandleEl.style.left = (r.right  + window.scrollX - 7) + 'px';
+                imgOverlayEl.classList.add('cmsov-on');
+                resizeHandleEl.classList.add('cmsov-on');
+            } else if (!e.target.closest?.('#cms-img-overlay') && !e.target.closest?.('#cms-resize-handle')) {
+                imgOverlayEl.classList.remove('cmsov-on');
+                resizeHandleEl.classList.remove('cmsov-on');
+            }
+        });
+    }
+
+    /* ── Rotate content image (non-gallery) ─────── */
+    async function cmsRotateContentImg(img) {
+        setStatus('Rotating…');
+        try {
+            const repoPath = resolveRepoPath(REPO_PATH, img.getAttribute('src').split('?')[0]);
+            const loaded = await new Promise((res, rej) => {
+                const i = new Image();
+                i.crossOrigin = 'anonymous';
+                i.onload = () => res(i);
+                i.onerror = () => rej(new Error('Cannot load image for rotation'));
+                i.src = img.src.split('?')[0] + '?t=' + Date.now();
+            });
+            const c = document.createElement('canvas');
+            c.width  = loaded.naturalHeight;
+            c.height = loaded.naturalWidth;
+            const ctx = c.getContext('2d');
+            ctx.translate(c.width / 2, c.height / 2);
+            ctx.rotate(Math.PI / 2);
+            ctx.drawImage(loaded, -loaded.naturalWidth / 2, -loaded.naturalHeight / 2);
+            const b64 = c.toDataURL('image/jpeg', 0.92).split(',')[1];
+            const f = await getFile(repoPath);
+            await putFileBin(repoPath, b64, f.sha, 'admin: rotate ' + repoPath.split('/').pop());
+            img.src = img.src.split('?')[0] + '?t=' + Date.now();
+            setStatus('Rotated!');
+        } catch (err) {
+            setStatus('Error: ' + err.message);
+        }
+    }
+
+    /* ── Section drag-and-drop reordering ───────── */
+    function initSectionReorder() {
+        const sels = ['.paper-row', '.course-card', '.content-card'];
+        if (IS_PUBS) sels.push('.pub-item');
+        sels.forEach(sel =>
+            document.querySelectorAll(sel).forEach(el => {
+                makeSecDraggable(el);
+                secDraggables.push(el);
+            })
+        );
+    }
+
+    function cleanupSectionReorder() {
+        secAbortCtrls.forEach(ac => ac.abort());
+        secAbortCtrls.length = 0;
+        secDraggables.forEach(el => {
+            el.classList.remove('cms-sec-draggable', 'sec-drag-over');
+            el.querySelector('.cms-sec-handle')?.remove();
+        });
+        secDraggables = [];
+        secDragSrc = null;
+    }
+
+    function makeSecDraggable(el) {
+        const ac = new AbortController();
+        const { signal } = ac;
+        secAbortCtrls.push(ac);
+        el.classList.add('cms-sec-draggable');
+
+        const handle = document.createElement('div');
+        handle.className = 'cms-sec-handle';
+        handle.textContent = '⠿';
+        handle.title = 'Drag to reorder';
+        handle.contentEditable = 'false';
+        handle.setAttribute('draggable', 'true');
+        el.appendChild(handle);
+
+        handle.addEventListener('dragstart', e => {
+            secDragSrc = el;
+            e.dataTransfer.effectAllowed = 'move';
+            e.stopPropagation();
+            setTimeout(() => { el.style.opacity = '0.45'; }, 0);
+        }, { signal });
+
+        handle.addEventListener('dragend', () => {
+            el.style.opacity = '';
+            document.querySelectorAll('.sec-drag-over').forEach(x => x.classList.remove('sec-drag-over'));
+            secDragSrc = null;
+        }, { signal });
+
+        el.addEventListener('dragover', e => {
+            if (!secDragSrc || secDragSrc === el) return;
+            e.preventDefault();
+            e.stopPropagation();
+            el.classList.add('sec-drag-over');
+        }, { signal });
+
+        el.addEventListener('dragleave', e => {
+            if (!el.contains(e.relatedTarget)) el.classList.remove('sec-drag-over');
+        }, { signal });
+
+        el.addEventListener('drop', e => {
+            e.preventDefault();
+            e.stopPropagation();
+            el.classList.remove('sec-drag-over');
+            // Only allow reorder within the same parent container
+            if (secDragSrc && secDragSrc !== el && secDragSrc.parentNode === el.parentNode) {
+                el.parentNode.insertBefore(secDragSrc, el);
+            }
+        }, { signal });
     }
 
     /* ── Color picker ───────────────────────────── */
@@ -441,10 +661,17 @@
             const clone = document.documentElement.cloneNode(true);
             clone.querySelector('#cms-bar')?.remove();
             clone.querySelector('#cms-styles')?.remove();
+            clone.querySelector('#cms-img-overlay')?.remove();
+            clone.querySelector('#cms-resize-handle')?.remove();
             clone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
             clone.querySelectorAll('.cms-pub-del, #cms-add-pub-btn').forEach(el => el.remove());
             clone.querySelectorAll('.pub-item').forEach(e => e.style.position = '');
             clone.querySelectorAll('img.cms-img-replace').forEach(img => img.classList.remove('cms-img-replace'));
+            clone.querySelectorAll('.cms-sec-handle').forEach(el => el.remove());
+            clone.querySelectorAll('.cms-sec-draggable').forEach(el => {
+                el.classList.remove('cms-sec-draggable', 'sec-drag-over');
+                el.style.opacity = '';
+            });
             clone.classList.remove('cms-admin', 'cms-edit');
 
             const newHtml = '<!DOCTYPE html>\n' + clone.outerHTML;
@@ -459,9 +686,10 @@
             if (btn) btn.style.display = 'none';
             document.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
             document.querySelectorAll('.cms-pub-del, #cms-add-pub-btn').forEach(el => el.remove());
-            document.querySelectorAll('img.cms-img-replace').forEach(img => {
-                img.classList.remove('cms-img-replace');
-            });
+            document.querySelectorAll('img.cms-img-replace').forEach(img => img.classList.remove('cms-img-replace'));
+            if (imgOverlayEl)  imgOverlayEl.classList.remove('cmsov-on');
+            if (resizeHandleEl) resizeHandleEl.classList.remove('cmsov-on');
+            cleanupSectionReorder();
         } catch (e) {
             setStatus(e.message);
         } finally {
@@ -868,6 +1096,7 @@
         injectStyles();
         injectBar();
         if (IS_GALLERY) initGallery();
+        else initImgOverlay();
     }
 
     if (document.readyState === 'loading') {
