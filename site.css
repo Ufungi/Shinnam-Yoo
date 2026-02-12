@@ -1,3 +1,4 @@
 /* ── Custom spore cursor ─────────────────────────────────────────────────── */
-/* Cursor is generated dynamically via JS using --cursor-fill CSS variable */
-/* See inline script in HTML files for implementation */
+* {
+    cursor: url('images/cursor-spore.png') 3 0, auto !important;
+}
