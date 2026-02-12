@@ -622,7 +622,31 @@
         </div>
     </footer>
     <script src="../admin/cms.js"></script>
-
-
-
+    <script>
+    (function () {
+        var ov = document.createElement('div');
+        ov.id = 'page-lightbox';
+        ov.style.cssText = 'display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9998;cursor:zoom-out;align-items:center;justify-content:center;';
+        var li = document.createElement('img');
+        li.style.cssText = 'max-width:92vw;max-height:90vh;object-fit:contain;border-radius:6px;pointer-events:none;-webkit-user-drag:none;user-select:none;';
+        ov.appendChild(li);
+        document.body.appendChild(ov);
+        var ks = document.createElement('style');
+        ks.textContent = '@keyframes _lb{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}';
+        document.head.appendChild(ks);
+        ov.addEventListener('click', function () { ov.style.display = 'none'; });
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape') ov.style.display = 'none'; });
+        document.addEventListener('click', function (e) {
+            if (document.body.classList.contains('cms-edit')) return;
+            var t = e.target;
+            if (t.tagName !== 'IMG') return;
+            if (t.closest('nav, footer, #cms-bar, .social-links')) return;
+            ov.removeChild(li); li.src = t.src.split('?')[0]; li.style.animation = '_lb 0.18s ease'; ov.appendChild(li);
+            ov.style.display = 'flex';
+        });
+        document.querySelectorAll('img').forEach(function (img) {
+            if (!img.closest('nav, footer, #cms-bar, .social-links')) img.style.cursor = 'zoom-in';
+        });
+    })();
+    </script>
 </body></html>

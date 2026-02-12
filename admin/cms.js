@@ -725,7 +725,7 @@
             ['qb-highlighter', 'qb-toolbar', 'qb-div', 'deepl-input-controller',
              'grammarly-desktop-integration', '#torrent-scanner-popup', '#__endic_crx__',
              '#immersive-translate-popup', '[data-wxt-integrated]',
-             '#cms-op-toast', '#cms-upload-toast'].forEach(sel => {
+             '#cms-op-toast', '#cms-upload-toast', '#page-lightbox'].forEach(sel => {
                 try { clone.querySelectorAll(sel).forEach(el => el.remove()); } catch (_) {}
             });
             // 3. Remove extension attributes from <html> and <body>
