@@ -229,6 +229,10 @@
         }
         .cms-pub-del:hover { background: rgba(201,107,107,0.5); }
         .cms-add-pub { margin: 1rem 0; display: block; width: 100%; }
+        /* pub-item drag styles */
+        .pub-item.cms-sec-draggable { transition: opacity 0.15s, outline 0.15s; }
+        .pub-item.sec-drag-over { outline: 2px dashed var(--accent, #c19a6b); background: rgba(193,154,107,0.08); }
+        .pub-item > .cms-sec-handle { top: 50%; transform: translateY(-50%); right: 2.5rem; }
         /* upload progress toast + operation toast */
         #cms-upload-toast, #cms-op-toast {
             position: fixed; bottom: 5.5rem; right: 1.25rem; z-index: 10000;
@@ -383,7 +387,7 @@
                 addBtn.contentEditable = 'false';
                 addBtn.textContent = '+ Add Publication';
                 addBtn.addEventListener('click', cmsAddPublication);
-                document.querySelector('.pub-list')?.after(addBtn);
+                document.querySelector('.pub-list')?.before(addBtn);
             } else {
                 document.querySelectorAll('.cms-pub-del').forEach(b => b.remove());
                 document.getElementById('cms-add-pub-btn')?.remove();
@@ -780,8 +784,11 @@
         delBtn.contentEditable = 'false';
         delBtn.addEventListener('click', () => li.remove());
         li.appendChild(delBtn);
-        list.appendChild(li);
-        li.querySelector('[contenteditable]')?.focus();
+        list.prepend(li);
+        // Make new item draggable
+        makeSecDraggable(li);
+        secDraggables.push(li);
+        li.querySelector('.pub-body')?.focus();
     }
 
     /* ── Gallery admin ──────────────────────────── */
