@@ -393,69 +393,52 @@
 
         /* ── STATS ───────────────────────────────────── */
         .stats-section {
-            background: var(--bg-section);
-            border-top: 1px solid var(--border);
-            padding: 3rem 2rem;
-            text-align: center;
-        }
-
-        .stats-inner {
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        .stats-heading {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.5rem;
-            font-weight: 400;
-            color: var(--accent);
-            margin-bottom: 2rem;
-        }
-
-        .stats-grid {
+            padding: 1.25rem 2rem;
             display: flex;
             justify-content: center;
-            gap: 1.5rem;
-            flex-wrap: wrap;
-            margin-bottom: 1.5rem;
         }
 
-        .stat-card {
+        .stats-widget {
+            display: inline-flex;
+            align-items: center;
+            gap: 0;
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1.25rem 1.75rem;
-            min-width: 110px;
+            border-radius: 999px;
+            padding: 0.45rem 1.1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            row-gap: 0.3rem;
         }
 
-        .stat-value {
+        .stats-widget-label {
+            font-size: 0.7rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding-right: 0.75rem;
+            margin-right: 0.25rem;
+            border-right: 1px solid var(--border);
+        }
+
+        .stat-pill {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0 0.6rem;
+            border-right: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .stat-pill:last-child { border-right: none; padding-right: 0; }
+
+        .stat-pill-num {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 2rem;
+            font-size: 1rem;
             font-weight: 600;
             color: var(--text-primary);
-            line-height: 1;
-            margin-bottom: 0.4rem;
         }
-
-        .stat-label {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-        }
-
-        .stats-note {
-            font-size: 0.82rem;
-            color: var(--text-secondary);
-            opacity: 0.8;
-        }
-
-        .stats-note a {
-            color: var(--accent);
-            text-decoration: none;
-        }
-
-        .stats-note a:hover { text-decoration: underline; }
 
         /* ── FOOTER ──────────────────────────────────── */
         footer {
@@ -703,30 +686,9 @@
 
     <!-- STATS -->
     <section class="stats-section">
-        <div class="stats-inner">
-            <h2 class="stats-heading">Site Visitors</h2>
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-value" id="stat-home">—</div>
-                    <div class="stat-label">Home</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="stat-research">—</div>
-                    <div class="stat-label">Research</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="stat-publications">—</div>
-                    <div class="stat-label">Publications</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="stat-gallery">—</div>
-                    <div class="stat-label">Gallery</div>
-                </div>
-            </div>
-            <p class="stats-note">
-                Location &amp; detailed analytics →
-                <a href="https://dbqnchqkq93.goatcounter.com" target="_blank" rel="noopener">GoatCounter dashboard</a>
-            </p>
+        <div class="stats-widget">
+            <span class="stats-widget-label">👁 Visitors</span>
+            <span class="stat-pill"><span class="stat-pill-num" id="stat-total">—</span></span>
         </div>
     </section>
 
@@ -757,17 +719,26 @@
     </footer>
     <script data-goatcounter="https://dbqnchqkq93.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
     <script>
-    var pages = [
-        { id: 'stat-home',         path: '%2FShinnam-Yoo%2F' },
-        { id: 'stat-research',     path: '%2FShinnam-Yoo%2Fresearch%2F' },
-        { id: 'stat-publications', path: '%2FShinnam-Yoo%2Fpublications%2F' },
-        { id: 'stat-gallery',      path: '%2FShinnam-Yoo%2Fgallery%2F' }
+    var paths = [
+        '%2FShinnam-Yoo%2F',
+        '%2FShinnam-Yoo%2Fresearch%2F',
+        '%2FShinnam-Yoo%2Fpublications%2F',
+        '%2FShinnam-Yoo%2Fgallery%2F',
+        '%2FShinnam-Yoo%2Fteaching%2F'
     ];
-    pages.forEach(function(p) {
-        fetch('https://dbqnchqkq93.goatcounter.com/counter/' + p.path + '.json')
+    var total = 0, done = 0;
+    paths.forEach(function(path) {
+        fetch('https://dbqnchqkq93.goatcounter.com/counter/' + path + '.json')
             .then(function(r){ return r.json(); })
-            .then(function(d){ var el = document.getElementById(p.id); if(el) el.textContent = d.count; })
-            .catch(function(){});
+            .then(function(d){
+                total += parseInt((d.count || '0').replace(/,/g, ''), 10);
+                done++;
+                if (done === paths.length) {
+                    var el = document.getElementById('stat-total');
+                    if (el) el.textContent = total.toLocaleString();
+                }
+            })
+            .catch(function(){ done++; });
     });
     </script>
     <script src="admin/cms.js"></script>
