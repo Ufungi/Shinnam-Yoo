@@ -657,9 +657,20 @@
 
             <div class="footer-bottom">
                 <p><span style="font-size: 0.8rem; font-style: italic;">"The real voyage of discovery consists not in seeking new landscapes, but in having new eyes." — Marcel Proust</span></p>
+                <p style="margin-top:0.75rem; font-size:0.8rem; color:var(--text-secondary); opacity:0.7;">
+                    <i class="fa-solid fa-eye" style="color:var(--accent);margin-right:0.4rem;"></i>
+                    Visitors: <span id="gc-count">—</span>
+                </p>
             </div>
         </div>
     </footer>
+    <script data-goatcounter="https://dbqnchqkq93.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <script>
+    fetch('https://dbqnchqkq93.goatcounter.com/counter/%2FShinnam-Yoo%2F.json')
+        .then(function(r){ return r.json(); })
+        .then(function(d){ var el = document.getElementById('gc-count'); if(el) el.textContent = d.count; })
+        .catch(function(){});
+    </script>
     <script src="admin/cms.js"></script>
     <script>
     (function () {
