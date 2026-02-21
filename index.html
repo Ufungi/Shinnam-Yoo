@@ -391,6 +391,72 @@
             line-height: 1.5;
         }
 
+        /* ── STATS ───────────────────────────────────── */
+        .stats-section {
+            background: var(--bg-section);
+            border-top: 1px solid var(--border);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .stats-inner {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .stats-heading {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--accent);
+            margin-bottom: 2rem;
+        }
+
+        .stats-grid {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem 1.75rem;
+            min-width: 110px;
+        }
+
+        .stat-value {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1;
+            margin-bottom: 0.4rem;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .stats-note {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            opacity: 0.8;
+        }
+
+        .stats-note a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .stats-note a:hover { text-decoration: underline; }
+
         /* ── FOOTER ──────────────────────────────────── */
         footer {
             background: #110a04;
@@ -635,6 +701,35 @@
         </div>
     </section>
 
+    <!-- STATS -->
+    <section class="stats-section">
+        <div class="stats-inner">
+            <h2 class="stats-heading">Site Visitors</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-home">—</div>
+                    <div class="stat-label">Home</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-research">—</div>
+                    <div class="stat-label">Research</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-publications">—</div>
+                    <div class="stat-label">Publications</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-gallery">—</div>
+                    <div class="stat-label">Gallery</div>
+                </div>
+            </div>
+            <p class="stats-note">
+                Location &amp; detailed analytics →
+                <a href="https://dbqnchqkq93.goatcounter.com" target="_blank" rel="noopener">GoatCounter dashboard</a>
+            </p>
+        </div>
+    </section>
+
     <!-- FOOTER -->
     <footer>
         <div class="footer-inner">
@@ -657,19 +752,23 @@
 
             <div class="footer-bottom">
                 <p><span style="font-size: 0.8rem; font-style: italic;">"The real voyage of discovery consists not in seeking new landscapes, but in having new eyes." — Marcel Proust</span></p>
-                <p style="margin-top:0.75rem; font-size:0.8rem; color:var(--text-secondary); opacity:0.7;">
-                    <i class="fa-solid fa-eye" style="color:var(--accent);margin-right:0.4rem;"></i>
-                    Visitors: <span id="gc-count">—</span>
-                </p>
             </div>
         </div>
     </footer>
     <script data-goatcounter="https://dbqnchqkq93.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
     <script>
-    fetch('https://dbqnchqkq93.goatcounter.com/counter/%2FShinnam-Yoo%2F.json')
-        .then(function(r){ return r.json(); })
-        .then(function(d){ var el = document.getElementById('gc-count'); if(el) el.textContent = d.count; })
-        .catch(function(){});
+    var pages = [
+        { id: 'stat-home',         path: '%2FShinnam-Yoo%2F' },
+        { id: 'stat-research',     path: '%2FShinnam-Yoo%2Fresearch%2F' },
+        { id: 'stat-publications', path: '%2FShinnam-Yoo%2Fpublications%2F' },
+        { id: 'stat-gallery',      path: '%2FShinnam-Yoo%2Fgallery%2F' }
+    ];
+    pages.forEach(function(p) {
+        fetch('https://dbqnchqkq93.goatcounter.com/counter/' + p.path + '.json')
+            .then(function(r){ return r.json(); })
+            .then(function(d){ var el = document.getElementById(p.id); if(el) el.textContent = d.count; })
+            .catch(function(){});
+    });
     </script>
     <script src="admin/cms.js"></script>
     <script>
