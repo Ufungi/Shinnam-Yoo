@@ -517,12 +517,10 @@
                 img.addEventListener('contextmenu', e => e.preventDefault());
                 item.appendChild(img);
 
-                if (species) {
-                    const caption = document.createElement('div');
-                    caption.className = 'species-caption';
-                    caption.textContent = species;
-                    item.appendChild(caption);
-                }
+                const caption = document.createElement('div');
+                caption.className = 'species-caption';
+                caption.textContent = species || filename.replace(/\.[^.]+$/, '');
+                item.appendChild(caption);
 
                 item.addEventListener('click', () => Modal.open(fullSrc, species));
                 gridEl.appendChild(item);

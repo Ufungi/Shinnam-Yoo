@@ -141,6 +141,7 @@
         body.cms-edit {
             caret-color: #c19a6b;
         }
+        body.cms-hide-names .species-caption { display: none !important; }
         /* image overlay toolbar */
         #cms-img-overlay {
             position: absolute; z-index: 9998; display: none;
@@ -318,6 +319,15 @@
         if (editBtn) editBtn.classList.toggle('cms-active', galleryEditMode);
         const saveBtn = document.getElementById('cms-gallery-save');
         if (saveBtn) saveBtn.style.display = galleryEditMode ? '' : 'none';
+        const namesBtn = document.getElementById('cms-names-btn');
+        if (namesBtn) namesBtn.style.display = galleryEditMode ? '' : 'none';
+        if (!galleryEditMode) document.body.classList.remove('cms-hide-names');
+    };
+
+    window.cmsToggleNames = function () {
+        const hidden = document.body.classList.toggle('cms-hide-names');
+        const btn = document.getElementById('cms-names-btn');
+        if (btn) btn.classList.toggle('cms-active', hidden);
     };
 
     function injectBar() {
@@ -330,7 +340,8 @@
         if (IS_GALLERY) {
             pill.innerHTML =
                 '<button class="cms-btn" id="cms-edit-btn" onclick="cmsToggleGalleryEdit()">&#9998; Edit</button>' +
-                '<button class="cms-btn" id="cms-gallery-save" onclick="cmsGallerySave()" style="display:none">&#8593; Save Order</button>';
+                '<button class="cms-btn" id="cms-gallery-save" onclick="cmsGallerySave()" style="display:none">&#8593; Save Order</button>' +
+                '<button class="cms-btn" id="cms-names-btn" onclick="cmsToggleNames()" style="display:none">Names &#128065;</button>';
         } else {
             pill.innerHTML =
                 '<button class="cms-btn" id="cms-edit-btn" onclick="cmsToggleEdit()">&#9998; Edit</button>' +
