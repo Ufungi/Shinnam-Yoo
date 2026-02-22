@@ -74,15 +74,25 @@
     async function putFileBin(path, b64content, sha, msg) {
         const body = { message: msg, content: b64content, branch: BRANCH };
         if (sha) body.sha = sha;
-        const r = await gh('/repos/' + OWNER + '/' + REPO + '/contents/' + encodePath(path), {
+        let r = await gh('/repos/' + OWNER + '/' + REPO + '/contents/' + encodePath(path), {
             method:  'PUT',
             headers: { 'Content-Type': 'application/json' },
             body:    JSON.stringify(body)
         });
+        if (!r.ok && r.status === 409) {
+            // SHA conflict — re-fetch latest SHA and retry once
+            try { const fresh = await getFile(path); body.sha = fresh.sha; } catch (_) {}
+            r = await gh('/repos/' + OWNER + '/' + REPO + '/contents/' + encodePath(path), {
+                method:  'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify(body)
+            });
+        }
         if (!r.ok) {
             const e = await r.json().catch(() => ({}));
             throw new Error('Upload HTTP ' + r.status + ': ' + (e.message || 'unknown'));
         }
+        return r.json();
     }
 
     async function deleteFile(path, sha, msg) {
@@ -306,10 +316,8 @@
         document.body.classList.toggle('cms-admin', galleryEditMode);
         const editBtn = document.getElementById('cms-edit-btn');
         if (editBtn) editBtn.classList.toggle('cms-active', galleryEditMode);
-        if (!galleryEditMode) {
-            const saveBtn = document.getElementById('cms-gallery-save');
-            if (saveBtn) saveBtn.style.display = 'none';
-        }
+        const saveBtn = document.getElementById('cms-gallery-save');
+        if (saveBtn) saveBtn.style.display = galleryEditMode ? '' : 'none';
     };
 
     function injectBar() {
