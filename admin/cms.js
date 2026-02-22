@@ -141,7 +141,6 @@
         body.cms-edit {
             caret-color: #c19a6b;
         }
-        body.cms-hide-names .species-caption { display: none !important; }
         /* image overlay toolbar */
         #cms-img-overlay {
             position: absolute; z-index: 9998; display: none;
@@ -189,7 +188,7 @@
             outline: 2px solid #6b9ac1;
         }
         .gallery-item { position: relative; }
-        .cms-trash, .cms-rotate, .cms-rename {
+        .cms-trash, .cms-rotate, .cms-rename, .cms-eye {
             position: absolute; top: 0.4rem;
             width: 28px; height: 28px; border-radius: 50%;
             background: rgba(20,10,4,0.88);
@@ -214,9 +213,16 @@
             border: 1px solid rgba(107,193,154,0.5); color: #6bc19a; font-size: 0.9rem;
         }
         .cms-rename:hover { background: rgba(107,193,154,0.3); }
+        .cms-eye {
+            right: 6.4rem;
+            border: 1px solid rgba(193,154,107,0.5); color: #c19a6b; font-size: 0.85rem;
+        }
+        .cms-eye:hover { background: rgba(193,154,107,0.3); }
+        .cms-eye.name-hidden { opacity: 0.35; }
         body.cms-admin .gallery-item .cms-trash,
         body.cms-admin .gallery-item .cms-rotate,
-        body.cms-admin .gallery-item .cms-rename { display: flex; }
+        body.cms-admin .gallery-item .cms-rename,
+        body.cms-admin .gallery-item .cms-eye { display: flex; }
         .gallery-item[draggable="true"] { cursor: grab; }
         .gallery-item.drag-over { outline: 3px dashed rgba(193,154,107,0.8); opacity: 0.75; }
         .cms-add-btn {
@@ -319,15 +325,6 @@
         if (editBtn) editBtn.classList.toggle('cms-active', galleryEditMode);
         const saveBtn = document.getElementById('cms-gallery-save');
         if (saveBtn) saveBtn.style.display = galleryEditMode ? '' : 'none';
-        const namesBtn = document.getElementById('cms-names-btn');
-        if (namesBtn) namesBtn.style.display = galleryEditMode ? '' : 'none';
-        if (!galleryEditMode) document.body.classList.remove('cms-hide-names');
-    };
-
-    window.cmsToggleNames = function () {
-        const hidden = document.body.classList.toggle('cms-hide-names');
-        const btn = document.getElementById('cms-names-btn');
-        if (btn) btn.classList.toggle('cms-active', hidden);
     };
 
     function injectBar() {
@@ -340,8 +337,7 @@
         if (IS_GALLERY) {
             pill.innerHTML =
                 '<button class="cms-btn" id="cms-edit-btn" onclick="cmsToggleGalleryEdit()">&#9998; Edit</button>' +
-                '<button class="cms-btn" id="cms-gallery-save" onclick="cmsGallerySave()" style="display:none">&#8593; Save Order</button>' +
-                '<button class="cms-btn" id="cms-names-btn" onclick="cmsToggleNames()" style="display:none">Names &#128065;</button>';
+                '<button class="cms-btn" id="cms-gallery-save" onclick="cmsGallerySave()" style="display:none">&#8593; Save Order</button>';
         } else {
             pill.innerHTML =
                 '<button class="cms-btn" id="cms-edit-btn" onclick="cmsToggleEdit()">&#9998; Edit</button>' +
@@ -948,6 +944,22 @@
             cmsRenamePhoto(item, getItemFilename(item), getItemInfo(item));
         });
         item.appendChild(rename);
+
+        // Eye — toggle individual caption visibility
+        const eye = document.createElement('button');
+        eye.className = 'cms-eye';
+        eye.title = 'Toggle name';
+        eye.innerHTML = '&#128065;';
+        eye.addEventListener('click', e => {
+            e.stopPropagation();
+            const caption = item.querySelector('.species-caption');
+            if (caption) {
+                const hiding = caption.style.display !== 'none';
+                caption.style.display = hiding ? 'none' : '';
+                eye.classList.toggle('name-hidden', hiding);
+            }
+        });
+        item.appendChild(eye);
     }
 
     function initGallery() {
