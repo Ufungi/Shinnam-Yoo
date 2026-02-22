@@ -103,16 +103,21 @@
         s.id = 'cms-styles';
         s.textContent = `
         #cms-bar {
-            position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 9999;
-            display: flex; align-items: center; gap: 0.45rem;
-            background: rgba(20,10,4,0.97);
-            border: 1px solid rgba(193,154,107,0.5);
-            border-radius: 10px; padding: 0.5rem 0.85rem;
+            position: sticky; top: 64px; z-index: 99;
+            display: flex; justify-content: flex-end;
+            padding: 0.4rem 1.25rem;
+            pointer-events: none;
             font-family: 'Segoe UI', system-ui, sans-serif; font-size: 0.8rem;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 24px rgba(0,0,0,0.65);
         }
-        #cms-bar-label { color: #c19a6b; font-weight: 700; letter-spacing: 0.04em; margin-right: 0.2rem; }
+        .cms-bar-pill {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            background: rgba(20,10,4,0.95);
+            border: 1px solid rgba(193,154,107,0.5);
+            border-radius: 999px; padding: 0.3rem 0.7rem;
+            pointer-events: all;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+        }
         .cms-btn {
             padding: 0.28rem 0.65rem; border-radius: 5px;
             border: 1px solid rgba(193,154,107,0.3);
@@ -123,10 +128,6 @@
         .cms-btn:hover:not(:disabled) { background: rgba(193,154,107,0.25); }
         .cms-btn:disabled { opacity: 0.4; cursor: not-allowed; }
         .cms-btn.cms-active { background: rgba(193,154,107,0.35); border-color: rgba(193,154,107,0.75); }
-        #cms-status {
-            font-size: 0.75rem; color: #c4aa88;
-            max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-        }
         body.cms-edit {
             caret-color: #c19a6b;
         }
@@ -235,7 +236,7 @@
         .pub-item > .cms-sec-handle { top: 50%; transform: translateY(-50%); right: 2.5rem; }
         /* upload progress toast + operation toast */
         #cms-upload-toast, #cms-op-toast {
-            position: fixed; bottom: 5.5rem; right: 1.25rem; z-index: 10000;
+            position: fixed; bottom: 1.5rem; right: 1.25rem; z-index: 10000;
             background: rgba(20,10,4,0.97);
             border: 1px solid rgba(193,154,107,0.5);
             border-radius: 8px; padding: 0.75rem 1rem; min-width: 215px;
@@ -273,10 +274,7 @@
     }
 
     /* ── Admin bar ──────────────────────────────── */
-    function setStatus(msg) {
-        const el = document.getElementById('cms-status');
-        if (el) el.textContent = msg;
-    }
+    function setStatus(msg) { /* status span removed; important messages use showOp */ }
 
     let opToastTimer = null;
     function showOp(msg, state) {
@@ -305,27 +303,21 @@
     function injectBar() {
         const bar = document.createElement('div');
         bar.id = 'cms-bar';
-        bar.style.position = 'relative';
 
-        let editControls = '';
+        const pill = document.createElement('div');
+        pill.className = 'cms-bar-pill';
+
         if (IS_GALLERY) {
-            editControls =
+            pill.innerHTML =
                 '<button class="cms-btn" id="cms-gallery-save" onclick="cmsGallerySave()" style="display:none">&#8593; Save Order</button>';
         } else {
-            editControls =
+            pill.innerHTML =
                 '<button class="cms-btn" id="cms-edit-btn" onclick="cmsToggleEdit()">&#9998; Edit</button>' +
-                '<button class="cms-btn" id="cms-save-btn" onclick="cmsSave()" style="display:none">&#8593; Save</button>' +
-                '<button class="cms-btn" id="cms-color-btn" onclick="cmsToggleColors()" title="Edit colors">&#127912;</button>' +
-                '<div id="cms-color-panel" style="display:none"></div>';
+                '<button class="cms-btn" id="cms-save-btn" onclick="cmsSave()" style="display:none">&#8593; Save</button>';
         }
 
-        bar.innerHTML =
-            '<span id="cms-bar-label">&#9881; Admin</span>' +
-            editControls +
-            '<span id="cms-status"></span>' +
-            '<a href="' + ADMIN_PREFIX + 'index.html" class="cms-btn">Panel</a>';
-
-        document.body.appendChild(bar);
+        bar.appendChild(pill);
+        document.body.prepend(bar);
         document.body.classList.add('cms-admin');
     }
 
