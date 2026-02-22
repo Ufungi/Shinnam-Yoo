@@ -300,6 +300,18 @@
         }
     }
 
+    let galleryEditMode = false;
+    window.cmsToggleGalleryEdit = function () {
+        galleryEditMode = !galleryEditMode;
+        document.body.classList.toggle('cms-admin', galleryEditMode);
+        const editBtn = document.getElementById('cms-edit-btn');
+        if (editBtn) editBtn.classList.toggle('cms-active', galleryEditMode);
+        if (!galleryEditMode) {
+            const saveBtn = document.getElementById('cms-gallery-save');
+            if (saveBtn) saveBtn.style.display = 'none';
+        }
+    };
+
     function injectBar() {
         const bar = document.createElement('div');
         bar.id = 'cms-bar';
@@ -309,6 +321,7 @@
 
         if (IS_GALLERY) {
             pill.innerHTML =
+                '<button class="cms-btn" id="cms-edit-btn" onclick="cmsToggleGalleryEdit()">&#9998; Edit</button>' +
                 '<button class="cms-btn" id="cms-gallery-save" onclick="cmsGallerySave()" style="display:none">&#8593; Save Order</button>';
         } else {
             pill.innerHTML =
@@ -318,7 +331,7 @@
 
         bar.appendChild(pill);
         document.body.prepend(bar);
-        document.body.classList.add('cms-admin');
+        if (!IS_GALLERY) document.body.classList.add('cms-admin');
     }
 
     /* ── Text editing (non-gallery pages) ──────── */
