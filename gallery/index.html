@@ -485,6 +485,8 @@
             '2021-10-05_16_46_2621295863196025745.jpg'
         ];
 
+        const hiddenCaptions = [];
+
         /* ── SPECIES NAME EXTRACTION ──────────────────── */
         function getSpeciesName(filename) {
             if (/^IMG_/i.test(filename) || /^\d{4}-/.test(filename)) return null;
@@ -520,6 +522,7 @@
                 const caption = document.createElement('div');
                 caption.className = 'species-caption';
                 caption.textContent = species || filename.replace(/\.[^.]+$/, '');
+                if (hiddenCaptions.includes(filename)) caption.style.display = 'none';
                 item.appendChild(caption);
 
                 item.addEventListener('click', () => Modal.open(fullSrc, species));

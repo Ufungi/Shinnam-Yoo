@@ -878,6 +878,10 @@
             const getFilenames = gridId => [...document.querySelectorAll('#' + gridId + ' .gallery-item img')]
                 .map(img => decodeURIComponent(img.getAttribute('src').split('/').pop().split('?')[0]));
 
+            const getHidden = gridId => [...document.querySelectorAll('#' + gridId + ' .gallery-item')]
+                .filter(item => { const c = item.querySelector('.species-caption'); return c && c.style.display === 'none'; })
+                .map(item => item.dataset.cmsFilename || decodeURIComponent(item.querySelector('img').getAttribute('src').split('/').pop().split('?')[0]));
+
             const file = await getFile('gallery/index.html');
             let html = decodeURIComponent(escape(atob(file.content.replace(/\n/g, ''))));
 
@@ -892,6 +896,13 @@
             html = replaceArr(html, 'mushroomImages', getFilenames('mushroomGrid'));
             html = replaceArr(html, 'animalImages',   getFilenames('animalGrid'));
             html = replaceArr(html, 'samplingImages', getFilenames('samplingGrid'));
+
+            const allHidden = [
+                ...getHidden('mushroomGrid'),
+                ...getHidden('animalGrid'),
+                ...getHidden('samplingGrid')
+            ];
+            html = replaceArr(html, 'hiddenCaptions', allHidden);
 
             await putFile('gallery/index.html', html, file.sha, 'admin: reorder gallery photos');
             if (btn) btn.style.display = 'none';
@@ -950,6 +961,9 @@
         eye.className = 'cms-eye';
         eye.title = 'Toggle name';
         eye.innerHTML = '&#128065;';
+        // Initialize state from current caption visibility (set by hiddenCaptions array)
+        const initCaption = item.querySelector('.species-caption');
+        if (initCaption && initCaption.style.display === 'none') eye.classList.add('name-hidden');
         eye.addEventListener('click', e => {
             e.stopPropagation();
             const caption = item.querySelector('.species-caption');
