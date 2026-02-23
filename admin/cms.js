@@ -1038,18 +1038,17 @@
                 if (!e.message.includes('HTTP 404')) throw e;
             }
 
-            // Rename thumbnail for Mushrooms
+            // Rename thumbnail
             if (!!info.thumb) {
+                const thumbDir = info.dir + '/thumbs/';
                 const oldThumbName = oldName.replace(/\.\w+$/, '.jpg');
                 const newThumbName = newBase.trim() + '.jpg';
-                const oldThumbPath = 'images/Mushrooms/thumbs/' + oldThumbName;
+                const oldThumbPath = thumbDir + oldThumbName;
                 try {
                     const tf = await getFile(oldThumbPath);
-                    // Check if new thumb path already exists
                     let newThumbSha = null;
-                    try { const ntf = await getFile('images/Mushrooms/thumbs/' + newThumbName); newThumbSha = ntf.sha; } catch (_) {}
-                    await putFileBin('images/Mushrooms/thumbs/' + newThumbName, tf.content.replace(/\n/g, ''), newThumbSha, 'admin: rename thumb');
-                    // Re-fetch SHA before delete to avoid 409 conflict
+                    try { const ntf = await getFile(thumbDir + newThumbName); newThumbSha = ntf.sha; } catch (_) {}
+                    await putFileBin(thumbDir + newThumbName, tf.content.replace(/\n/g, ''), newThumbSha, 'admin: rename thumb');
                     const tfRefresh = await getFile(oldThumbPath);
                     await deleteFile(oldThumbPath, tfRefresh.sha, 'admin: rename thumb (del)');
                 } catch (_) {}
@@ -1117,7 +1116,7 @@
                 tc.getContext('2d').drawImage(canvas, 0, 0, tc.width, tc.height);
                 const thumbB64 = tc.toDataURL('image/jpeg', 0.8).split(',')[1];
                 const thumbName = filename.replace(/\.\w+$/, '.jpg');
-                const tp = 'images/Mushrooms/thumbs/' + thumbName;
+                const tp = info.dir + '/thumbs/' + thumbName;
                 let thumbSha = '';
                 try { const tf = await getFile(tp); thumbSha = tf.sha; } catch (_) {}
                 await putFileBin(tp, thumbB64, thumbSha, 'admin: rotate thumb ' + thumbName);
@@ -1149,7 +1148,7 @@
             if (!!info.thumb) {
                 try {
                     const thumbName = filename.replace(/\.\w+$/, '.jpg');
-                    const tp = 'images/Mushrooms/thumbs/' + thumbName;
+                    const tp = info.dir + '/thumbs/' + thumbName;
                     const tf = await getFile(tp);
                     await deleteFile(tp, tf.sha, 'admin: delete thumb ' + thumbName);
                 } catch (_) {}
@@ -1256,10 +1255,10 @@
         try { const ex = await getFile(filePath); sha = ex.sha; } catch (_) {}
         await putFileBin(filePath, mainB64, sha, 'admin: add ' + filename);
 
-        // Upload thumbnail for Mushrooms section
+        // Upload thumbnail (for sections with thumb path)
         if (!!info.thumb) {
             const thumbName = filename.replace(/\.\w+$/, '.jpg');
-            const thumbPath = 'images/Mushrooms/thumbs/' + thumbName;
+            const thumbPath = info.dir + '/thumbs/' + thumbName;
             let thumbSha = '';
             try { const tf = await getFile(thumbPath); thumbSha = tf.sha; } catch (_) {}
             await putFileBin(thumbPath, thumbB64, thumbSha, 'admin: add thumb ' + thumbName);
@@ -1278,7 +1277,7 @@
         makeDraggable(item);
         grid.appendChild(item);
 
-        const countIds = { mushroomImages: 'mushroomCount', animalImages: 'animalCount', samplingImages: 'samplingCount' };
+        const countIds = { mushroomImages: 'mushroomCount', ectomycorrhizaImages: 'ectomycorrhizaCount', animalImages: 'animalCount', samplingImages: 'samplingCount' };
         const countEl = document.getElementById(countIds[info.arr]);
         if (countEl) countEl.textContent = grid.querySelectorAll('.gallery-item').length + ' photos';
     }
@@ -1316,22 +1315,32 @@
     }
 
     async function updateGalleryArr(arrName, filename, action) {
-        const file = await getFile('gallery/index.html');
-        let html = decodeURIComponent(escape(atob(file.content.replace(/\n/g, ''))));
-        const re = new RegExp('(const ' + arrName + '\\s*=\\s*\\[)([\\s\\S]*?)(\\];)');
-        html = html.replace(re, (_, pre, content, post) => {
-            const esc = filename.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/'/g, "\\'");
-            if (action === 'remove') {
-                content = content
-                    .replace(new RegExp(",\\s*'" + esc + "'", 'g'), '')
-                    .replace(new RegExp("'" + esc + "',\\s*", 'g'), '')
-                    .replace(new RegExp("'" + esc + "'", 'g'), '');
-            } else {
-                content = content.trimEnd() + ",\n            '" + filename + "'\n        ";
+        // Retry loop to handle 409 SHA conflicts from rapid sequential uploads
+        for (let attempt = 0; attempt < 4; attempt++) {
+            if (attempt > 0) await new Promise(r => setTimeout(r, 600 * attempt));
+            const file = await getFile('gallery/index.html');
+            let html = decodeURIComponent(escape(atob(file.content.replace(/\n/g, ''))));
+            const re = new RegExp('(const ' + arrName + '\\s*=\\s*\\[)([\\s\\S]*?)(\\];)');
+            html = html.replace(re, (_, pre, content, post) => {
+                const esc = filename.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/'/g, "\\'");
+                if (action === 'remove') {
+                    content = content
+                        .replace(new RegExp(",\\s*'" + esc + "'", 'g'), '')
+                        .replace(new RegExp("'" + esc + "',\\s*", 'g'), '')
+                        .replace(new RegExp("'" + esc + "'", 'g'), '');
+                } else {
+                    content = content.trimEnd() + ",\n            '" + filename + "'\n        ";
+                }
+                return pre + content + post;
+            });
+            try {
+                await putFile('gallery/index.html', html, file.sha, 'admin: ' + action + ' ' + filename);
+                return; // success
+            } catch (e) {
+                if (attempt < 3 && e.message.includes('409')) continue; // retry
+                throw e;
             }
-            return pre + content + post;
-        });
-        await putFile('gallery/index.html', html, file.sha, 'admin: ' + action + ' ' + filename);
+        }
     }
 
     /* ── Init ───────────────────────────────────── */
