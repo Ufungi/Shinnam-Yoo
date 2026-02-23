@@ -496,7 +496,23 @@
 
         const ectomycorrhizaImages = [
             'Amanita pallidorosea.JPG',
-            'Tricholoma terreum.JPG'
+            'Atheliaceae sp. 1.JPG',
+            'Cenococcum geophilum (1).JPG',
+            'Clavulina sp..JPG',
+            'Helvella macropus.JPG',
+            'Lactarius sp.JPG',
+            'Membranomyces cf. delectabilis.JPG',
+            'Piloderma fallax.JPG',
+            'Rhizopogon sp. 1.JPG',
+            'Russula brevipes.JPG',
+            'Russula sanguinea.JPG',
+            'Sarcodon scabrosus.JPG',
+            'Thelephoraceae sp. 18.JPG',
+            'Thelephoraceae sp. 19.JPG',
+            'Tricholoma matsutake.JPG',
+            'Tricholoma sp. 1.JPG',
+            'Tricholoma terreum.JPG',
+            'Tricholoma ustale.JPG'
         ];
 
         const hiddenCaptions = [
@@ -537,7 +553,7 @@
                 const species = getSpeciesName(filename);
                 const fullSrc = basePath + encodeURIComponent(filename);
                 const thumbSrc = thumbPath
-                    ? thumbPath + encodeURIComponent(filename)
+                    ? thumbPath + encodeURIComponent(filename.replace(/\.[^.]+$/, '.jpg'))
                     : fullSrc;
 
                 const item = document.createElement('div');
