@@ -820,6 +820,13 @@
             src:  '../images/Mushrooms/',
             thumb:'../images/Mushrooms/thumbs/'
         },
+        ectomycorrhizaGrid: {
+            key:  'ectomycorrhiza',
+            dir:  'images/Ectomycorrhiza',
+            arr:  'ectomycorrhizaImages',
+            src:  '../images/Ectomycorrhiza/',
+            thumb:'../images/Ectomycorrhiza/thumbs/'
+        },
         animalGrid: {
             key:  'animal',
             dir:  'images/Animals',
@@ -893,12 +900,14 @@
                 );
             }
 
-            html = replaceArr(html, 'mushroomImages', getFilenames('mushroomGrid'));
-            html = replaceArr(html, 'animalImages',   getFilenames('animalGrid'));
-            html = replaceArr(html, 'samplingImages', getFilenames('samplingGrid'));
+            html = replaceArr(html, 'mushroomImages',       getFilenames('mushroomGrid'));
+            html = replaceArr(html, 'ectomycorrhizaImages', getFilenames('ectomycorrhizaGrid'));
+            html = replaceArr(html, 'animalImages',         getFilenames('animalGrid'));
+            html = replaceArr(html, 'samplingImages',       getFilenames('samplingGrid'));
 
             const allHidden = [
                 ...getHidden('mushroomGrid'),
+                ...getHidden('ectomycorrhizaGrid'),
                 ...getHidden('animalGrid'),
                 ...getHidden('samplingGrid')
             ];
@@ -1030,7 +1039,7 @@
             }
 
             // Rename thumbnail for Mushrooms
-            if (info.key === 'mushroom') {
+            if (!!info.thumb) {
                 const oldThumbName = oldName.replace(/\.\w+$/, '.jpg');
                 const newThumbName = newBase.trim() + '.jpg';
                 const oldThumbPath = 'images/Mushrooms/thumbs/' + oldThumbName;
@@ -1099,7 +1108,7 @@
             const f = await getFile(filePath);
             await putFileBin(filePath, b64content, f.sha, 'admin: rotate ' + filename);
 
-            if (info.key === 'mushroom') {
+            if (!!info.thumb) {
                 const THUMB_MAX = 400;
                 const scale = THUMB_MAX / Math.max(canvas.width, canvas.height);
                 const tc = document.createElement('canvas');
@@ -1137,7 +1146,7 @@
             const f = await getFile(filePath);
             await deleteFile(filePath, f.sha, 'admin: delete ' + filename);
 
-            if (info.key === 'mushroom') {
+            if (!!info.thumb) {
                 try {
                     const thumbName = filename.replace(/\.\w+$/, '.jpg');
                     const tp = 'images/Mushrooms/thumbs/' + thumbName;
@@ -1149,7 +1158,7 @@
             await updateGalleryArr(info.arr, filename, 'remove');
             item.remove();
 
-            const countIds = { mushroomImages: 'mushroomCount', animalImages: 'animalCount', samplingImages: 'samplingCount' };
+            const countIds = { mushroomImages: 'mushroomCount', ectomycorrhizaImages: 'ectomycorrhizaCount', animalImages: 'animalCount', samplingImages: 'samplingCount' };
             const countEl = document.getElementById(countIds[info.arr]);
             if (countEl) {
                 const gridEl = document.getElementById(info.arr.replace('Images', 'Grid'));
@@ -1248,7 +1257,7 @@
         await putFileBin(filePath, mainB64, sha, 'admin: add ' + filename);
 
         // Upload thumbnail for Mushrooms section
-        if (info.key === 'mushroom') {
+        if (!!info.thumb) {
             const thumbName = filename.replace(/\.\w+$/, '.jpg');
             const thumbPath = 'images/Mushrooms/thumbs/' + thumbName;
             let thumbSha = '';

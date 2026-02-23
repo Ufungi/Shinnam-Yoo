@@ -384,6 +384,15 @@
             <div class="masonry-grid" id="mushroomGrid"></div>
         </section>
 
+        <!-- Ectomycorrhiza Section -->
+        <section class="gallery-section" id="ectomycorrhiza">
+            <div class="section-header">
+                <h2 class="section-title">Ectomycorrhiza</h2>
+                <span class="section-count" id="ectomycorrhizaCount"></span>
+            </div>
+            <div class="masonry-grid" id="ectomycorrhizaGrid"></div>
+        </section>
+
         <!-- Animals Section -->
         <section class="gallery-section" id="animals">
             <div class="section-header">
@@ -484,6 +493,8 @@
             '2020-07-17_11_40_2298616518138659087.jpg',
             '2021-10-05_16_46_2621295863196025745.jpg'
         ];
+
+        const ectomycorrhizaImages = [];
 
         const hiddenCaptions = [
             'IMG_1772.jpg',
@@ -588,6 +599,14 @@
                 mushroomImages,
                 '../images/Mushrooms/',
                 '../images/Mushrooms/thumbs/'
+            );
+
+            buildGrid(
+                document.getElementById('ectomycorrhizaGrid'),
+                document.getElementById('ectomycorrhizaCount'),
+                ectomycorrhizaImages,
+                '../images/Ectomycorrhiza/',
+                '../images/Ectomycorrhiza/thumbs/'
             );
 
             buildGrid(
