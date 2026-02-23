@@ -1329,7 +1329,8 @@
                         .replace(new RegExp("'" + esc + "',\\s*", 'g'), '')
                         .replace(new RegExp("'" + esc + "'", 'g'), '');
                 } else {
-                    content = content.trimEnd() + ",\n            '" + filename + "'\n        ";
+                    const trimmed = content.trimEnd();
+                    content = (trimmed ? trimmed + ',' : '') + "\n            '" + filename + "'\n        ";
                 }
                 return pre + content + post;
             });
