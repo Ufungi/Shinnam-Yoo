@@ -286,6 +286,29 @@
             border-radius: 4px; padding: 1px; cursor: pointer; background: none;
         }
         #cms-color-panel .cp-row { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
+        #cms-caption-panel {
+            position: absolute; bottom: 3.5rem; right: 0;
+            background: rgba(20,10,4,0.98);
+            border: 1px solid rgba(193,154,107,0.5);
+            padding: 1rem 1.2rem; border-radius: 10px;
+            z-index: 10001; min-width: 240px;
+            font-family: 'Segoe UI', system-ui, sans-serif; font-size: 0.82rem;
+            color: #c4aa88;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.7);
+            display: none;
+        }
+        #cms-caption-panel label {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 0.75rem; margin-bottom: 0.6rem; color: #c4aa88;
+        }
+        #cms-caption-panel select, #cms-caption-panel input[type="text"] {
+            background: rgba(193,154,107,0.1);
+            border: 1px solid rgba(193,154,107,0.4);
+            border-radius: 4px; padding: 0.2rem 0.4rem;
+            color: #f0ebe0; font-size: 0.8rem;
+            cursor: pointer; min-width: 130px;
+        }
+        #cms-caption-panel .cp-row { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
         `;
         document.head.appendChild(s);
     }
@@ -337,7 +360,11 @@
         if (IS_GALLERY) {
             pill.innerHTML =
                 '<button class="cms-btn" id="cms-edit-btn" onclick="cmsToggleGalleryEdit()">&#9998; Edit</button>' +
+                '<button class="cms-btn" id="cms-caption-btn" onclick="cmsCaptionPanel()">Aa Caption</button>' +
                 '<button class="cms-btn" id="cms-gallery-save" onclick="cmsGallerySave()" style="display:none">&#8593; Save Order</button>';
+            const captionPanelEl = document.createElement('div');
+            captionPanelEl.id = 'cms-caption-panel';
+            pill.appendChild(captionPanelEl);
         } else {
             pill.innerHTML =
                 '<button class="cms-btn" id="cms-edit-btn" onclick="cmsToggleEdit()">&#9998; Edit</button>' +
@@ -715,6 +742,80 @@
         }
     };
 
+    /* ── Caption font panel (gallery only) ─────── */
+    const CAPTION_FONTS = [
+        { label: 'Karla (default)', value: "'Karla', sans-serif" },
+        { label: 'Cormorant Garamond', value: "'Cormorant Garamond', serif" },
+        { label: 'Georgia', value: 'Georgia, serif' },
+        { label: 'Arial', value: 'Arial, sans-serif' },
+        { label: 'Courier New', value: "'Courier New', monospace" }
+    ];
+
+    window.cmsCaptionPanel = function () {
+        const panel = document.getElementById('cms-caption-panel');
+        if (!panel) return;
+        if (panel.style.display !== 'none' && panel.innerHTML) { panel.style.display = 'none'; return; }
+
+        const cs = getComputedStyle(document.documentElement);
+        const curFamily = cs.getPropertyValue('--caption-font-family').trim() || "'Karla', sans-serif";
+        const curSize   = cs.getPropertyValue('--caption-font-size').trim()   || '0.8rem';
+
+        const fontOptions = CAPTION_FONTS.map(f =>
+            '<option value="' + f.value + '"' + (curFamily === f.value ? ' selected' : '') + '>' + f.label + '</option>'
+        ).join('');
+
+        panel.innerHTML =
+            '<label>Font family' +
+                '<select id="cap-family">' + fontOptions + '</select>' +
+            '</label>' +
+            '<label>Font size' +
+                '<input type="text" id="cap-size" value="' + curSize + '" style="width:80px">' +
+            '</label>' +
+            '<div class="cp-row">' +
+                '<button class="cms-btn" onclick="cmsCaptionApply()">Apply</button>' +
+                '<button class="cms-btn" onclick="cmsCaptionSave()">Apply &amp; Save</button>' +
+            '</div>';
+
+        // Live preview on change
+        panel.querySelector('#cap-family').addEventListener('change', window.cmsCaptionApply);
+        panel.querySelector('#cap-size').addEventListener('input', window.cmsCaptionApply);
+        panel.style.display = '';
+    };
+
+    function getCaptionPanelValues() {
+        const panel = document.getElementById('cms-caption-panel');
+        if (!panel) return null;
+        return {
+            family: panel.querySelector('#cap-family')?.value || '',
+            size:   (panel.querySelector('#cap-size')?.value || '').trim()
+        };
+    }
+
+    window.cmsCaptionApply = function () {
+        const v = getCaptionPanelValues();
+        if (!v) return;
+        if (v.family) document.documentElement.style.setProperty('--caption-font-family', v.family);
+        if (v.size)   document.documentElement.style.setProperty('--caption-font-size',   v.size);
+    };
+
+    window.cmsCaptionSave = async function () {
+        window.cmsCaptionApply();
+        const v = getCaptionPanelValues();
+        if (!v) return;
+        showOp('Saving caption font…', 'busy');
+        try {
+            const file = await getFile('gallery/index.html');
+            let html = decodeURIComponent(escape(atob(file.content.replace(/\n/g, ''))));
+            if (v.family) html = html.replace(/(--caption-font-family\s*:\s*)([^;]+)(;)/, '$1' + v.family + '$3');
+            if (v.size)   html = html.replace(/(--caption-font-size\s*:\s*)([^;]+)(;)/,   '$1' + v.size   + '$3');
+            await putFile('gallery/index.html', html, file.sha, 'admin: update caption font');
+            document.getElementById('cms-caption-panel').style.display = 'none';
+            showOp('Caption font saved!', 'done');
+        } catch (err) {
+            showOp(err.message, 'error');
+        }
+    };
+
     /* ── Save page (non-gallery) ────────────────── */
     window.cmsSave = async function () {
         const btn = document.getElementById('cms-save-btn');
@@ -882,8 +983,8 @@
         if (btn) btn.disabled = true;
         showOp('Saving order…', 'busy');
         try {
-            const getFilenames = gridId => [...document.querySelectorAll('#' + gridId + ' .gallery-item img')]
-                .map(img => decodeURIComponent(img.getAttribute('src').split('/').pop().split('?')[0]));
+            const getFilenames = gridId => [...document.querySelectorAll('#' + gridId + ' .gallery-item')]
+                .map(item => item.dataset.cmsFilename || decodeURIComponent(item.querySelector('img').getAttribute('src').split('/').pop().split('?')[0]));
 
             const getHidden = gridId => [...document.querySelectorAll('#' + gridId + ' .gallery-item')]
                 .filter(item => { const c = item.querySelector('.species-caption'); return c && c.style.display === 'none'; })
@@ -992,8 +1093,9 @@
             if (!info) return;
             const img = item.querySelector('img');
             if (!img) return;
-            const filename = decodeURIComponent(img.getAttribute('src').split('/').pop().split('?')[0]);
-            item.dataset.cmsFilename = filename;
+            if (!item.dataset.cmsFilename) {
+                item.dataset.cmsFilename = decodeURIComponent(img.getAttribute('src').split('/').pop().split('?')[0]);
+            }
             addGalleryButtons(item);
             makeDraggable(item);
         });

@@ -175,17 +175,23 @@
         }
 
         /* caption for named specimens */
+        :root {
+            --caption-font-family: 'Karla', sans-serif;
+            --caption-font-size: 0.8rem;
+        }
         .species-caption {
             position: absolute;
             bottom: 0; left: 0; right: 0;
             background: linear-gradient(transparent, rgba(10,5,2,0.85));
             color: var(--text-primary);
-            font-size: 0.8rem;
-            font-style: italic;
+            font-family: var(--caption-font-family);
+            font-size: var(--caption-font-size);
+            font-style: normal;
             padding: 1.5rem 0.75rem 0.6rem;
             text-align: center;
             pointer-events: none;
         }
+        .species-caption.italic { font-style: italic; }
 
         /* ── MODAL ───────────────────────────────────── */
         .modal {
@@ -538,8 +544,8 @@
         /* ── SPECIES NAME EXTRACTION ──────────────────── */
         function getSpeciesName(filename) {
             if (/^IMG_/i.test(filename) || /^\d{4}-/.test(filename)) return null;
-            const m = filename.match(/^([A-Z][a-z]+ [a-z]+)/);
-            return m ? m[1] : null;
+            const base = filename.replace(/\.[^.]+$/, '').trim();
+            return /^[A-Z]/.test(base) ? base : null;
         }
 
         /* ── BUILD MASONRY GRID ───────────────────────── */
@@ -557,6 +563,7 @@
 
                 const item = document.createElement('div');
                 item.className = 'gallery-item';
+                item.dataset.cmsFilename = filename;
 
                 const img = document.createElement('img');
                 img.src = thumbSrc;
@@ -568,7 +575,8 @@
                 item.appendChild(img);
 
                 const caption = document.createElement('div');
-                caption.className = 'species-caption';
+                const isBinomial = species && /^[A-Z][a-z]+ [a-z]+$/.test(species);
+                caption.className = 'species-caption' + (isBinomial ? ' italic' : '');
                 caption.textContent = species || filename.replace(/\.[^.]+$/, '');
                 if (hiddenCaptions.includes(filename)) caption.style.display = 'none';
                 item.appendChild(caption);
