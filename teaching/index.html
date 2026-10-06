@@ -359,7 +359,7 @@
         }
 
         @media (max-width: 640px) {
-            nav { position: relative; }
+            nav { position: sticky; top: 0; z-index: 100; }
             .nav-hamburger { display: block; }
             .nav-links {
                 display: none; flex-direction: column;
@@ -372,15 +372,15 @@
             .nav-links.open { display: flex; }
         }
     </style>
-<style>@keyframes _lb{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}</style></head>
+</head>
 <body class="">
 
     <!-- NAV -->
     <nav role="navigation" aria-label="Main navigation">
         <div class="nav-inner">
             <a href="../" class="nav-brand">Shinnam Yoo</a>
-            <button class="nav-hamburger" aria-label="Toggle navigation" onclick="this.closest('nav').querySelector('.nav-links').classList.toggle('open')">☰</button>
-            <div class="nav-links">
+            <button class="nav-hamburger" aria-label="Toggle navigation" aria-expanded="false" aria-controls="site-navigation" onclick="const links=this.closest('nav').querySelector('.nav-links'); const open=links.classList.toggle('open'); this.setAttribute('aria-expanded',open); this.setAttribute('aria-label',open?'Close navigation':'Open navigation');">☰</button>
+            <div class="nav-links" id="site-navigation">
                 <a href="../" class="nav-link">Home</a>
                 <a href="../research/" class="nav-link">Research</a>
                 <a href="../gallery/" class="nav-link">Gallery</a>
@@ -395,7 +395,7 @@
         <div class="container">
 
             <div class="page-header">
-                <h1 class="page-title">Teaching</h1><div>(update in progress..)</div>
+                <h1 class="page-title">Teaching</h1>
             </div>
 
             <!-- Course 1: Field Practice in Biology -->
@@ -462,7 +462,6 @@
                         <li>Introduction to macrofungal diversity and ecology</li>
                         <li>Safe identification of edible vs. toxic species</li>
                         <li>Field data recording and citizen science platforms</li>
-                        <li><br></li>
                         <li>Conservation ethics and ecosystem stewardship</li>
                     </ul>
                 </div>
